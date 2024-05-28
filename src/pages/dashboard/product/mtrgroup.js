@@ -20,7 +20,8 @@ import {useSession} from 'next-auth/react';
 import GridLogoTemplate from '@/components/grid/gridLogoTemplate';
 import StepHeader from '@/components/StepHeader';
 import {EditDialog as SubGroupEdit} from '@/GridDialogs/mtrsubgroupDialog';
-
+import {setSubmitted} from "@/features/productsSlice";
+import {GroupDialog} from "@/GridDialogs/mtrgroupDialog";
 
 const dialogStyle = {
     marginTop: '10vh', // Adjust the top margin as needed
@@ -32,7 +33,14 @@ const dialogStyle = {
 
 
 export default function Groups() {
+
+    const [dialog, setDialog] = useState({
+        state: false,
+        isEdit: false
+    })
+
     const [editData, setEditData] = useState(null)
+
     const [editDialog, setEditDialog] = useState(false);
     const [addDialog, setAddDialog] = useState(false);
     const [submitted, setSubmitted] = useState(false);
@@ -107,20 +115,23 @@ export default function Groups() {
 
     const editProduct = async (product) => {
         setSubmitted(false);
-        setEditDialog(true)
+        // setEditDialog(true)
         dispatch(setGridRowData(product))
+        setDialog(prev => ({...prev, state: true, isEdit: true}))
     };
 
     //Add product
     const openNew = () => {
         setSubmitted(false);
-        setAddDialog(true);
+        setDialog(prev => ({...prev, state: true, isEdit: false}))
+        // setAddDialog(true);
     };
 
 
     const hideDialog = () => {
-        setEditDialog(false);
-        setAddDialog(false);
+        // setEditDialog(false);
+        // setAddDialog(false);
+        setDialog((prev) => ({...prev, state: false, isEdit: false}))
     };
 
     const onDelete = async (id) => {
@@ -205,19 +216,25 @@ export default function Groups() {
 
 
             </DataTable>
-            <EditDialog
-                style={dialogStyle}
-                data={editData}
-                setData={setEditData}
-                dialog={editDialog}
-                setDialog={setEditDialog}
-                hideDialog={hideDialog}
-                setSubmitted={setSubmitted}
+            {/*<EditDialog*/}
+            {/*    style={dialogStyle}*/}
+            {/*    data={editData}*/}
+            {/*    setData={setEditData}*/}
+            {/*    dialog={editDialog}*/}
+            {/*    setDialog={setEditDialog}*/}
+            {/*    hideDialog={hideDialog}*/}
+            {/*    setSubmitted={setSubmitted}*/}
 
-            />
-            <AddDialog
-                dialog={addDialog}
-                setDialog={setAddDialog}
+            {/*/>*/}
+            {/*<AddDialog*/}
+            {/*    dialog={addDialog}*/}
+            {/*    setDialog={setAddDialog}*/}
+            {/*    hideDialog={hideDialog}*/}
+            {/*    setSubmitted={setSubmitted}*/}
+            {/*/>*/}
+            <GroupDialog
+                isEdit={dialog.isEdit}
+                dialog={dialog.state}
                 hideDialog={hideDialog}
                 setSubmitted={setSubmitted}
             />

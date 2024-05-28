@@ -4,7 +4,6 @@ import {Button} from 'primereact/button';
 import {Dialog} from 'primereact/dialog';
 import Input from '@/components/Forms/PrimeInput';
 import axios from 'axios';
-import PrimeUploads from '@/components/Forms/PrimeImagesUpload';
 import {useForm} from "react-hook-form";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
@@ -16,14 +15,169 @@ import PrimeSelect from '@/components/Forms/PrimeSelect';
 import SingleImageUpload from '@/components/bunnyUpload/FileUpload';
 import {Dropdown} from 'primereact/dropdown';
 import {TranslateInput} from "@/components/Forms/TranslateInput";
+import DropdownCategories from "@/components/Forms/DropdownCategories";
 
 
-const GroupDialog = () => {
-    const methods = useForm();
-    const {control, handleSubmit, formState: {errors}} = methods;
-
-
+//VALIDATION SCHEMA:
+const addSchema = yup.object().shape({
+    groupName: yup.string().required('Συμπληρώστε το όνομα'),
+    // categoryid: yup.string().required('Η Κατηγορία είναι υποχρεωτική'),
+});
+//DEFAULT VALUES FOR THE FORM:
+const DEFAULT_VALUES = {
+    groupName: '',
+    englishName: '',
+    MTRCATEGORY: '',
 }
+
+//ADD/EDIT COMPONENT:
+export const GroupDialog =
+    ({
+         isEdit,
+         dialog,
+         hideDialog,
+         setSubmitted
+     }) => {
+        const session = useSession()
+        const {gridRowData} = useSelector(store => store.grid)
+        const user = session?.user?.user?.lastName;
+
+        const methods = useForm({
+            resolver: yupResolver(addSchema),
+            defaultValues: DEFAULT_VALUES
+        });
+        const {
+            control,
+            setValue,
+            reset,
+            handleSubmit,
+            formState: {
+                errors
+            }
+        } = methods;
+        const values = methods.watch()
+
+        //RESET VALUES ON EDIT/ADD FORM
+        useEffect(() => {
+            if (!isEdit) reset(DEFAULT_VALUES)
+        }, [])
+
+        useEffect(() => {
+            console.log({gridRowData})
+            if (isEdit && gridRowData) {
+                reset({
+                    ...gridRowData,
+                    MTRCATEGORY: parseInt(gridRowData?.softOne.MTRCATEGORY),
+                })
+            }
+        }, [gridRowData])
+
+        //HANDLE SUBMIT:
+
+        const handleEdit = async (data) => {
+            let _newData = {
+                ...data,
+                updatedFrom: user,
+            }
+
+            try {
+                let resp = await axios.post('/api/product/apiGroup',
+                    {
+                        action: "update",
+                        data: _newData,
+                        groupid: gridRowData._id,
+                        originalCategory: gridRowData?.softOne.MTRCATEGORY,
+                        // newCategory: newCategory,
+                    })
+
+            } catch (e) {
+
+            }
+
+        }
+        const handleAdd = async (data) => {
+
+        }
+        const handleSubmitDialog = async (data) => {
+            if (isEdit) {
+                await handleEdit(data)
+            } else {
+                await handleAdd(data)
+            }
+        }
+
+        //HANDLE INPUT CHANGES:
+        const handleCategoryChange = (value) => {
+            methods.setValue('MTRCATEGORY', value)
+        }
+        const productDialogFooter = (
+            <React.Fragment>
+                <Button label="Ακύρωση" icon="pi pi-times" severity="info" outlined onClick={hideDialog}/>
+                <Button label="Αποθήκευση" icon="pi pi-check" severity="info"
+                        onClick={handleSubmit(handleSubmitDialog)}/>
+            </React.Fragment>
+        );
+
+
+        return (
+            <div className="dialog_container">
+                <Dialog
+                    visible={dialog}
+                    style={{width: '32rem', maxWidth: '80rem'}}
+                    breakpoints={{'960px': '75vw', '641px': '90vw'}}
+                    header={isEdit ? "Διόρθωση Ομάδας" : "Προσθήκη Ομάδας"}
+                    modal
+                    className="p-fluid"
+                    footer={productDialogFooter}
+                    onHide={hideDialog}
+                    maximizable
+                >
+                    <form
+                        onSubmit={handleSubmit(handleSubmitDialog)}
+                        noValidate
+                        className="form"
+                    >
+                        <DropdownCategories
+                            isEdit={isEdit}
+                            state={values?.MTRCATEGORY}
+                            handleState={handleCategoryChange}
+                            error={errors?.MTRCATEGORY?.message}
+                        />
+                        <Input
+                            label={'Όνομα Ομάδας'}
+                            name={'groupName'}
+                            control={control}
+                            required
+                            error={errors.groupName}
+                        />
+                        <TranslateInput
+                            state={values.englishName}
+                            textArea={true}
+                            handleState={(value) => setValue('englishName', value)}
+                            name="englishName"
+                            label={"Όνομα Αγγλικό"}
+                            targetLang="en-GB"
+                        />
+
+
+                        {/*<PrimeSelect*/}
+                        {/*    control={control}*/}
+                        {/*    name="categoryid"*/}
+                        {/*    required*/}
+                        {/*    label={'Κατηγορία'}*/}
+                        {/*    options={parent}*/}
+                        {/*    optionLabel={'label'}*/}
+                        {/*    optionValue={'value._id'}*/}
+                        {/*    placeholder={gridRowData?.category?.categoryName}*/}
+                        {/*    error={errors.categoryName}*/}
+                        {/*/>*/}
+                    </form>
+                </Dialog>
+
+            </div>
+
+        )
+    }
 
 
 const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
@@ -170,12 +324,6 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
 
     )
 }
-
-
-const addSchema = yup.object().shape({
-    groupName: yup.string().required('Συμπληρώστε το όνομα'),
-    categoryid: yup.string().required('Η Κατηγορία είναι υποχρεωτική'),
-});
 
 
 const AddDialog =
