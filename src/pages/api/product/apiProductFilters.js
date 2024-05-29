@@ -46,27 +46,52 @@ export default async function handler(req, res) {
             let sortObject = {};
             let filterConditions = {};
 
-
-
             //SORTING:
-            if(sort !== 0) sortObject.NAME = sort;
-            if(sortPrice !== 0) sortObject.PRICER = sortPrice;
-            if(sortImpa !== 0)  sortObject.impas = sortImpa;
-            if(sortEan !== 0) sortObject.CODE1 = sortEan;
-            if (categoryID) {
-                filterConditions.MTRCATEGORY = categoryID;
+            if(sort) sortObject.NAME = sort;
+            if(sortPrice) sortObject.PRICER = sortPrice;
+            if(sortImpa)  sortObject.impas = sortImpa;
+            if(sortEan) sortObject.CODE1 = sortEan;
+            // if (categoryID) {
+            //     filterConditions.MTRCATEGORY = categoryID;
+            // }
+            //CATEGORIZATION:
+            if(stateFilters?.MTRCATEGORY) {
+                filterConditions.MTRCATEGORY =stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY;
             }
-
-
+            if(stateFilters?.MTRGROUP) {
+                filterConditions.MTRGROUP = stateFilters?.MTRGROUP?.softOne?.MTRGROUP;
+            }
+            if(stateFilters?.CCCSUBGROUP2) {
+                filterConditions.CCCSUBGROUP2 = stateFilters?.CCCSUBGROUP2?.softOne?.cccSubgroup2;
+            }
+            //BRANDS:
+            if(stateFilters?.MTRMARK) {
+                filterConditions.MTRMARK = stateFilters?.MTRMARK?.softOne?.MTRMARK;
+            }
             //FILTERS:
             if(stateFilters.images) {
                 filterConditions.images = { $exists: true, $ne: [] };
-
             }
+            //NEW EAN SEARCH:
+            if(stateFilters.eanSearch) {
+                filterConditions.CODE1 = new RegExp(stateFilters.eanSearch, 'i');
+                
+            }
+            if(stateFilters.nameSearch) {
+                const greek = greekUtils.toGreek(stateFilters.nameSearch);
+                let regexSearchTerm = new RegExp( stateFilters.nameSearch, 'i');
+                let regexSearchGreeLish = new RegExp( greek, 'i');
+                filterConditions.NAME = {$in: [ regexSearchTerm, regexSearchGreeLish ]};
+                console.log('and again')
+            }
+
+           
             //manufacturer:
-            if(stateFilters.manufacturer) {
+            if(stateFilters.hasOwnProperty('manufacturer') && stateFilters.manufacturer ) {
                 filterConditions.MMTRMANFCTR_NAME = stateFilters.manufacturer.NAME;
             }
+           
+            console.log({filterConditions})
             if(stateFilters.skroutz !== null) {
                 filterConditions.isSkroutz = stateFilters.skroutz;
             }
@@ -74,36 +99,28 @@ export default async function handler(req, res) {
                 filterConditions.ISACTIVE = stateFilters.active;
             }
 
-            if (groupID) {
-                filterConditions.MTRGROUP = groupID;
-            }
+           
 
-            if (subgroupID) {
-                filterConditions.CCCSUBGROUP2 = subgroupID;
-            }
+            // if (softoneFilter) {
+            //     filterConditions.SOFTONESTATUS = softoneFilter;
+            // }
 
-            if (softoneFilter === true || softoneFilter === false) {
-                filterConditions.SOFTONESTATUS = softoneFilter;
-            }
+            // if (stateFilters.codeSearch !== '') {
+            //     filterConditions.CODE1 = new RegExp(stateFilters.codeSearch, 'i');
+            // }
 
-            if (stateFilters.codeSearch !== '') {
-                filterConditions.CODE1 = new RegExp(stateFilters.codeSearch, 'i');
-            }
+            // if (marka) {
+            //     filterConditions.MTRMARK = marka.softOne.MTRMARK;
+            // }
 
-            if (marka) {
-                filterConditions.MTRMARK = marka.softOne.MTRMARK;
-            }
+            // if (searchTerm !== '') {
+            //     const greek = greekUtils.toGreek(searchTerm);
+            //     let regexSearchTerm = new RegExp( searchTerm, 'i');
+            //     let regexSearchGreeLish = new RegExp( greek, 'i');
+            //     filterConditions.NAME = {$in: [ regexSearchTerm, regexSearchGreeLish ]};
+            // }
 
-            if (searchTerm !== '') {
-                const greek = greekUtils.toGreek(searchTerm);
-                let regexSearchTerm = new RegExp( searchTerm, 'i');
-                let regexSearchGreeLish = new RegExp( greek, 'i');
-                filterConditions.NAME = {$in: [ regexSearchTerm, regexSearchGreeLish ]};
-
-            }
-
-
-
+           
 
             if (stateFilters.impaSearch !== '' && stateFilters.hasOwnProperty('impaSearch') ) {
                 let regex = new RegExp(stateFilters.impaSearch, 'i');
@@ -131,7 +148,6 @@ export default async function handler(req, res) {
                 .sort(sortObject)
                 .skip(skip)
                 .limit(limit)
-            
             if(!softonefind) {
                 response.message = "Δεν βρέθηκαν προϊόντα"
                 response.totalRecords = 0;
@@ -153,6 +169,7 @@ export default async function handler(req, res) {
 
   
 
+    //FOR THE DROPDOWNS:
     if (action === 'findCategories') {
         
         try {
@@ -165,11 +182,12 @@ export default async function handler(req, res) {
         }
     }
     if (action === 'findGroups') {
+        
         let { categoryID } = req.body;
         if(!categoryID) return res.status(200).json({ success: false, result: null})
       
         await connectMongo();
-        let response = await MtrGroup.find({ 'softOne.MTRCATEGORY': categoryID }, { "softOne.MTRGROUP": 1, groupName: 1, _id: 0 }).sort({ groupName: 1 })
+        let response = await MtrGroup.find({ 'softOne.MTRCATEGORY': parseInt(categoryID) }, { "softOne.MTRGROUP": 1, groupName: 1, _id: 0 }).sort({ groupName: 1 })
         try {
             return res.status(200).json({ success: true, result: response })
         } catch (e) {

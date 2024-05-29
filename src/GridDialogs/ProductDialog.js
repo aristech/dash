@@ -72,9 +72,7 @@ const defaultValues = {
 
 };
 
-export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
-    const {gridRowData} = useSelector((store) => store.grid);
-
+export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
     const dispatch = useDispatch();
     const methods = useForm({
         resolver: yupResolver(addSchema),
@@ -89,23 +87,24 @@ export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
     const values = methods.watch();
     const toast = useRef(null);
 
-
     useEffect(() => {
+    
         if (!isEdit) {
             reset(defaultValues);
         }
     }, [])
 
     useEffect(() => {
-        if (isEdit && gridRowData) {
+      
+        if (isEdit && data) {
             reset({
-                ...gridRowData,
-                DIATHESIMA: gridRowData?.availability?.DIATHESIMA,
-                SEPARAGELIA: gridRowData?.availability?.SEPARAGELIA,
-                DESVMEVMENA: gridRowData?.availability?.DESVMEVMENA,
+                ...data,
+                DIATHESIMA: data?.availability?.DIATHESIMA,
+                SEPARAGELIA: data?.availability?.SEPARAGELIA,
+                DESVMEVMENA: data?.availability?.DESVMEVMENA,
             });
         }
-    }, [gridRowData])
+    }, [data, reset])
 
 
     const showSuccess = (message) => {
@@ -131,12 +130,12 @@ export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
 
 
     const handleSubmitForm = async (data) => {
+       
         try {
             let res = await axios.post("/api/product/apiProduct", {
                 action: !isEdit ? "create" : "update",
                 data: data,
             });
-            console.log(res.data.message)
             if (!res.data.success) {
                 showError(res.data.message);
                 return;
@@ -176,14 +175,18 @@ export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
         setValue(name, value);
     };
 
-    const handleCategoryChange = (value) => {
-        setValue("MTRCATEGORY", value);
-    };
-
-    const handleGroupChange = (value) => {
-        setValue("MTRGROUP", value);
-    };
-
+    const handleCategoryClear = () => {
+        setValue("MTRCATEGORY", null);
+        setValue("MTRGROUP", null);
+        setValue("CCCSUBGROUP2")
+    }
+    const handleGroupClear = () => {
+        setValue("MTRGROUP", null)
+        setValue("CCCSUBGROUP2", null)
+    }
+    const handleSubgroupClear = () => {
+        setValue("CCCSUBGROUP2", null)
+    }
 
     return (
         <div className="dialog_container">
@@ -218,22 +221,27 @@ export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
                     <DropdownCategories
                         isEdit={isEdit}
                         state={values.MTRCATEGORY}
-                        handleState={handleCategoryChange}
+                        handleState={(e) => handleInputChange(e, "MTRCATEGORY")}
                         error={errors?.MTRCATEGORY?.message}
+                        handleClear={handleCategoryClear}
                     />
                     <DropdownGroups
                         isEdit={isEdit}
                         state={values.MTRGROUP}
-                        handleState={handleGroupChange}
+                        handleState={(e) => handleInputChange(e, "MTRGROUP")}
                         error={errors?.MTRGROUP?.message}
-                        categoryId={values?.MTRCATEGORY?.softOne?.MTRCATEGORY || gridRowData?.MTRCATEGORY}
+                        categoryId={values?.MTRCATEGORY?.softOne?.MTRCATEGORY}
+                        handleClear={handleGroupClear}
                     />
                     <DropdownSubroups
                         isEdit={isEdit}
                         state={values.CCCSUBGROUP2}
                         handleState={(e) => handleInputChange(e, "CCCSUBGROUP2")}
                         error={errors?.CCCSUBGROUP2?.message}
-                        groupId={values?.MTRGROUP?.softOne?.MTRGROUP || gridRowData?.MTRGROUP}
+                        groupId={values?.MTRGROUP?.softOne?.MTRGROUP}
+                        categoryId={values?.MTRCATEGORY?.softOne?.MTRCATEGORY}
+                        handleClear={handleSubgroupClear}
+                       
                     />
                     <DropdownManufacturers
                         isEdit={isEdit}

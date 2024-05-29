@@ -190,7 +190,7 @@ export default function TemplateDemo() {
                 <i className="pi pi-cog mr-2 cursor-pointer text-primary" style={{ fontSize: '12px' }} onClick={(e) => op.current.toggle(e)}></i>
                 <OverlayPanel ref={op}>
                     <div className='flex flex-column'>
-                        <Button label="Διαμόρφωση Μάρκας" icon="pi pi-pencil" className='w-full mb-2' onClick={() => editProduct(rowData)} />
+                        <Button label="Τροποποίηση Μάρκας" icon="pi pi-pencil" className='w-full mb-2' onClick={() => editProduct(rowData)} />
                         <UploadBtn>
                             <input className="hide" ref={fileInputRef} type="file" onChange={(e) => handleFileUpload(e, rowData)} />
                             <Button className='w-full' severity='warning' loading={fileLoading} onClick={onUploadClick} label="Ανέβασμα τιμοκατάλογου" icon="pi pi-plus"></Button>

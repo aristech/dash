@@ -42,7 +42,7 @@ const GridExpansionTemplate = ({ data, setSubmitted }) => {
                         </ DisabledDisplay  >
 
                     </TabPanel>
-                    <TabPanel header="Λεπτομέριες">
+                    <TabPanel header="Λεπτομέρειες">
                         < DisabledDisplay  >
                             <div className="disabled-card">
                                 <label>

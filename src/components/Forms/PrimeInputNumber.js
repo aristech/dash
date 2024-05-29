@@ -25,7 +25,7 @@ const PrimeInputNumber = ({
         <div className="w-full">
           <label
             htmlFor={name}
-            className={`mb-1 block ${error && "text-red-600"}`}
+            className={`custom_label ${error && "text-red-600"}`}
           >
             {label} {required && <span className="required">*</span>}
           </label>
@@ -41,7 +41,7 @@ const PrimeInputNumber = ({
               id={field.name}
               value={field.value}
               disabled={disabled}
-              className={classNames({ "p-invalid": fieldState.error })}
+              className={`custom_input ${classNames({ "p-invalid": fieldState.error })}`}
               onValueChange={(e) => field.onChange(e)}
             />
           </span>

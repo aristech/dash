@@ -21,7 +21,7 @@ export const TranslateInput = ({ textArea =false , label,name, state, handleStat
     
     return (
         <div >
-            <label className='mb-1 block' >
+            <label className='custom_label' >
                 {label}
             </label>
             <div >

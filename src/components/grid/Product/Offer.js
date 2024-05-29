@@ -85,7 +85,7 @@ const AfterClientSelection = () => {
             <Toast ref={toast} />
             <Button label="Eπίλεξε Πελάτη" severity="warning" onClick={() => dispatch(setSelectedClient(null))} />
             <div className='surface-100 p-4 mt-3 mb-2 border-round'>
-                <p className='text-lg font-bold '>Λεπτομέριες Πελάτη</p>
+                <p className='text-lg font-bold '>Λεπτομέρειες Πελάτη</p>
                 <div className='mt-3'>
                     <span className='font-bold text-sm mr-2'>Κωδικός:</span>
                     <span className='text-sm'>{selectedClient.CODE}</span>

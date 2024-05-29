@@ -477,7 +477,7 @@ const ActionTemplate = ({
             <OverlayPanel ref={op}>
                 <div className="flex flex-column">
                     <Button
-                        label="Διαμόρφωση Προμηθευτή"
+                        label="Τροποποίηση Προμηθευτή"
                         icon="pi pi-pencil"
                         className="w-full mb-2"
                         onClick={() => editProduct(rowData)}

@@ -7,7 +7,7 @@ const UrlInput =({label, value, }) => {
     return (
         <DisabledDisplay>
              <div className="disabled-card">
-        <label>
+        <label className="custom_label">
            {label}
         </label>
         <Link target="_blank" href={value ? value : ''}>

@@ -38,7 +38,7 @@ export default function DropdownManufacturers ({
   
     return (
       <div>
-        <label className={`mb-1 block ${error ? "text-red-500" : null}`}>
+        <label className={`custom_label ${error ? "text-red-500" : null}`}>
             Κατασκευαστής 
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
@@ -49,7 +49,7 @@ export default function DropdownManufacturers ({
           options={options}
           optionLabel="NAME"
           placeholder="Κατασκευαστής"
-          className="w-full"
+          className="w-full custom_dropdown"
         />
         {error && <p className="text-red-500 mt-1">{error}</p>}
       </div>

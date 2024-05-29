@@ -83,7 +83,7 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     onHide={hideDialog}
                     maximizable
                 >
-                   <FormTitle>Λεπτομέριες</FormTitle>
+                   <FormTitle>Λεπτομέρειες</FormTitle>
                    <CountriesDropdown
                     isEdit={true}
                     selectedCountry={values.COUNTRY} 

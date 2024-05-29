@@ -6,7 +6,8 @@ import axios from "axios";
 export default function DropdownBrands({ 
     state, 
     handleState, 
-    isEdit =false, 
+    isEdit =false,
+    isFilter=false, 
     error, 
     required = false 
 }) {
@@ -36,20 +37,25 @@ export default function DropdownBrands({
 
     return (
       <div>
-        <label className={`mb-1 block ${error ? "text-red-500" : null}`}>
+        {!isFilter ? (
+            <label className={`custom_label ${error ? "text-red-500" : null}`}>
             Μάρκα
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
+        ): null}
         <Dropdown
           filter
           value={state}
+          showClear
           onChange={(e) => handleState(e.target.value)}
           options={options}
           optionLabel="softOne.NAME"
           placeholder="Μάρκα"
-          className="w-full"
+          className="custom_dropdown"
+          style={isFilter ? { width: '140px' } : null}
         />
         {error && <p className="text-red-500 mt-1">{error}</p>}
+
       </div>
     );
   };

@@ -23,7 +23,7 @@ export default function PrimeSelect({
       render={({ field, fieldState }) => {
         return (
           <div>
-              <label className={`mb-1 block ${error ? "text-red-500" : null}`}>
+              <label className={`custom_label ${error ? "text-red-500" : null}`}>
             {label}
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
@@ -36,7 +36,7 @@ export default function PrimeSelect({
               placeholder={placeholder}
               focusInputRef={field.ref}
               value={field.value}
-              className={error ? classNames({ "p-invalid": true }) : null}
+              className={ `custom_dropdown ${error ? classNames({ "p-invalid": true }) : null}`}
               onChange={(e) => {
                 field.onChange(e.value);
               }}

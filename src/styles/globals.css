@@ -71,6 +71,119 @@ form {
 }
 
 
+
+
+/* label for all input elements */
+.custom_label {
+    /* block mb-1 text-sm font-medium text-gray-700 */
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #938f8f;
+}
+
+
+/* CUSTOMIZE THE PRODUCT DROPDOWNS: */
+.custom_dropdown_wrapper {
+    position: relative;
+}
+
+.custom_dropdown_wrapper .icon {
+    position: absolute;
+    right: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgb(191, 191, 191);
+    font-size: 0.75rem;
+}
+
+.custom_dropdown .p-inputtext {
+    font-size: 0.85rem;
+    width: 100%;
+    padding: 0.57rem 0.57rem;
+}
+.custom_dropdown .p-icon {
+    width: 0.7rem;
+    height: 0.7rem;
+}
+.custom_dropdown .p-dropdown-clear-icon {
+    top: 50%!important;
+    transform: translateY(-50%)!important;
+    margin-top: 0!important;
+}
+
+.p-dropdown-panel {
+    max-width: 220px;
+}
+
+.p-dropdown-item {
+    white-space: wrap;
+}
+
+/* the filter when the dropdown opens */
+.p-dropdown-filter {
+    font-size: 0.85rem;
+    padding: 0.57rem 0.57rem;
+    width: 100%;
+
+}
+/* CUSTOMIZE THE INPUTS: */
+.custom_input.p-inputtext {
+    font-size: 0.85rem;
+    padding: 0.57rem 0.57rem;
+    width: 100%;
+    min-width: 100px;
+}
+
+.custom_search_input {
+    font-size: 0.85rem;
+    padding: 0.57rem 0.57rem;
+    width: 100%;
+    min-width: 100px;
+    max-width: 200px;
+}
+
+.custom_search_input,.p-input-icon-left {
+    max-width: 200px;
+}
+
+.p-input-icon-left .pi {
+    font-size: 0.74rem;
+    margin-top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+
+.p-input-icon-left .custom_input {
+    padding-left: 2.5rem;  
+    font-size: 0.85rem;
+}
+.p-input-icon-left .custom_search_input {
+    padding-left: 1.8rem;  
+    font-size: 0.85rem;
+
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+.custom_search_input::-webkit-input-placeholder {
+    font-size: 0.7rem;
+}
+
+/* For Mozilla browsers (Firefox) */
+.custom_search_input::-moz-placeholder {
+    font-size: 0.7rem;
+}
+
+
+/* SORT ICON SIZE */
+.sort_icon {
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 12px;

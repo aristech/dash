@@ -114,15 +114,15 @@ export default async function handler(req, res) {
             message: ""
         }
 
-        if(data.MTRL) {
-           let softone = await putSoftone(data)
-           if(!softone.success) {
-                response.success = false,
-                response.message = "Αποτυχία ενημέρωσης του SOFTONE"
-                return res.status(400).json(response)
-           }
-           response.message = "Επιτυχής ενημέρωση Softone"
-        }
+        // if(data.MTRL) {
+        //    let softone = await putSoftone(data)
+        //    if(!softone.success) {
+        //         response.success = false,
+        //         response.message = "Αποτυχία ενημέρωσης του SOFTONE"
+        //         return res.status(400).json(response)
+        //    }
+        //    response.message = "Επιτυχής ενημέρωση Softone"
+        // }
 
         //Due to the format of the data from the dropdowns if the data change when the user edits we will receive and object. 
         //If the data remains unchanged during edit it will evaluate to the right of the ternary operator
@@ -164,7 +164,6 @@ export default async function handler(req, res) {
             // SOFTONESTATUS: data?.SOFTONESTATUS,
         }
         let _systemData = removeEmptyObjectFields(systemData);
-        console.log({_systemData})
         try {
             await connectMongo();
             let update = await SoftoneProduct.findOneAndUpdate({
@@ -203,17 +202,17 @@ export default async function handler(req, res) {
           CCCSUBGROUP2: data?.CCCSUBGROUP2?.softOne?.cccSubgroup2?.toString(),
           MTRMARK: data?.MTRMARK?.softOne?.MTRMARK?.toString(),
           MTRMANFCTR:data?.MTRMANFCTR?.MTRMANFCTR?.toString(),
-          INTRASTAT: data?.INTRASTAT?.INTRASTAT.toString(),
-          VAT: data?.VAT?.VAT.toString(),
-          COUNTRY: data?.COUNTRY?.COUNTRY.toString(),
+          INTRASTAT: data?.INTRASTAT?.INTRASTAT?.toString(),
+          VAT: data?.VAT?.VAT?.toString(),
+          COUNTRY: data?.COUNTRY?.COUNTRY?.toString(),
           //PRICES:
           PRICER: data?.PRICER?.toString(),
           PRICEW: data?.PRICEW?.toString(),
           PRICER02: data?.PRICER02?.toString(),
           //REST:
           ISACTIVE: data?.ISACTIVE ? "1" : "0",
-          VOLUME: data?.VOLUME.toString(),
-          GWEIGHT: data?.GWEIGHT.toString(),
+          VOLUME: data?.VOLUME?.toString(),
+          GWEIGHT: data?.GWEIGHT?.toString(),
         
         };
         let _softoneData = removeEmptyObjectFields(softoneData);

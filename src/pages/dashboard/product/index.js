@@ -166,7 +166,7 @@ function Product() {
     } = useSelector((store) => store.products);
     const dispatch = useDispatch();
     const [totalRecords, setTotalRecords] = useState(0);
-
+    const [rowData, setRowData] = useState([])
     const [classDialog, setClassDialog] = useState(false);
     const [visibleColumns, setVisibleColumns] = useState(initialColumns);
     const [expandedRows, setExpandedRows] = useState(null);
@@ -329,7 +329,8 @@ function Product() {
     const onEdit = async (product) => {
         dispatch(setSubmitted());
         setDialog(prev => ({...prev, state: true, isEdit: true}))
-        dispatch(setGridRowData(product));
+        // dispatch(setGridRowData(product));
+        setRowData(product)
     };
 
 
@@ -783,18 +784,10 @@ function Product() {
                     {/* <Column style={{ width: '40px' }} field="PRICER01" header="Τιμή Scroutz"></Column> */}
                 </DataTable>
             </div>
-
-            {/* <EditDialog
-                style={dialogStyle}
-             
-                dialog={editDialog}
-                setDialog={setEditDialog}
-                hideDialog={hideDialog}
-                // setSubmitted={setSubmitted}
-            /> */}
            {dialog.state ? (
              <ProductDialog
              isEdit={dialog.isEdit}
+             data={rowData}
              dialog={dialog.state}
              hideDialog={hideDialog}
              setSubmitted={setSubmitted}
@@ -992,7 +985,7 @@ const rowExpansionTemplate = (data) => {
     return (
         <div className="card p-20" style={{maxWidth: "1000px"}}>
             <TabView>
-                <TabPanel header="Λεπτομέριες">
+                <TabPanel header="Λεπτομέρειες">
                     <ExpansionDetails data={data}/>
                 </TabPanel>
                 <TabPanel header="Φωτογραφίες">

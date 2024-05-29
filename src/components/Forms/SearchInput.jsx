@@ -10,6 +10,7 @@ export default function SearchInput({handleSearch, name, value}) {
                         style={{ minWidth: '120px', maxWidth: '140px' }}
                         name={name}
                         value={value}
+                        className="custom_input"
                         onChange={handleSearch}
                     />
                 </span>

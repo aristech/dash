@@ -202,7 +202,7 @@ const AddDialog = ({
                 className="p-fluid"
                 footer={productDialogFooter}
                 onHide={hideDialog}>
-                <FormTitle>Λεπτομέριες</FormTitle>
+                <FormTitle>Λεπτομέρειες</FormTitle>
                 <Input
                     label={'Όνομα Kατασκευαστή'}
                     name={'NAME'}

@@ -170,7 +170,7 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                             outlined  
                             className='min-w-min w-4 mt-4' 
                             size='small' 
-                            label="Λεπτομέριες" 
+                            label="Λεπτομέρειες" 
                             icon="pi pi-angle-down" 
                             severity="secondary"
                             iconPos="right" />
@@ -366,14 +366,13 @@ const AddDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     error={errors.role}
                 />
 
-                {/* <FormTitle>Λεπτομέριες</FormTitle> */}
                 <Button 
                     onClick={() => setShowDetails(prev => !prev)}   
                     severity="secondary" 
                     outlined 
                     className='min-w-min w-4 mt-4' 
                     size='small' 
-                    label="Λεπτομέριες" 
+                    label="Λεπτομέρειες" 
                     icon="pi pi-angle-down" 
                     iconPos="right" />
                 {showDetails ? (

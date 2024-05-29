@@ -126,7 +126,7 @@ const Profile = () => {
                         outlined
                         className='w-9rem mt-4 bg-white'
                         size='small'
-                        label="Λεπτομέριες"
+                        label="Λεπτομέρειες"
                         icon="pi pi-angle-down"
                         severity="secondary"
                         iconPos="right" />

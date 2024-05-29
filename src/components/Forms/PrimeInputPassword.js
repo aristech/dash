@@ -16,7 +16,7 @@ export function PrimeInputPass({ name, mb, mt, control,error, label,  }) {
                     control={control}
                     render={({ field, fieldState }) => (
                         <>
-                            <label htmlFor={field.name} >
+                            <label className="custom_label" htmlFor={field.name} >
                                 {label}
                             </label>
                             <Password 

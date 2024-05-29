@@ -107,7 +107,7 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     onHide={hideDialog}
                     maximizable
                 >
-                    <FormTitle>Λεπτομέριες</FormTitle>
+                    <FormTitle>Λεπτομέρειες</FormTitle>
                     {/* <div className="flex mb-3">
                         <div
                             style={{ width: '18px', height: '18px' }}
@@ -229,7 +229,7 @@ const AddDialog = ({
                 className="p-fluid"
                 footer={productDialogFooter}
                 onHide={hideDialog}>
-                <FormTitle>Λεπτομέριες</FormTitle>
+                <FormTitle>Λεπτομέρειες</FormTitle>
                 <Input
                     label={'Impa code'}
                     name={'code'}

@@ -132,7 +132,7 @@ export default function TemplateDemo() {
                 <i className="pi pi-cog mr-2 cursor-pointer text-primary" style={{ fontSize: '13px' }} onClick={(e) => op.current.toggle(e)}></i>
                 <OverlayPanel ref={op}>
                     <div className='flex flex-column'>
-                        <Button label="Διαμόρφωση" icon="pi pi-pencil" className='w-full mb-2' onClick={() => editProduct(rowData)} />
+                        <Button label="Τροποποίηση" icon="pi pi-pencil" className='w-full mb-2' onClick={() => editProduct(rowData)} />
                         <Button onClick ={() => onDelete(rowData._id)} label="Διαγραφή" severity='danger' icon="pi pi-trash" className='w-full mb-2'  />
                     </div>
                 </OverlayPanel>
@@ -183,9 +183,9 @@ export default function TemplateDemo() {
             >
                 <Column field="firstName" header="'Ονομα" body={nameTemplate} ></Column>
                 <Column field="lastName" header="Επώνυμο" sortable></Column>
-                <Column field="details" body={gridDetails} header="Λεπτομέριες" sortable></Column>
+                <Column field="details" body={gridDetails} header="Λεπτομέρειες" sortable></Column>
                 <Column field="email" header="Email" sortable tableStyle={{ width: '5rem' }} body={emailTemplate}></Column>
-                <Column field="createdAt"  body={userCreate} sortable header="Ημερομηνία Δημιουργίας" tableStyle={{ width: '5rem' }}></Column>
+                <Column field="createdAt"  body={userCreate} sortable header="Δημιουργήθηκε" tableStyle={{ width: '5rem' }}></Column>
                 {/* <Column field="status"  sortable header="Status" tableStyle={{ width: '5rem' }} body={ActiveTempate}></Column> */}
                 <Column field="role"  sortable header="Ρόλος" tableStyle={{ width: '5rem' }} body={(data) => UserRoleChip(data.role)}></Column>
                
@@ -266,8 +266,9 @@ const gridDetails = (data) => {
                 <Column field="address.city" header="Πόλη" ></Column>
                 <Column field="address.address" header="Διεύθυνση" ></Column>
                 <Column field="address.postalcode" header="Τ.Κ." ></Column>
+                <Column field="phones.landline" header="Σταθερο Τηλέφωνο" ></Column>
                 <Column field="phones.mobile" header="Κινητό" ></Column>
-                <Column field="phones.landline" header="Σταθερό" ></Column>
+              
                 
 
             </DataTable>

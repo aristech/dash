@@ -344,7 +344,7 @@ const AddDialog = ({dialog, hideDialog, setSubmitted}) => {
                 footer={productDialogFooter}
                 onHide={hideDialog}
             >
-                <FormTitle>Λεπτομέριες</FormTitle>
+                <FormTitle>Λεπτομέρειες</FormTitle>
                 <Input
                     label={"Όνομα Κατηγορίας"}
                     name={"categoryName"}
