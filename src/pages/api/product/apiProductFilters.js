@@ -33,15 +33,7 @@ export default async function handler(req, res) {
         try {
             await connectMongo();
           
-            let totalRecords;
             let filterConditions = {};
-
-            let sortObject = {};
-            //SORTING:
-            
-            
-           
-            console.log( sortState)
             //CATEGORIZATION:
             if(stateFilters?.MTRCATEGORY) {
                 filterConditions.MTRCATEGORY =stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY;
@@ -94,21 +86,6 @@ export default async function handler(req, res) {
                 filterConditions.ISACTIVE = stateFilters.ISACTIVE;
             }
 
-            // if (stateFilters.codeSearch !== '') {
-            //     filterConditions.CODE1 = new RegExp(stateFilters.codeSearch, 'i');
-            // }
-
-            // if (marka) {
-            //     filterConditions.MTRMARK = marka.softOne.MTRMARK;
-            // }
-
-            // if (searchTerm !== '') {
-            //     const greek = greekUtils.toGreek(searchTerm);
-            //     let regexSearchTerm = new RegExp( searchTerm, 'i');
-            //     let regexSearchGreeLish = new RegExp( greek, 'i');
-            //     filterConditions.NAME = {$in: [ regexSearchTerm, regexSearchGreeLish ]};
-            // }
-
            
 
             if (stateFilters.impaSearch !== '' && stateFilters.hasOwnProperty('impaSearch') ) {
@@ -123,16 +100,9 @@ export default async function handler(req, res) {
                 return res.status(200).json({ success: true, totalRecords: totalRecords, result: products });
             }
 
-            if (Object.keys(filterConditions).length === 0) {
-                // No specific filters, fetch all products
-                totalRecords = await SoftoneProduct.countDocuments();
-
-            } else {
-                totalRecords = await SoftoneProduct.countDocuments(filterConditions);
-
-            }
-
-            let softonefind = await SoftoneProduct.find(filterConditions)
+          
+            const totalRecords = await SoftoneProduct.countDocuments();
+            const softonefind = await SoftoneProduct.find(filterConditions)
                 .populate('impas')
                 .sort(sortState)
                 .skip(skip)
