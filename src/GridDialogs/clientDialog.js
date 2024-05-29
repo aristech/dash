@@ -95,14 +95,14 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     visible={dialog}
                     style={{ width: '32rem', maxWidth: '80rem' }}
                     breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                    header="Διόρθωση Πελάτη"
+                    header="Τροποποίηση Mάρκας Πελάτη"
                     modal
                     className="p-fluid"
                     footer={productDialogFooter}
                     onHide={hideDialog}
                     maximizable
                 >
-                    <FormTitle>Λεπτομέριες</FormTitle>
+                    <FormTitle>Λεπτομέρειες</FormTitle>
                     <Dropdown  
                     className='mb-2'
                      value={selectState.country} 

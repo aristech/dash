@@ -168,7 +168,7 @@ export default function Manufacturers() {
                 selectOnEdit
             >
                 <Column field="NAME" header="Kατασκευαστής" sortable></Column>
-                <Column field="updatedFrom" sortable header="updatedFrom"  body={UpdatedFromTemplate} style={{ width: '90px' }}></Column>
+                <Column field="updatedFrom" sortable header="τροποποιήθηκε Από"  body={UpdatedFromTemplate} style={{ width: '90px' }}></Column>
                 {/* <Column field="createdFrom" sortable header="createdFrom"  body={CreatedFromTemplate} style={{ width: '90px' }}></Column> */}
                 {/* <Column field="status" sortable header="Status"  body={ActiveTempate}  bodyStyle={{ textAlign: 'center' }}  style={{ width: '90px' }}></Column> */}
                 {user?.role === 'admin' ? (

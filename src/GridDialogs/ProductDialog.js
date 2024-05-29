@@ -100,9 +100,9 @@ export const ProductDialog = ({dialog, hideDialog, isEdit}) => {
         if (isEdit && gridRowData) {
             reset({
                 ...gridRowData,
-                DIATHESIMA: gridRowData.availability.DIATHESIMA,
-                SEPARAGELIA: gridRowData.availability.SEPARAGELIA,
-                DESVMEVMENA: gridRowData.availability.DESVMEVMENA,
+                DIATHESIMA: gridRowData?.availability?.DIATHESIMA,
+                SEPARAGELIA: gridRowData?.availability?.SEPARAGELIA,
+                DESVMEVMENA: gridRowData?.availability?.DESVMEVMENA,
             });
         }
     }, [gridRowData])

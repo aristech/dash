@@ -118,7 +118,7 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                     visible={dialog}
                     style={{width: "32rem", maxWidth: "80rem"}}
                     breakpoints={{"960px": "75vw", "641px": "90vw"}}
-                    header="Διόρθωση Κατηγορίας"
+                    header="Τροποποίηση  Κατηγορίας"
                     modal
                     className="p-fluid"
                     footer={productDialogFooter}
@@ -134,14 +134,14 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                     />
                     <div>
                         <TranslateInput
-                            label={"Όνομα κατηγορίας αγγλικά"}
+                            label={"Όνομα Κατηγορίας Αγγλικά"}
                             state={translateName}
                             handleState={handleTranslate}
                             targetLang="en-GB"
                         />
                     </div>
 
-                    <FormTitle>Φωτογραφίες</FormTitle>
+                    <FormTitle>Φωτογραφία</FormTitle>
 
                     <div>
                         <UploadImage
@@ -149,7 +149,7 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                             image={gridRowData.categoryImage}
                         />
                     </div>
-                    <FormTitle>Λογότυπο</FormTitle>
+                    <FormTitle>Εικονίδιο</FormTitle>
                     <UploadLogo id={gridRowData._id}/>
                 </Dialog>
             </form>

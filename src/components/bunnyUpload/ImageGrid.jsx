@@ -59,6 +59,9 @@ export const ImageGrid = ({ uploadedFiles, setUploadedFiles, data, onDelete, onA
     return (
         < DataTableContainer>
             <DataTable
+                rows={5}
+                paginator
+                rowsPerPageOptions={[5, 10, 25]}
                 value={data}
                 header={header}
                 loading={loading}

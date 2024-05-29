@@ -127,8 +127,8 @@ export default function Manufacturers() {
                 header={header}
                 value={data}
                 paginator
-                rows={8}
-                rowsPerPageOptions={[5, 10, 25, 50]}
+                rows={20}
+                rowsPerPageOptions={[20, 50, 100, 200, 500]}
                 showGridlines
                 dataKey="_id"
                 filters={filters}
@@ -139,7 +139,7 @@ export default function Manufacturers() {
                 editMode="row"
                 selectOnEdit
             >
-                <Column field="NAME" header="Kατασκευαστής"  body={CountryIcon} sortable></Column>
+                <Column field="NAME" header="Όνομα"  body={CountryIcon} sortable></Column>
                 <Column field="INTERCODE" header="Κωδικός" sortable></Column>
                 <Column field="COUNTRYTYPE" header="COUNTRYTYPE" sortable></Column>
             </DataTable>

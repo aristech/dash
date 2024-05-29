@@ -143,7 +143,7 @@ export default function Categories() {
     }
 
      
-
+    console.log({data})
    
     const actionBodyTemplate = (rowData) => {
         return (
@@ -193,12 +193,12 @@ export default function Categories() {
                 className='p-datatable-sm'
                 selectOnEdit
             >
-                <Column field="subGroupIcon" header="Λογότυπο" body={logoTemplate}  style={{ width: '50px' }}></Column>
+                <Column field="subGroupIcon" header="Εικονίδιο" body={logoTemplate}  style={{ width: '50px' }}></Column>
                 <Column field="subGroupImage" header="Φωτογραφία" body={ImageTemplate }  style={{ width: '50px' }}></Column>
-                <Column field="group.groupName" header="Κατηγορία" ></Column>
-                <Column field="subGroupName" header="Όνομα Sub Group"  ></Column>
-                <Column field="englishName" header="Μετάφραση"  ></Column>
-                <Column field="updatedFrom"  header="updatedFrom" style={{ width: '90px' }} body={UpdatedFromTemplate}></Column>
+                <Column field="group.groupName" header="Ομάδα" style={{ width: '120px' }} ></Column>
+                <Column field="subGroupName" header="Όνομα Υποκατηγορίας"  ></Column>
+                <Column field="englishName" header="Μετάφραση" style={{ width: '90px' }} ></Column>
+                <Column field="updatedFrom"  header="Τροποποίηση Από" style={{ width: '90px' }} body={UpdatedFromTemplate}></Column>
                 {user?.role === 'admin' ? (
                 <Column body={actionBodyTemplate} exportable={false}  bodyStyle={{ textAlign: 'center' }} style={{width: '40px'}} ></Column>
                 ) : null}
@@ -226,20 +226,7 @@ export default function Categories() {
 }
 
 
-const ActiveTempate = ({ status }) => {
 
-    return (
-        <div>
-            {status ? (
-                <Tag severity="success" value=" active "></Tag>
-            ) : (
-                <Tag severity="danger" value="deleted" ></Tag>
-            )}
-
-        </div>
-    )
-
-}
 
 
 
@@ -256,18 +243,6 @@ const UpdatedFromTemplate = ({ updatedFrom, updatedAt }) => {
     )
 }
 
-const CreatedFromTemplate = ({ createdFrom, createdAt }) => {
-    return (
-        <RegisterUserActions
-            actionFrom={createdFrom}
-            at={createdAt}
-            icon="pi pi-user"
-            color="#fff"
-            backgroundColor='var(--green-400)'
-        />
-
-    )
-}
 
 
 

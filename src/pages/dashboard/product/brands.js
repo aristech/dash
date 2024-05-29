@@ -259,10 +259,10 @@ export default function TemplateDemo() {
             >
                 <Column bodyStyle={{ textAlign: 'center' }} expander={allowExpansion} style={{ width: '20px' }} />
                 <Column body={ActionTemplate} style={{ width: '30px' }} />
-                <Column field="logo" header="Λογότυπο" body={logoTemplate} style={{ width: '50px' }} ></Column>
-                <Column field="softOne.NAME" header="Ονομα" ></Column>
+                <Column field="logo" header="Εικονίδιο" body={logoTemplate} style={{ width: '50px' }} ></Column>
+                <Column field="softOne.NAME" header="Όνομα" ></Column>
                 <Column field="supplier.NAME" header="Προμηθευτής" ></Column>
-                <Column field="updatedFrom" header="updatedFrom" style={{ width: '90px' }} body={UpdatedFromTemplate}></Column>
+                <Column field="updatedFrom" header="Τροποποιήθηκε Από" style={{ width: '90px' }} body={UpdatedFromTemplate}></Column>
                 {user?.role === 'admin' ? (
                     <Column body={Actions} exportable={false} sortField={'delete'} bodyStyle={{ textAlign: 'center' }} style={{ width: '90px' }} ></Column>
                 ) : null}

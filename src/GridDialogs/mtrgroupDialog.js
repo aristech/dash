@@ -135,7 +135,7 @@ export const GroupDialog =
                     visible={dialog}
                     style={{width: '32rem', maxWidth: '80rem'}}
                     breakpoints={{'960px': '75vw', '641px': '90vw'}}
-                    header={isEdit ? "Διόρθωση Ομάδας" : "Προσθήκη Ομάδας"}
+                    header={isEdit ? "Τροποποίηση  Ομάδας" : "Προσθήκη Ομάδας"}
                     modal
                     className="p-fluid"
                     footer={productDialogFooter}
@@ -277,7 +277,7 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                 visible={dialog}
                 style={{width: '32rem', maxWidth: '80rem'}}
                 breakpoints={{'960px': '75vw', '641px': '90vw'}}
-                header="Διόρθωση Ομάδας"
+                header="Τροποποίηση Ομάδας"
                 modal
                 className="p-fluid"
                 footer={productDialogFooter}
@@ -314,11 +314,11 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
 
 
                     <div>
-                        <FormTitle>Φωτογραφίες</FormTitle>
+                        <FormTitle>Φωτογραφία</FormTitle>
                         <UploadImage id={gridRowData._id} image={gridRowData.groupImage}/>
                     </div>
                     <div>
-                        <FormTitle>Λογότυπο</FormTitle>
+                        <FormTitle>Εικονίδιο</FormTitle>
                         <UploadLogo id={gridRowData._id} image={gridRowData.groupImage}/>
                     </div>
                 </form>

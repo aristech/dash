@@ -28,7 +28,7 @@ const SuppliersGrid = () => {
     })
     const [lazyState, setlazyState] = useState({
         first: 0,
-        rows: 15,
+        rows: 20,
         page: 1,
     });
     const [totalRecords, setTotalRecords] = useState(0);

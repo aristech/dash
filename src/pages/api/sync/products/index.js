@@ -134,8 +134,7 @@ export default async function handler(req, res) {
     };
   
     let { findByMTRL, findByID, product } = req.body;
-  
-    try {
+    try { 
       let updateFields = {...product};
   
       const fetchNameFromDatabase = async (model, field) => {
@@ -174,7 +173,7 @@ export default async function handler(req, res) {
         { $set: updateFields },
         { new: true }
       );
-  
+      console.log({update})
       if (update) {
         response.success = true;
         response.message = 'Product updated successfully';
@@ -183,6 +182,7 @@ export default async function handler(req, res) {
         response.message = 'Product not found';
       }
     } catch (e) {
+      console.error(e.message)
       response.error = e;
     }
   

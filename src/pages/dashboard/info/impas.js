@@ -204,7 +204,7 @@ const Impas = () => {
                 paginator
                 totalRecords={totalRecords}
                 loading={loading}
-                rowsPerPageOptions={[20, 50, 100, 200]}
+                rowsPerPageOptions={[20, 50, 100, 200, 500]}
                 filterDisplay="row"
                 tableStyle={{ minWidth: '50rem' }}
             >
@@ -221,7 +221,7 @@ const Impas = () => {
                 <Column field="englishDescription" header="Αγγλική Περιγραφή" filter filterElement={searchEngName} showFilterMenu={false}></Column>
                 <Column field="greekDescription" header="Ελληνική Περιγραφή" filter filterElement={searchGreekName} showFilterMenu={false}></Column>
                 <Column field="unit" header="Unit"></Column>
-                <Column field="isActive" header="isActive" body={IsActive}></Column>
+                <Column field="isActive" header="Κατάσταση Impa" body={IsActive}></Column>
                 <Column style={{ width: '100px' }} body={ActionBodyTemplate}></Column>
             </DataTable>
             <EditDialog

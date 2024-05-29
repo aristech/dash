@@ -5,7 +5,6 @@ import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import AdminLayout from '@/layouts/Admin/AdminLayout';
 import axios from 'axios';
-import { Tag } from 'primereact/tag';
 import { FilterMatchMode} from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Toolbar } from 'primereact/toolbar';
@@ -17,7 +16,6 @@ import { Toast } from 'primereact/toast';
 import GridIconTemplate from '@/components/grid/gridIconTemplate';
 import { useSession } from 'next-auth/react';
 import GridOverlay from '@/components/grid/GridOverlay';
-import GridActions from '@/components/grid/GridActions';
 import StepHeader from '@/components/StepHeader';
 import { OverlayPanel } from 'primereact/overlaypanel';
 
@@ -171,8 +169,8 @@ export default function TemplateDemo() {
                 header={header}
                 value={data}
                 paginator
-                rows={8}
-                rowsPerPageOptions={[5, 10, 25, 50]}
+                rows={20}
+                rowsPerPageOptions={[20, 50, 100, 200, 500]}
                 showGridlines
                 dataKey="_id"
                 filters={filters}
@@ -189,7 +187,7 @@ export default function TemplateDemo() {
                 <Column field="email" header="Email" sortable tableStyle={{ width: '5rem' }} body={emailTemplate}></Column>
                 <Column field="createdAt"  body={userCreate} sortable header="Ημερομηνία Δημιουργίας" tableStyle={{ width: '5rem' }}></Column>
                 {/* <Column field="status"  sortable header="Status" tableStyle={{ width: '5rem' }} body={ActiveTempate}></Column> */}
-                <Column field="role"  sortable header="Role" tableStyle={{ width: '5rem' }} body={(data) => UserRoleChip(data.role)}></Column>
+                <Column field="role"  sortable header="Ρόλος" tableStyle={{ width: '5rem' }} body={(data) => UserRoleChip(data.role)}></Column>
                
                 {role === 'admin' ? (
                     <Column body={ActionBodyTemplate } exportable={false} sortField={'delete'} bodyStyle={{ textAlign: 'center' }} style={{ width: '90px' }} ></Column>
@@ -217,20 +215,6 @@ export default function TemplateDemo() {
 }
 
 
-const ActiveTempate = ({ status }) => {
-
-    return (
-        <div>
-            {status ? (
-                <Tag severity="success" value=" active "></Tag>
-            ) : (
-                <Tag severity="danger" value="deleted" ></Tag>
-            )}
-
-        </div>
-    )
-
-}
 
 
 

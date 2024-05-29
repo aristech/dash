@@ -93,14 +93,14 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     visible={dialog}
                     style={{ width: '32rem', maxWidth: '80rem' }}
                     breakpoints={{ '960px': '75vw', '641px': '90vw' }}
-                    header= "Διόρθωση Κατασκευαστή"
+                    header= "Τροποποίηση  Κατασκευαστή"
                     modal
                     className="p-fluid"
                     footer={productDialogFooter}
                     onHide={hideDialog}
                     maximizable
                 >
-                   <FormTitle>Λεπτομέριες</FormTitle>
+                   <FormTitle>Λεπτομέρειες</FormTitle>
               
                    <Input
                    label={'Όνομα Kατασκευαστή'}

@@ -128,8 +128,8 @@ export default function Manufacturers() {
                 header={header}
                 value={data}
                 paginator
-                rows={8}
-                rowsPerPageOptions={[5, 10, 25, 50]}
+                rows={20}
+                rowsPerPageOptions={[20, 50, 100, 200, 500]}
                 showGridlines
                 dataKey="_id"
                 filters={filters}

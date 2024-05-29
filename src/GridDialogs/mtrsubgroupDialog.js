@@ -129,7 +129,7 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                     visible={dialog}
                     style={{width: '32rem', maxWidth: '80rem'}}
                     breakpoints={{'960px': '75vw', '641px': '90vw'}}
-                    header="Διόρθωση Υποομάδας"
+                    header="Τροποποίηση Υποομάδας"
                     modal
                     className="p-fluid"
                     footer={productDialogFooter}
@@ -140,30 +140,30 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
                         control={control}
                         name="groupid"
                         required
-                        label={'Yποκατηγορία'}
+                        label={'Ομάδα'}
                         options={parent}
                         optionLabel={'label'}
                         optionValue={'value._id'}
                         placeholder={gridRowData?.group?.groupName}
                     />
                     <Input
-                        label={'Όνομα Sub Group'}
+                        label={'Όνομα Υποομάδας'}
                         name={'subGroupName'}
                         control={control}
                         required
                     />
                     <TranslateInput
-                        label={'Όνομα κατηγορίας αγγλικά'}
+                        label={'Όνομα Υποομάδας Αγγλικά'}
                         state={translateName}
                         handleState={handleTranslate}
                         targetLang="en-GB"
                     />
                     <div>
-                        <FormTitle>Φωτογραφίες</FormTitle>
+                        <FormTitle>Φωτογραφία</FormTitle>
                         <UploadImage id={gridRowData._id}/>
                     </div>
                     <div>
-                        <FormTitle>Λογότυπο</FormTitle>
+                        <FormTitle>Εικονίδιο</FormTitle>
                         <UploadLogo id={gridRowData._id}/>
                     </div>
                 </Dialog>
@@ -375,7 +375,7 @@ const AddDialog = ({
                     control={control}
                     name="groupid"
                     required
-                    label={'Eπιλέξτε Group'}
+                    label={'Eπιλέξτε Ομάδα'}
                     options={parent}
                     optionLabel={'label'}
                     optionValue={'value._id'}
@@ -383,7 +383,7 @@ const AddDialog = ({
                 />
                 <Input
 
-                    label={'Όνομα subgroup'}
+                    label={'Όνομα Υποομάδας'}
                     name={'subGroupName'}
                     control={control}
                     required
