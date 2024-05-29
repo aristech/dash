@@ -24,18 +24,9 @@ export default async function handler(req, res) {
             message: "",
         }
         const {
-            groupID,
-            categoryID,
-            subgroupID,
-            searchTerm,
             skip,
             limit,
-            softoneFilter,
-            sort,
-            sortEan,
-            marka,
-            sortPrice,
-            sortImpa,
+            sortState,
             stateFilters,
         } = req.body;
        
@@ -43,17 +34,14 @@ export default async function handler(req, res) {
             await connectMongo();
           
             let totalRecords;
-            let sortObject = {};
             let filterConditions = {};
 
+            let sortObject = {};
             //SORTING:
-            if(sort) sortObject.NAME = sort;
-            if(sortPrice) sortObject.PRICER = sortPrice;
-            if(sortImpa)  sortObject.impas = sortImpa;
-            if(sortEan) sortObject.CODE1 = sortEan;
-            // if (categoryID) {
-            //     filterConditions.MTRCATEGORY = categoryID;
-            // }
+            
+            
+           
+            console.log( sortState)
             //CATEGORIZATION:
             if(stateFilters?.MTRCATEGORY) {
                 filterConditions.MTRCATEGORY =stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY;
@@ -64,11 +52,14 @@ export default async function handler(req, res) {
             if(stateFilters?.CCCSUBGROUP2) {
                 filterConditions.CCCSUBGROUP2 = stateFilters?.CCCSUBGROUP2?.softOne?.cccSubgroup2;
             }
-            //BRANDS:
             if(stateFilters?.MTRMARK) {
                 filterConditions.MTRMARK = stateFilters?.MTRMARK?.softOne?.MTRMARK;
             }
-            //FILTERS:
+            
+            if(stateFilters.hasOwnProperty('MANUFACTURER') && stateFilters.MANUFACTURER ) {
+                filterConditions.MMTRMANFCTR_NAME = stateFilters.MANUFACTURER.NAME;
+            }
+            //FILTER IMAGES:
             if(stateFilters.images) {
                 filterConditions.images = { $exists: true, $ne: [] };
             }
@@ -77,33 +68,31 @@ export default async function handler(req, res) {
                 filterConditions.CODE1 = new RegExp(stateFilters.eanSearch, 'i');
                 
             }
+            //NAME SEARCH:
             if(stateFilters.nameSearch) {
                 const greek = greekUtils.toGreek(stateFilters.nameSearch);
                 let regexSearchTerm = new RegExp( stateFilters.nameSearch, 'i');
                 let regexSearchGreeLish = new RegExp( greek, 'i');
                 filterConditions.NAME = {$in: [ regexSearchTerm, regexSearchGreeLish ]};
-                console.log('and again')
+               
             }
-
-           
-            //manufacturer:
-            if(stateFilters.hasOwnProperty('manufacturer') && stateFilters.manufacturer ) {
-                filterConditions.MMTRMANFCTR_NAME = stateFilters.manufacturer.NAME;
-            }
-           
-            console.log({filterConditions})
+        
+        
+            
             if(stateFilters.skroutz !== null) {
                 filterConditions.isSkroutz = stateFilters.skroutz;
             }
-            if(stateFilters.active !== null) {
-                filterConditions.ISACTIVE = stateFilters.active;
+           
+            if (stateFilters.hasOwnProperty('isSkroutz')) {
+                filterConditions.isSkroutz = stateFilters.isSkroutz;
             }
 
-           
-
-            // if (softoneFilter) {
-            //     filterConditions.SOFTONESTATUS = softoneFilter;
-            // }
+            if (stateFilters.hasOwnProperty('SOFTONESTATUS')){
+                filterConditions.SOFTONESTATUS = stateFilters.SOFTONESTATUS;
+            }
+            if (stateFilters.hasOwnProperty('ISACTIVE')){
+                filterConditions.ISACTIVE = stateFilters.ISACTIVE;
+            }
 
             // if (stateFilters.codeSearch !== '') {
             //     filterConditions.CODE1 = new RegExp(stateFilters.codeSearch, 'i');
@@ -145,7 +134,7 @@ export default async function handler(req, res) {
 
             let softonefind = await SoftoneProduct.find(filterConditions)
                 .populate('impas')
-                .sort(sortObject)
+                .sort(sortState)
                 .skip(skip)
                 .limit(limit)
             if(!softonefind) {

@@ -9,7 +9,7 @@ export const ProductAvailability = ({ data }) => {
             <div  className='prod_availability_content '>
                 <div className='prod_availability_row'>
                 <div className={`prod_availability_circle prod_availability_circle-div ${parseInt(data?.DIATHESIMA) < 0 ? 'circle-notavailable' : null }`}></div>
-                    <span>Διαθεσιμα:</span>
+                    <span className='text-xs'>Διαθ:</span>
                     <span className='prod_availability_available'>{data?.DIATHESIMA}</span>
                 </div>
             </div>

@@ -79,19 +79,21 @@ form {
     display: block;
     margin-bottom: 4px;
     font-size: 0.82rem;
-    font-weight: 500;
-    color: #938f8f;
+    font-weight: 600;
+    color: #4a4848;
 }
 
 
 /* CUSTOMIZE THE PRODUCT DROPDOWNS: */
 .custom_dropdown_wrapper {
+    display: inline-block;
     position: relative;
+    width: 100%;
 }
 
 .custom_dropdown_wrapper .icon {
     position: absolute;
-    right: 60px;
+    right: 2.3rem;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
@@ -99,7 +101,13 @@ form {
     font-size: 0.75rem;
 }
 
+
+.custom_dropdown.p-dropdown {
+    width: 100%;
+}
+
 .custom_dropdown .p-inputtext {
+    width: 100%;
     font-size: 0.85rem;
     width: 100%;
     padding: 0.57rem 0.57rem;
@@ -169,14 +177,22 @@ form {
 
 /* For WebKit browsers (Chrome, Safari) */
 .custom_search_input::-webkit-input-placeholder {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    color: rgb(156, 156, 156);
 }
 
 /* For Mozilla browsers (Firefox) */
 .custom_search_input::-moz-placeholder {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    color: rgb(156, 156, 156);
 }
 
+
+
+
+.p-datatable .p-datatable-thead > tr > th {
+    padding: 0.5rem 0.5rem;
+}
 
 /* SORT ICON SIZE */
 .sort_icon {
@@ -184,19 +200,58 @@ form {
     cursor: pointer;
 }
 
-::-webkit-scrollbar {
-    width: 5px;
-    height: 12px;
+/* PRODUCT GRID */
+
+/* DATATABLE */
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 0.4rem 0.5rem;
+}
+.p-filter-column {
+    padding: 5px;
 }
 
-::-webkit-scrollbar-track {
-    background: #efefef9a;
+.tags_wrapper {
+    display: flex;
+    /* margin-top: 2px; */
+}
+.product_name {
+    font-size: 0.85rem;
+    font-weight: 500;
 }
 
-::-webkit-scrollbar-thumb {
-    background: #cdcdcda7;
-    border-radius: 8px;
+.product_tags {
+    font-size: 0.7rem;
+    letter-spacing: 1.2px;
 }
+
+
+.product_availability {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 2px;
+    padding: 2px 4px;
+    border-radius: 3px;
+    height: 18px;
+    font-size: 10px;
+    max-width: 70px;
+    background-color: red;
+    color: white;
+    margin-top: 2px;
+}
+
+/* PRODUCT ACTIONS */
+.basket-icon {
+    display: flex;
+    align-items: center;
+  }
+
+
+  .impa_text {
+    font-size: 0.80rem;
+    color: #726f6f;
+  }
+  
 
 
 .offer_input .p-inputtext {
@@ -267,6 +322,22 @@ form {
     flex-direction: column;
     padding: 10px;
 
+}
+
+
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #efefef9a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cdcdcda7;
+    border-radius: 8px;
 }
 
 @media screen and (max-width: 469px) {

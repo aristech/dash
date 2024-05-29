@@ -181,7 +181,7 @@ const ProductSearchGrid = () => {
       paginator
       loading={loading}
       rows={lazyState.rows}
-      rowsPerPageOptions={[5, 10, 20, 50, 100, 200]}
+      rowsPerPageOptions={[ 20, 50, 100, 200, 500]}
       first={lazyState.first}
       lazy
       totalRecords={totalRecords}
