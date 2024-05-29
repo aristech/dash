@@ -127,8 +127,15 @@ export default async function handler(req, res) {
                 return res.status(400).json(response)
             }
         }
-
-
+        let softoneObj = {
+            username: "Service",
+            password: "Service",
+            company: 1001,
+            mtrgroup: data.softOne.MTRGROUP,
+            name: data.softOne.NAME,
+            mtrcategory: data.MTRCATEGORY.softOne.MTRCATEGORY
+        }
+        console.log(softoneObj)
         let softoneResult = await UpdateSoftone();
         if (!softoneResult.success) {
             response.message = "Αποτυχία ενημέρωσης στο Softone"
@@ -136,18 +143,28 @@ export default async function handler(req, res) {
         }
 
 
-        const updatedGroup = await MtrGroup.findOneAndUpdate({_id: groupid}, {
-            $set: {
-                category: findCategoryId,
-                groupName: data?.softOne.NAME,
-                softOne: {
-                    NAME: data.softOne.NAME,
-                },
-                updatedFrom: data?.updatedFrom,
-                englishName: data.englishName,
-            }
-        }, {new: true})
+        try {
+            const updatedGroup = await MtrGroup.findOneAndUpdate({_id: groupid}, {
+                $set: {
+                    category: findCategoryId,
+                    groupName: data?.softOne.NAME,
+                    softOne: {
+                        NAME: data.softOne.NAME,
+                    },
+                    updatedFrom: data?.updatedFrom,
+                    englishName: data.englishName,
+                }
+            }, {new: true})
+            response.success = true
+            response.result = updatedGroup
+            response.message += " Επιτυχής ενημέρωση στην βάση δεδομένων"
+        } catch (e) {
+            response.message = e.message
+            return res.status(400).json(response)
+        }
 
+        console.log({updatedGroup})
+      
         async function UpdateSoftone() {
             let URL = `${process.env.NEXT_PUBLIC_SOFTONE_URL}/JS/mbmv.mtrGroup/updateMtrGroup`;
             try {
@@ -156,13 +173,7 @@ export default async function handler(req, res) {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        username: "Service",
-                        password: "Service",
-                        mtrgroup: data.softOne.MTRGROUP,
-                        name: data.softOne.NAME,
-                        mtrcategory: data.MTRCATEGORY.softOne.MTRCATEGORY
-                    })
+                    body: JSON.stringify(softoneObj)
                 })
 
                 let buffer = await translateData(res)

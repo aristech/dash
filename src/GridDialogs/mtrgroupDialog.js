@@ -41,7 +41,7 @@ export const GroupDialog =
         const session = useSession()
         const {gridRowData} = useSelector(store => store.grid)
         const user = session?.user?.user?.lastName;
-
+        const toast = useRef(null);
         const methods = useForm({
             resolver: yupResolver(addSchema),
             defaultValues: DEFAULT_VALUES
@@ -57,6 +57,13 @@ export const GroupDialog =
         } = methods;
         const values = methods.watch()
 
+        const showSuccess = (message) => {
+            toast.current.show({severity: 'success', summary: 'Success', detail: message, life: 6000});
+        }
+        const showError = (message) => {
+            toast.current.show({severity: 'error', summary: 'Error', detail: message, life: 4000});
+        }
+    
         //RESET VALUES ON EDIT/ADD FORM
         useEffect(() => {
             if (!isEdit) reset(DEFAULT_VALUES)
@@ -89,9 +96,11 @@ export const GroupDialog =
                         originalCategory: gridRowData?.softOne.MTRCATEGORY,
                         // newCategory: newCategory,
                     })
-
+                setSubmitted(prev => !prev)
+                hideDialog()
+                showSuccess(resp.data.message)
             } catch (e) {
-
+                showError(e.message)
             }
 
         }
@@ -121,6 +130,7 @@ export const GroupDialog =
 
         return (
             <div className="dialog_container">
+                <Toast ref={toast}/>
                 <Dialog
                     visible={dialog}
                     style={{width: '32rem', maxWidth: '80rem'}}
@@ -247,13 +257,7 @@ const EditDialog = ({dialog, hideDialog, setSubmitted}) => {
 
     }
 
-    const showSuccess = (message) => {
-        toast.current.show({severity: 'success', summary: 'Success', detail: message, life: 6000});
-    }
-    const showError = () => {
-        toast.current.show({severity: 'error', summary: 'Error', detail: 'Αποτυχία ενημέρωσης βάσης', life: 4000});
-    }
-
+   
 
     const handleClose = () => {
         hideDialog()
