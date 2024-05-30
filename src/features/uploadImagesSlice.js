@@ -3,6 +3,7 @@ import {createSlice} from "@reduxjs/toolkit";
 const initialState = {
     gridData: [],
     mongoKeys: [],
+    newData: [],
 }
 
 const uploadImagesSlice = createSlice({
@@ -15,7 +16,6 @@ const uploadImagesSlice = createSlice({
         setSelectedMongoKeys: (state, {payload}) => {
             // one of the values CODE, CODE1, CODE2. must exist 
             // and a value for the IMAGES URL:
-            console.log({payload})
             const existingKey = state.mongoKeys.find(item => item.value === payload.value);
             if (existingKey) {
                 existingKey.related = payload.related;
@@ -31,6 +31,9 @@ const uploadImagesSlice = createSlice({
             state.mongoKeys = [];
             state.attributes = [];
         },
+        setNewData: (state, {payload}) => {
+            state.newData = payload;
+        }
     },
 
 })
@@ -41,6 +44,7 @@ export const {
     setGridData,
     setSelectedMongoKeys,
     setClearKeys,
+    setNewData,
 } = uploadImagesSlice.actions;
 
 export default uploadImagesSlice.reducer;

@@ -10,7 +10,8 @@ import UpdatedAt from '@/components/grid/UpdatedAt';
 import XLSXDownloadButton from '@/components/exportCSV/Download';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
-import {  setSelectedMongoKeys, removeSelectedKey, setClearKeys } from '@/features/uploadImagesSlice';
+import {  setSelectedMongoKeys, removeSelectedKey, setClearKeys , setNewData } from '@/features/uploadImagesSlice';
+import axios from 'axios';
 
 const KEYS = ["CODE2", "CODE1", "CODE"]
 
@@ -37,11 +38,20 @@ export const Page = () => {
     const router = useRouter();
     const dispatch = useDispatch()
     const {gridData, mongoKeys} = useSelector(state => state.uploadImages);
-
+    const toast = useRef(null)
+    
 
     useEffect(() => {
         dispatch(setClearKeys())
     }, [])
+
+
+    const showError = (message) => {
+        toast.current.show({ severity: 'warn', summary: message, detail: message, life: 4000 });
+    }
+    const showSuccess = (message) => {
+        toast.current.show({ severity: 'success', summary: message, detail: message, life: 4000 });
+    }
 
 
     const columns = () => {
@@ -58,7 +68,12 @@ export const Page = () => {
             showFilterMenu={false}
             filter
             filterElement={({field}) => (
-                <SelectTemplate field={field} mongoKeys={mongoKeys} setSelectedMongoKeys={setSelectedMongoKeys}/>
+                <SelectTemplate 
+                    toast={toast}
+                    field={field} 
+                    mongoKeys={mongoKeys} 
+                    setSelectedMongoKeys={setSelectedMongoKeys}
+                    />
             )}
             header={col} 
             />
@@ -67,21 +82,38 @@ export const Page = () => {
 
 
     const handleAdd = async () => {
-        router.push('/dashboard/product/upload-images/altered')
-    }
+        setLoading(true)
+        const {data} = await axios.post('/api/butchImages/format', {data: gridData, mongoKeys})
+        setLoading(false)
+        if(!data.success) {
+            showError(data.message)
+        } else {
+            showSuccess(data.message)
+            dispatch(setNewData(data.result))
+            router.push('/dashboard/product/upload-images/altered')
 
+        }
+        
+    }
 
     return (
         <AdminLayout>
-            {!returnedData.length ? (
+              <Toast ref={toast} />
                 <DataTable
                     header={() => (
                         <div className='flex justify-content-between'>
-                            <Button size="small" loading={loading} disabled={loading} label="Συσχετισμός" icon="pi pi-file" onClick={handleAdd} />
+                            <Button 
+                            size="small" 
+                            // loading={loading} 
+                            // disabled={loading} 
+                            label="Συσχετισμός" 
+                            icon="pi pi-file" 
+                            onClick={handleAdd} 
+                            />
                             <XLSXDownloadButton data={returnedData} filename="images"  size="small"/>
                         </div>
                     )}
-                    
+                    editMode="cell"
                     paginator
                     rows={10}
                     rowsPerPageOptions={[20, 50, 100, 200, 500]}
@@ -92,45 +124,17 @@ export const Page = () => {
                 >
                     {columns()}
                 </DataTable>
-            ) : (
-                <div>
-                    <DataTable
-                        value={returnedData}
-                        tableStyle={{ minWidth: '50rem' }}
-                        rows={10}
-                        rowsPerPageOptions={[5, 10, 25]}
-                        paginator
-                    >
-                        <Column header="Προϊόν" field='NAME' />
-                        <Column header="Κωδικός" field='CODE' />
-                        <Column header="Κωδικός" body={Image} />
-                        <Column header="Num" field={'updatedToTotal'}/>
-                        <Column header="UpdatedAt" field='updatedAt' body={UpdatedAt} />
-                    </DataTable>
-                </div>
-            )}
-
-
-
         </AdminLayout >
     );
 };
-const Image = ({ images }) => {
-    return (
-        <div>
-            <span>{images[0].name}</span>
-        </div>
-    )
-}
 
-const SelectTemplate = ({field, mongoKeys, setSelectedMongoKeys}) => {
+
+const SelectTemplate = ({field, mongoKeys, setSelectedMongoKeys, toast}) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const dispatch = useDispatch()
-    const toast = useRef(null)
+    
 
-    const showSuccess = () => {
-        toast.current.show({ severity: 'success', summary: 'Success', detail: 'Επιτυχής διαγραφή', life: 4000 });
-    }
+   
 
     console.log({mongoKeys})
     const showError = (message) => {
@@ -145,21 +149,28 @@ const SelectTemplate = ({field, mongoKeys, setSelectedMongoKeys}) => {
             return;
         };
   
-    
+        
 
         const selectedLabel = e.value.label;
         const selectedKey = e.value.key;
-        //step: if the mongokeys contain any of the KEYS then do not let the user add another key to the array
-        const condition = mongoKeys.find(item => KEYS.includes(item.value));
-        const repetition = mongoKeys.find(item => item.value === selectedKey);
-        if(condition) {
-            showError('Μπορείτε να συσχετίσετε μόνο ένα κλειδί')
-            return;
+        console.log(selectedLabel, selectedKey)
+        //step: if the KEYS inlucde the selected key do not allow it:
+        if (KEYS.includes(selectedKey)) {
+            const existingKey = mongoKeys.find(item => KEYS.includes(item.value));
+            console.log({existingKey})
+            if (existingKey) {
+                console.log("WTF")
+                showError('Μπορείτε να συσχετίσετε μόνο ένα κλειδί');
+                return;
+            }
+        } else if (selectedKey === 'images') {
+            const existingImages = mongoKeys.filter(item => item.value === 'images');
+            if (existingImages.length > 1 || (existingImages.length === 1 && existingImages[0].field !== field)) {
+                showError('Μπορείτε να επιλέξετε μόνο μία στήλη για τις φωτογραφίες');
+                return;
+            }
         }
-        if(repetition) {
-            showError('Έχετε επιλέξει ήδη στήλη για τη φωτογραφία')
-            return;
-        }
+
        
         setSelectedOption(e.value);
         dispatch(setSelectedMongoKeys({
@@ -175,7 +186,7 @@ const SelectTemplate = ({field, mongoKeys, setSelectedMongoKeys}) => {
 
     return (
         <div className="flex align-items-center gap-2">
-            <Toast ref={toast} />
+          
             <Dropdown
                 showClear
                 value={selectedOption}

@@ -88,7 +88,7 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
     const toast = useRef(null);
 
     useEffect(() => {
-    
+        
         if (!isEdit) {
             reset(defaultValues);
         }
@@ -136,6 +136,7 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
                 action: !isEdit ? "create" : "update",
                 data: data,
             });
+            console.log({res})
             if (!res.data.success) {
                 showError(res.data.message);
                 return;

@@ -170,7 +170,7 @@ function Product() {
     sortImpa,
   } = useSelector((store) => store.products);
   const dispatch = useDispatch();
-
+  
   const [loading, setLoading] = useState(false)
   const [totalRecords, setTotalRecords] = useState(0);
   const [rowData, setRowData] = useState([]);
@@ -194,6 +194,7 @@ function Product() {
 
   const INITIAL_STATE_FILTERS = {
     //SEARCHES:
+    nameSearch: "",
     impaSearch: "",
     erpCode: "",
     codeSearch: "",
@@ -214,10 +215,21 @@ function Product() {
 
   const [stateFilters, setStateFilters] = useState(INITIAL_STATE_FILTERS);
 
+  const showError = (message) => {
+    toast.current.show({
+      severity: "error",
+      summary: message,
+      detail: message,
+      life: 4000,
+    });
+  };
   const fetchProducts = async () => {
-    if (!searchTerm && !stateFilters.codeSearch) {
+    console.log(stateFilters)
+    if ( !stateFilters.codeSearch && !stateFilters.impaSearch && !stateFilters.erpCode && !stateFilters.nameSearch) {
         //create a conditional loading state:
+        setLoading(true)
     }
+ 
     try {
       let { data } = await axios.post("/api/product/apiProductFilters", {
         action: "productSearchGrid",
@@ -227,21 +239,21 @@ function Product() {
         stateFilters: stateFilters,
       });
 
-      return data;
+      setData(data?.result);
+      setTotalRecords(data?.totalRecords);
+      
     } catch (e) {
       console.log(e);
+      showError(e.message)
     } finally {
+      setLoading(false)
     }
   };
 
 
 
   useEffect(() => {
-    (async () => {
-      let data = await fetchProducts();
-      setData(data?.result);
-      setTotalRecords(data?.totalRecords);
-    })();
+    fetchProducts();
   }, [lazyState2,submitted,stateFilters,sortState]);
 
   const allowExpansion = (rowData) => {
@@ -1135,12 +1147,16 @@ const ImpaCode = ({ impas }) => {
 const ExpansionDetails = ({ data }) => {
   const [vat, setVat] = useState("");
   const handleVat = async () => {
-    const res = await axios.post("/api/vat", {
-      action: "findVatName",
-      VAT: data?.VAT,
-    });
-
-    setVat(res.data.result);
+    try {
+      const res = await axios.post("/api/vat", {
+        action: "findVatName",
+        VAT: data?.VAT,
+      });
+  
+      setVat(res.data.result);
+    } catch (e) {
+      setVat(null)
+    }
   };
   useEffect(() => {
     handleVat();
@@ -1165,15 +1181,15 @@ const ExpansionDetails = ({ data }) => {
       <div className="expansion_row">
         <div className="disabled-card">
           <label>Κόστος</label>
-          <InputText disabled value={data?.COST.toFixed(2)} />
+          <InputText disabled value={data?.COST?.toFixed(2)} />
         </div>
         <div className="disabled-card">
           <label>Τιμή Λιανικής</label>
-          <InputText disabled value={data?.PRICER.toFixed(2)} />
+          <InputText disabled value={data?.PRICER?.toFixed(2)} />
         </div>
         <div className="disabled-card">
           <label>Τιμή Χονδρικής</label>
-          <InputText disabled value={data?.PRICEW.toFixed(2)} />
+          <InputText disabled value={data?.PRICEW?.toFixed(2)} />
         </div>
       </div>
       <div className="expansion_row">
@@ -1198,12 +1214,12 @@ const ExpansionDetails = ({ data }) => {
       </div>
       <div className="disabled-card">
         <label>Περιγραφή</label>
-        <InputTextarea autoResize disabled value={data.description} />
+        <InputTextarea autoResize disabled value={data?.description} />
       </div>
 
       <div className="disabled-card">
         <label>Αγγλική Περιγραφή</label>
-        <InputTextarea autoResize disabled value={data.descriptions?.en} />
+        <InputTextarea autoResize disabled value={data?.descriptions?.en} />
       </div>
     </div>
   );

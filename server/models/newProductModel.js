@@ -25,6 +25,7 @@ const softoneProduct = new mongoose.Schema({
     CODE2: {
         type: String,
         index: true,
+        // κωδικός Eργοαστασίου
     }, 
     MTRCATEGORY: {
         type: Number,
@@ -83,6 +84,7 @@ const softoneProduct = new mongoose.Schema({
     },
     images: [{
         name: String,
+        url: String,
     }],
     hasImage: {
         type: Boolean,

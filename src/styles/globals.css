@@ -72,7 +72,11 @@ form {
 
 
 
+.p-button.p-button-sm {
+    font-size: 0.8rem;
+    padding: 0.55rem 0.9rem;
 
+}
 /* label for all input elements */
 .custom_label {
     /* block mb-1 text-sm font-medium text-gray-700 */
@@ -149,6 +153,11 @@ form {
     min-width: 100px;
 }
 
+.input_med {
+    max-width: 150px;
+
+}
+
 .custom_search_input {
     font-size: 0.85rem;
     padding: 0.57rem 0.57rem;
@@ -208,7 +217,7 @@ form {
 
 /* DATATABLE */
 .p-datatable .p-datatable-tbody > tr > td {
-    padding: 0.4rem 0.5rem;
+    padding: 0.55rem 0.5rem;
 }
 .p-filter-column {
     padding: 5px;
@@ -343,6 +352,9 @@ form {
     background: #cdcdcda7;
     border-radius: 8px;
 }
+
+
+
 
 @media screen and (max-width: 469px) {
     .product_form_grid_row {

@@ -96,6 +96,7 @@ export default async function handler(req, res) {
                 response.message = 'Δεν δημιουργήθηκε το προϊόν';
                 return res.status(400).json(response);
             }
+            console.log(product)
             response.success = true;
             response.result = product;
             return res.status(200).json(response);

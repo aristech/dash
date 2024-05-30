@@ -34,6 +34,7 @@ export default async function handler(req, res) {
             await connectMongo();
           
             let filterConditions = {};
+            console.log({stateFilters})
             //CATEGORIZATION:
             if(stateFilters?.MTRCATEGORY) {
                 filterConditions.MTRCATEGORY =stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY;
@@ -100,8 +101,12 @@ export default async function handler(req, res) {
                 return res.status(200).json({ success: true, totalRecords: totalRecords, result: products });
             }
 
-          
-            const totalRecords = await SoftoneProduct.countDocuments();
+            // if(Object.keys(filterConditions).length === 0) {
+            //     totalRecords = await SoftoneProduct.countDocuments();
+            // } else {
+                
+            // }
+            const totalRecords = await SoftoneProduct.countDocuments(filterConditions);
             const softonefind = await SoftoneProduct.find(filterConditions)
                 .populate('impas')
                 .sort(sortState)
