@@ -55,7 +55,6 @@ import ProductImagesComp from "@/components/grid/Product/ProductImageComp";
 import { Image as PrimeImage } from "primereact/image";
 import Link from "next/link";
 import { Message } from "primereact/message";
-import FilterManufacturer from "@/components/grid/Product/FilterManufacturer";
 import { SearchAndSort } from "@/components/Forms/SearchAndSort";
 import DropdownCategories from "@/components/Forms/DropdownCategories";
 import DropdownGroups from "@/components/Forms/DropdownGroups";

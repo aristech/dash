@@ -125,7 +125,6 @@ export default function TemplateDemo() {
   
 
     const ActionBodyTemplate = (rowData) => {
-            // <GridActions onDelete={onDelete} onEdit={editProduct} rowData={rowData} />
         const op = useRef(null);
         return (
             <div className='flex align-items-center justify-content-center'>

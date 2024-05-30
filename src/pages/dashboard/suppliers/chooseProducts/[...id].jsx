@@ -46,9 +46,6 @@ const ChooseProducts = () => {
 
 
 
-
- 
-
   const handleFinalSubmit = async () => {
     let { data } = await axios.post('/api/createOrder', {
       action: 'createBucket',
@@ -62,9 +59,8 @@ const ChooseProducts = () => {
   }
   return (
     <AdminLayout>
-      <StepHeader text="Προσθήκη Προϊόντων στο bucket" />
+      <StepHeader text="Προσθήκη Προϊόντων Στον Κουβά" />
       <ProductSearchGrid />
- 
       {selectedProducts.length !== 0 ? (
          <div className='mt-3'>
           <StepHeader text="Επιλεγμένα Προϊόντα" />

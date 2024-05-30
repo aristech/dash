@@ -37,7 +37,7 @@ const Page = () => {
   }
   return (
     <AdminLayout>
-      <StepHeader text="Προσθήκη Προϊόντων στο bucket" />
+      <StepHeader text="Προσθήκη Προϊόντων Στον Κουβά" />
       <ProductSearchGrid />
       {selectedProducts.length > 0 ? (
         <div className='mt-4'>

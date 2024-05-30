@@ -135,53 +135,27 @@ const Table = ({data, loading, mongoKeys, attributes}) => {
     const {selectedSupplier} = useSelector(state => state.supplierOrder)
     const [newData, setNewData] = useState([])
 
-    function generateUniqueCode() {
-        const characters = '0123456789';
-        let uniqueCode = '';
-        for (let i = 0; i < 10; i++) {
-            const randomIndex = Math.floor(Math.random() * characters.length);
-            uniqueCode += characters.charAt(randomIndex);
-        }
-        return uniqueCode;
-    }
+    
 
     const name = selectedSupplier?.NAME
     const trdr = selectedSupplier?.TRDR
 
-    const handleFetch = async (code, name) => {
-        let {data} = await axios.post('/api/uploadedProducts', {
-            action: 'returnedUploadedProducts',
-            UNIQUE_CODE: code,
-            NAME: name
-        })
-        setNewData(prev => [...prev, data.result])
-    }
+    // const handleFetch = async (code, name) => {
+    //     let {data} = await axios.post('/api/uploadedProducts', {
+    //         action: 'returnedUploadedProducts',
+    //         UNIQUE_CODE: code,
+    //         NAME: name
+    //     })
+    //     setNewData(prev => [...prev, data.result])
+    // }
 
     const handleSubmit = async () => {
-
-        // const code = generateUniqueCode();
-        // let products = [...returnedProducts]
-        // for (let i = 0; i < data.length; i++) {
-        //     const {data} = await axios.post('/api/insertProductFromFile', {
-        //         data: data[i],
-        //         action: 'importCSVProducts',
-        //         SUPPLIER_NAME: name,
-        //         SUPPLIER_TRDR: trdr,
-        //         UNIQUE_CODE: code,
-        //     })
-        //     // products.push(data.result)
-        //
-        //     const returned = await handleFetch(code, data[i].NAME)
-        //
-        // }
-        // setReturnedProducts(products)
-
         const res = await axios.post('/api/insertProductFromFile', {
             data: data,
-            // action: 'importCSVProducts',
             SUPPLIER_NAME: name,
             SUPPLIER_TRDR: trdr,
         })
+        console.log(res.data)
     }
 
 
