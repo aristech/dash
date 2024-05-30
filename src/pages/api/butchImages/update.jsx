@@ -17,8 +17,13 @@ export default async function handler(req, res) {
     const { data } = req.body;
 
     try {
+        let countSuccess = 0;
+        let countNotFound = 0;
+        let countError = 0;
         for (let product of data) {
             let result = {};
+            
+            let field;
             const { images,  ...rest } = product;
             const filter = {};
             const update = { 
@@ -31,6 +36,7 @@ export default async function handler(req, res) {
 
             for (const key in rest) {
                 filter[key] = rest[key];
+                field = rest[key];
             }
             console.log({filter})
             const productData = await SoftoneProduct.findOneAndUpdate(
@@ -38,25 +44,30 @@ export default async function handler(req, res) {
                 update,
                 { new: true }
             );
-            console.log({productData})
-            if (productData) {
-                result.success = true;
-                result.NAME = productData.NAME;
+                //COMMON DATA:
+                result.NAME = productData?.NAME || 'Δεν βρέθηκε προϊόν με τον Κωδικό:'
+                result.code = field;
                 result.imageName = images;
+            if (productData) {
+                //PRODUCT FOUND:
+                countSuccess++;
+                result.success = true;
                 result.message = "UPDATED";
             } else {
-                result.success = false;
-                result.NAME = product.NAME;
+                //PRODUCT NOT FOUND:
+                countError++;
                 result.imageName = images;
                 result.message = "NOT FOUND";
             }
             response.success = true;
+            response.countSuccess = countSuccess;
+            response.countNotFound = countNotFound;
             response.message = 'Τα προϊόντας ενημερώθηκαν επιτυχώς'
             response.result.push(result);
         }
         return res.status(200).json(response);
     } catch (e) {
-        console.error("Error updating products:", error);
+        console.error("Error updating products:", e);
         response.error = e.message;
         return res.status(500).json(response);
     }

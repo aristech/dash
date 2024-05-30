@@ -338,7 +338,18 @@ form {
 }
 
 
+/*UPLOAD IMAGES */
+.status_success {
+    color: green;
+    color: rgb(6, 82, 6);
+    font-size: 0.8rem;
+}
 
+.status_error {
+    background-color: red;
+    color: rgb(136, 15, 15);
+    font-size: 0.8rem;
+}
 ::-webkit-scrollbar {
     width: 5px;
     height: 12px;
