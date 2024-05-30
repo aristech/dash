@@ -4,7 +4,7 @@ import {Column} from "primereact/column";
 import {Button} from "primereact/button";
 import AdminLayout from "@/layouts/Admin/AdminLayout";
 import {useRouter} from "next/router";
-import {setClearKeys, setAttribute, setSelectedMongoKey, removeSelectedKey} from "@/features/catalogSlice";
+import {setClearKeys, setAttribute, setSelectedMongoKey, removeSelectedKey, setNewData} from "@/features/catalogSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {Dropdown} from "primereact/dropdown";
 import {Toast} from "primereact/toast";
@@ -13,9 +13,8 @@ import {Dialog} from 'primereact/dialog';
 import Input from "@/components/Forms/PrimeInput";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {mongo} from "mongoose";
 import * as yup from "yup";
-
+import axios from "axios";
 
 const REQUIRED_KEY = "CODE2";
 const OUR_DATABASE_KEYS = [
@@ -45,30 +44,49 @@ const Page = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const toast = useRef(null);
-    const {gridData, headers, mongoKeys, attributes} = useSelector(
-        (state) => state.catalog
-    );
-    useEffect(() => {
-        console.log({gridData})
-        if (!gridData) router.push("/dashboard/catalogs");
-        dispatch(setClearKeys())
-    }, []);
+    const {gridData, mongoKeys, attributes} = useSelector((state) => state.catalog);
 
+    useEffect(() => {
+        dispatch(setClearKeys());
+    },[])
+    const showError = ({message, summary}) => {
+        toast.current.show({
+            severity: "error",
+            summary:summary,
+            detail: message,
+            life: 6000,
+        });
+    };
+
+
+    const renderColumns = () => {
+        //make this correct:
+        if(gridData && !gridData.length) {
+            router.push('/dashboard/suppliers')
+            return;
+        
+        };
+        const columns = Object.keys(gridData[0])
+        return columns.map((col, index) => {
+            return (
+                <Column
+                        filterElement={SelectTemplate}
+                        showFilterMenu={false}
+                        filter
+                        key={col}
+                        field={col}
+                        header={col}
+                    />
+            ) ;
+        });
+    };
 
     useEffect(() => {
         console.log({attributes})
         console.log({mongoKeys})
     }, [attributes, mongoKeys]);
 
-    const showError = (message) => {
-        toast.current.show({
-            severity: "error",
-            summary: "Το κλειδί είναι υποχρεωτικό!",
-            detail: message,
-            life: 6000,
-        });
-    };
-
+   
 
     const handleMongoKeysChange = () => {
         const codeCondition = mongoKeys.some((key) => key.related === REQUIRED_KEY);
@@ -76,15 +94,37 @@ const Page = () => {
         return true;
     };
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
         let condition = handleMongoKeysChange();
         if (!condition) {
             showError("Πρέπει να επιλέξεις στήλη τον ΚΩΔΙΚΟ ΕΡΓΟΣΤΑΣΙΟΥ");
             return;
         }
+        try {
+            const {data} = await axios.post("/api/catalogs/format-data", {
+                data: gridData,
+                mongoKeys,
+                attributes,
+            })
+            if(data.success) {
+                dispatch(setNewData(data.result))
+                router.push("/dashboard/catalogs/result");
 
-        // setSelectedMongoKey([]);
-        router.push("/dashboard/catalogs/result");
+            } else {
+                showError({
+                    message: 'Σφάλμα δεν έγινε αντιστοίχηση',
+                    summary: 'Request Error'
+                })
+            }
+        } catch(e) {
+            console.error(e.message)
+            showError({
+                message: 'Προέκυψε κάποιο σφάλμα! Παρακαλώ δοκιμάστε ξανά',
+                summary: 'Server Error'
+            })
+        } 
+       
+        
     };
 
     return (
@@ -118,17 +158,8 @@ const Page = () => {
                 value={gridData.slice(0, 5)}
                 tableStyle={{minWidth: "50rem"}}
                 filterDisplay="row"
-            >
-                {headers.map((header, index) => (
-                    <Column
-                        filterElement={SelectTemplate}
-                        showFilterMenu={false}
-                        filter
-                        key={header.field}
-                        field={header.field}
-                        header={header.field}
-                    />
-                ))}
+            >   
+               {renderColumns()}
             </DataTable>
             <Button label="Διαμόρφωση" onClick={onSubmit} className="mt-2"/>
         </AdminLayout>
@@ -137,11 +168,11 @@ const Page = () => {
 
 const schema = yup.object().shape({
     name: yup.string().required("Το όνομα είναι υποχρεωτικό")
-        .matches(
-            /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff0-9_\- ]+)$/gi,
-            'Το όνομα μπορεί να περιέχει μόνο λατινικά γράμματα, αριθμούς, κάτω παύλες, παύλες και κενά.'
-        ),
-    header: yup.string().required("Το όνομα είναι υποχρεωτικό"),
+        // .matches(
+        //     /^([A-Za-z\u00C0-\u00D6\u00D8-\u00f6\u00f8-\u00ff0-9_\- ]+)$/gi,
+        //     'Το όνομα μπορεί να περιέχει μόνο λατινικά γράμματα, αριθμούς, κάτω παύλες, παύλες και κενά.'
+        // ),
+    // header: yup.string().required("Το όνομα είναι υποχρεωτικό"),
 })
 
 
@@ -172,11 +203,6 @@ const SelectTemplate = ({field}) => {
         }
         const {key, header} = e.value;
         setSelectedOption(e.value);
-
-        // const updatedPairs = mongoKeys.filter((item) => item.key !== field);
-        // updatedPairs.push({ key: field, related: key, header: header });
-        // setMongoKeys(updatedPairs);
-
         //update mongoKeys state:
         dispatch(setSelectedMongoKey({
             oldKey: field,
@@ -188,7 +214,7 @@ const SelectTemplate = ({field}) => {
 
     //on adding a custom attribute
     const onDialogSubmitCustomAttribute = (data) => {
-        console.log({data})
+        
         let previousOptions = [...options];
         previousOptions.push({
             key: data.name,
@@ -205,7 +231,6 @@ const SelectTemplate = ({field}) => {
         dispatch(setAttribute({
             name: data?.name,
             oldKey: field,
-            header: data?.header,
         }))
     }
 
@@ -281,14 +306,7 @@ const SelectTemplate = ({field}) => {
                         control={methods.control}
                         required
                         error={methods.formState.errors.name}
-                    /> <Input
-                    label="Όνομα Πεδίου για Κατανόηση Χρήστη"
-                    name="header"
-                    id="header"
-                    control={methods.control}
-                    required
-                    error={methods.formState.errors.header}
-                />
+                        />
                 </form>
             </Dialog>
         </div>

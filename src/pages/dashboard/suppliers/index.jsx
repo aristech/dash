@@ -157,28 +157,18 @@ export default function Page() {
 
         dispatch(setSelectedSupplier(rowData))
         const reader = new FileReader();
+        
         reader.readAsArrayBuffer(e.target.files[0]);
         reader.onload = async (e) => {
-
             const data = e.target.result;
-            let upload = await uploadBunnyFolderName(data, fileName, 'catalogs')
+            await uploadBunnyFolderName(data, fileName, 'catalogs')
             const workbook = XLSX.read(data, { type: 'array' });
             const sheetName = workbook.SheetNames[0];
             const sheet = workbook.Sheets[sheetName];
             const parsedData = XLSX.utils.sheet_to_json(sheet);
             dispatch(setGridData(parsedData))
-
-            if (parsedData.length > 0) {
-                const firstRow = parsedData[0];
-                const headers = Object.keys(firstRow).map((key) => ({
-                    field: key,
-                }));
-                dispatch(setHeaders(headers))
-                setFileLoading(false)
-                router.push('/dashboard/catalogs/upload-catalog')
-
-
-            }
+            router.push('/dashboard/catalogs/upload-catalog')
+           
         };
     };
 

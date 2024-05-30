@@ -10,7 +10,8 @@ export default async function handler(req, res) {
     error: null,
     data: null,
   };
-
+  
+  console.log({data})
   await connectMongo();
   const { SOFTONE_DATA, PRODUCT_DATA } = createData(data);
 

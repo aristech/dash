@@ -6,6 +6,7 @@ import impaofferSlice from "./features/impaofferSlice";
 import supplierOrderSlice from "./features/supplierOrderSlice";
 import productsSlice from "./features/productsSlice";
 import pdfSlice from "./features/pdfSlice";
+import uploadImagesSlice from "./features/uploadImagesSlice";
 import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage'
 import {
@@ -23,7 +24,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['products', 'user', 'catalog'],
+  blacklist: ['products', 'user', 'catalog', 'uploadImages'],
 
 }
 const reducers = combineReducers({
@@ -34,6 +35,7 @@ const reducers = combineReducers({
     supplierOrder: supplierOrderSlice,
     products: productsSlice,
     pdf: pdfSlice,
+    uploadImages: uploadImagesSlice,
 })
 
 

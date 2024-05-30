@@ -338,6 +338,7 @@ function Product() {
         <StepHeader text="Προϊόντα" />
       </div>
       <Button
+        size="small"
         type="button"
         className="mb-3"
         severity="secondary"
@@ -388,6 +389,7 @@ function Product() {
         <DataTable
           header={() => (
             <RenderHeader
+              setVisibleColumns={setVisibleColumns}
               selectedProducts={selectedProducts}
               setStateFilters={setStateFilters}
               stateFilters={stateFilters}

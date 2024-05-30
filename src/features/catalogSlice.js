@@ -5,13 +5,7 @@ const initialState = {
     data: [],
     attributes: [],
     mongoKeys: [],
-
     newData: [],
-    headers: [],
-    // selectedPriceKey: null,
-    // selectedHeaders: null,
-    // dropdownValue: null,
-    // object: [],
     returnProducts: [],
 }
 
@@ -28,16 +22,6 @@ const catalogSlice = createSlice({
         },
         setNewData: (state, {payload}) => {
             state.newData = payload;
-        },
-        setCurrentPage: (state, {payload}) => {
-            state.currentPage = payload;
-        },
-
-        setHeaders: (state, {payload}) => {
-            state.headers = payload;
-        },
-        setSelectedHeaders: (state, {payload}) => {
-            state.selectedHeaders = payload;
         },
 
         setSelectedMongoKey: (state, {payload}) => {
@@ -89,16 +73,12 @@ const catalogSlice = createSlice({
 
 export const {
     setGridData,
-    setHeaders,
     setSelectedMongoKey,
     removeSelectedKey,
     setAttribute,
     setClearKeys,
-    // setSelectedPriceKey,
-    // setPricesMultiplier,
     setNewData,
     setReturnedProducts,
-    setData,
 } = catalogSlice.actions;
 
 export default catalogSlice.reducer;

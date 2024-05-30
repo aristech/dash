@@ -1,15 +1,14 @@
 import React, { useState, useRef } from 'react'
 import * as XLSX from 'xlsx';
-import { setHeaders } from '@/features/catalogSlice';
 import { useRouter } from 'next/router';
 import { Button } from 'primereact/button';
 import { useDispatch } from 'react-redux';
-import { setGridData } from '@/features/catalogSlice';
-import { Toast } from 'primereact/toast';
+import { setGridData } from '@/features/uploadImagesSlice';
 
 const MassiveImageUpload = () => {
+    
     const fileInputRef = useRef(null);
-    const toast = useRef(null);
+    
     const router = useRouter();
     const dispatch = useDispatch();
     const [fileLoading, setFileLoading] = useState(false)
@@ -24,27 +23,12 @@ const MassiveImageUpload = () => {
             const sheet = workbook.Sheets[sheetName];
             const parsedData = XLSX.utils.sheet_to_json(sheet);
             dispatch(setGridData(parsedData))
-
-            if (parsedData.length > 0) {
-                const firstRow = parsedData[0];
-                const headers = Object.keys(firstRow).map((key) => ({
-                    field: key,
-                }));
-                dispatch(setHeaders(headers))
-                setFileLoading(false)
-                router.push('/dashboard/product/multi-image-upload')
-            } else {
-                setFileLoading(false)
-                showWarn()
-                return;
-            }
-              
+            setFileLoading(false)
+            router.push('/dashboard/product/upload-images/transform')
         };
     };
 
-    const showWarn = () => {
-        toast.current.show({severity:'warn', summary: 'Warning', detail:'Δεν βρέθηκαν δεδομένα στο αρχείο', life: 3000});
-    }
+   
     const onUploadClick = () => {
         fileInputRef.current.click()
     }
@@ -52,13 +36,11 @@ const MassiveImageUpload = () => {
    
     return (
         <div>
-            <Toast ref={toast} />
             <input hidden className="hide" ref={fileInputRef} type="file" onChange={(e) => handleFileUpload(e)} />
             <Button className='w-full' severity='warning' loading={fileLoading} onClick={onUploadClick} label="Ανέβασμα Φωτογραφιών xlsx" icon="pi pi-upload"></Button>
         </div>
     )
 }
-
 
 
 

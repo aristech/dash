@@ -59,7 +59,6 @@ export default function DropdownCategories({
       )}
       <div className="custom_dropdown_wrapper">
         <Dropdown
-          loading
           filter
           disabled={loading}
           size="small"

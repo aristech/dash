@@ -61,7 +61,6 @@ export default function DropdownSubroups({
       <div className="custom_dropdown_wrapper">
       <Dropdown
         filter
-        loading
         disabled={!groupId}
         value={state}
         onChange={(e) => handleState( e.target.value)}

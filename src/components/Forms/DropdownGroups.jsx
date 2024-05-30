@@ -11,10 +11,13 @@ export default function DropdownGroups({
   error,
   required = false,
   categoryId,
+  type,
 }) {
   const [options, setOptions] = useState([]);
   
-  console.log({categoryId})
+
+
+
   const handleFetch = async () => {
     let { data } = await axios.post("/api/product/apiProductFilters", {
       action: "findGroups",
@@ -24,6 +27,7 @@ export default function DropdownGroups({
   };
 
   useEffect(() => {
+    if(!categoryId) return
     (async () => {
       await handleFetch();
     })();
