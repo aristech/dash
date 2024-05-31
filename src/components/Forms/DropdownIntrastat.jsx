@@ -37,7 +37,7 @@ export default function DropdownIntrastat ({
  
   
     return (
-      <div>
+      <div className="w-full">
         <label className={`custom_label ${error ? "text-red-500" : null}`}>
             INTRASTAT
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
@@ -49,7 +49,7 @@ export default function DropdownIntrastat ({
           options={options}
           optionLabel="NAME"
           placeholder="INTRASTAT"
-          className="w-full custom_dropdown"
+          className="custom_dropdown"
         />
         {error && <p className="text-red-500 mt-1">{error}</p>}
       </div>

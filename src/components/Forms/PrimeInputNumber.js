@@ -29,7 +29,6 @@ const PrimeInputNumber = ({
           >
             {label} {required && <span className="required">*</span>}
           </label>
-          <span>
             <InputNumber
               name={name}
               maxFractionDigits={maxFractionDigits}
@@ -44,7 +43,6 @@ const PrimeInputNumber = ({
               className={`custom_input ${classNames({ "p-invalid": fieldState.error })}`}
               onValueChange={(e) => field.onChange(e)}
             />
-          </span>
           <div className="error-div">
             {error && <span className="text-red-600">{error.message}</span>}
           </div>

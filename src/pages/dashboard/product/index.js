@@ -215,6 +215,7 @@ function Product() {
 
   const [stateFilters, setStateFilters] = useState(INITIAL_STATE_FILTERS);
 
+  console.log({stateFilters})
   const showError = (message) => {
     toast.current.show({
       severity: "error",
@@ -250,7 +251,9 @@ function Product() {
   };
 
 
-
+  useEffect(() => {
+      dispatch(setSelectedProducts([]))
+  }, [])
   useEffect(() => {
     fetchProducts();
   }, [lazyState2,submitted,stateFilters,sortState]);
@@ -399,6 +402,7 @@ function Product() {
         <DataTable
           header={() => (
             <RenderHeader
+              INITIAL_STATE_FILTERS={INITIAL_STATE_FILTERS}
               setVisibleColumns={setVisibleColumns}
               selectedProducts={selectedProducts}
               setStateFilters={setStateFilters}
@@ -460,7 +464,7 @@ function Product() {
               showFilterMenu={false}
               filterElement={() => (
                 <SearchAndSort
-                  state={stateFilters.nameSearch}
+                  state={stateFilters?.nameSearch}
                   handleState={(value) =>
                     setStateFilters((prev) => ({ ...prev, nameSearch: value }))
                   }
@@ -729,6 +733,8 @@ const RenderHeader = ({
   setVisibleColumns,
   INITIAL_STATE_FILTERS
 }) => {
+
+  console.log({INITIAL_STATE_FILTERS})
   const ref = useRef(null);
  
 
@@ -780,7 +786,7 @@ const RenderHeader = ({
           <OverlayPanel ref={ref} className="h-26rem overflow-y-scroll">
             <div className="form">
               <DropdownCustom
-                state={stateFilters.SOFTONESTATUS}
+                state={stateFilters?.SOFTONESTATUS}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, SOFTONESTATUS: val }))
                 }
@@ -793,7 +799,7 @@ const RenderHeader = ({
                 ]}
               />
               <DropdownCustom
-                state={stateFilters.ISACTIVE}
+                state={stateFilters?.ISACTIVE}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, ISACTIVE: val }))
                 }
@@ -806,7 +812,7 @@ const RenderHeader = ({
                 ]}
               />
               <DropdownCustom
-                state={stateFilters.isSkroutz}
+                state={stateFilters?.isSkroutz}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, isSkroutz: val }))
                 }
@@ -819,7 +825,7 @@ const RenderHeader = ({
                 ]}
               />
               <DropdownCategories
-                state={stateFilters.MTRCATEGORY}
+                state={stateFilters?.MTRCATEGORY}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, MTRCATEGORY: val }))
                 }
@@ -833,7 +839,7 @@ const RenderHeader = ({
                 }
               />
               <DropdownGroups
-                state={stateFilters.MTRGROUP}
+                state={stateFilters?.MTRGROUP}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, MTRGROUP: val }))
                 }
@@ -846,7 +852,7 @@ const RenderHeader = ({
                 }
               />
               <DropdownSubroups
-                state={stateFilters.CCCSUBGROUP2}
+                state={stateFilters?.CCCSUBGROUP2}
                 handleState={() =>
                   setStateFilters((prev) => ({ ...prev, CCCSUBGROUP2: val }))
                 }
@@ -855,19 +861,19 @@ const RenderHeader = ({
                 }
               />
               <DropdownManufacturers
-                state={stateFilters.MANUFACTURER}
+                state={stateFilters?.MANUFACTURER}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, MANUFACTURER: val }))
                 }
               />
               <DropdownBrands
-                state={stateFilters.MTRMARK}
+                state={stateFilters?.MTRMARK}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, MTRMARK: val }))
                 }
               />
               <DropdownCustom
-                state={stateFilters.images}
+                state={stateFilters?.images}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, images: val }))
                 }
@@ -882,16 +888,7 @@ const RenderHeader = ({
             </div>
           </OverlayPanel>
         </div>
-        <div className="ml-2">
-          <MultiSelect
-            className="w-15rem"
-            value={visibleColumns}
-            options={columns}
-            onChange={onColumnToggle}
-            optionLabel="header"
-            display="chip"
-          />
-        </div>
+        
       </div>
       <div>
         <XLSXDownloadButton products={selectedProducts} />

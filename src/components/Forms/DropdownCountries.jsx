@@ -34,7 +34,7 @@ export default function CountriesDropdown({
     }, [])
 
     return (
-        <div className="">
+        <div  className="w-full">
             <label className={`custom_label ${error && "text-red-500"}`}>Χώρα {required && "*"}</label>
             <Dropdown
                 className='w-full custom_dropdown'

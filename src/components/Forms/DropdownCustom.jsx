@@ -16,7 +16,7 @@ export default function DropdownCustom({
 
 
     return (
-        <div className="">
+        <div className="w-full">
             <label className={`custom_label ${error && "text-red-500"}`}>{label} {required && "*"}</label>
             <Dropdown
                 showClear

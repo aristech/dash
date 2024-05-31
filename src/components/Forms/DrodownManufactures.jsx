@@ -37,13 +37,12 @@ export default function DropdownManufacturers ({
    
   
     return (
-      <div>
+      <div  className="w-full">
         <label className={`custom_label ${error ? "text-red-500" : null}`}>
             Κατασκευαστής 
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
         <Dropdown
-          filter
           value={state}
           onChange={(e) => handleState(e.target.value)}
           options={options}

@@ -49,7 +49,7 @@ export default function DropdownSubroups({
 
 
   return (
-    <div>
+    <div className="w-full">
       {
         !isFilter ? (
           <label className={`custom_label ${error ? "text-red-500" : null}`}>

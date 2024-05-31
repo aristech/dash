@@ -26,7 +26,6 @@ const Input = ({
           >
             {label} {required && <span className="required">*</span>}
           </label>
-          <span>
             <InputText
               name={name}
               type={type}
@@ -38,7 +37,6 @@ const Input = ({
               })}`}
               onChange={(e) => field.onChange(e.target.value)}
             />
-          </span>
           <div className="mt-2">
             {error && <span className="text-red-600">{error.message}</span>}
           </div>
@@ -64,7 +62,7 @@ export const TextAreaInput = ({
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <div>
+        <div className="w-full">
           <label
             htmlFor={name}
             className={`custom_label ${classNames({

@@ -57,7 +57,7 @@ const ProductActions = ({ rowData, onEdit, onEditClass, onAdd }) => {
 			return;
 		}
 		dispatch(setSingleProductForSoftone(rowData))
-		router.push('/dashboard/add-to-softone/add')
+		router.push('/dashboard/add-to-softone')
 	}
 
 	const handleAddToBucket = () => {

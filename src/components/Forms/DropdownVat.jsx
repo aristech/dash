@@ -24,7 +24,7 @@ const VatDropdown = ({ state, handleState, isEdit =false, error, required = fals
 
     
     return (
-      <div className="">
+      <div className="w-full">
         <label className={`custom_label ${error ? "text-red-500" : null}`}>Αλλαγή ΦΠΑ {required && "*"}</label>
         <Dropdown
           value={state}

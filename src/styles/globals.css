@@ -106,8 +106,10 @@ form {
 }
 
 
+
 .custom_dropdown.p-dropdown {
     width: 100%;
+    min-width: 120px;
 }
 
 .dropdown-md.p-dropdown {
@@ -151,6 +153,13 @@ form {
     padding: 0.57rem 0.57rem;
     width: 100%;
     min-width: 100px;
+}
+
+
+
+/* NUMBER INPUT: */
+.p-inputnumber.p-component.p-inputwrapper.p-inputwrapper-filled.custom_input {
+    width: 100%;
 }
 
 .input_med {
@@ -311,8 +320,16 @@ form {
 }
 
 .product_form_grid_row {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(2, calc(50% - 10px));
     column-gap: 10px;
+    
+}
+.product_form_grid_row_three {
+    display: grid;
+    grid-template-columns: repeat(3, calc(33.3333% -  10px));
+    column-gap: 10px;
+    
 }
 
 .catalogs_form {
@@ -350,6 +367,27 @@ form {
     color: rgb(136, 15, 15);
     font-size: 0.8rem;
 }
+
+.plus_button {
+    background-color: rgb(236, 236, 236);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 5px;
+    width:28px;
+    height: 28px;
+    cursor: pointer;
+    outline: none;
+    border: none;
+    color: rgb(53, 53, 53);
+}
+
+.plus_button i {
+    color: #7274f3;
+    font-size: 0.8rem;
+}
+
 ::-webkit-scrollbar {
     width: 5px;
     height: 12px;
@@ -365,12 +403,15 @@ form {
 }
 
 
-
-
-@media screen and (max-width: 469px) {
+@media screen and (max-width: 700px) {
     .product_form_grid_row {
-        display: flex;
-        flex-wrap: wrap;
-        row-gap: 15px;
+        grid-template-columns: 1fr;
+        row-gap: 10px;
     }
+
+    .product_form_grid_row_three {
+        grid-template-columns: 1fr;
+        row-gap: 10px;
+    }
+    
 }

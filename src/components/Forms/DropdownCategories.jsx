@@ -16,7 +16,7 @@ export default function DropdownCategories({
   //setValue comes from react-hook-forms, it is used to set the value of the dropdown
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  console.log({ state })
   const handleFetch = async () => {
     setLoading(true);
     let { data } = await axios.post("/api/product/apiProductFilters", {
@@ -50,7 +50,7 @@ export default function DropdownCategories({
 
 
   return (
-    <div>
+    <div className="w-full">
       {!isFilter && (
         <label className="custom_label">
           Κατηγορία
@@ -59,7 +59,6 @@ export default function DropdownCategories({
       )}
       <div className="custom_dropdown_wrapper">
         <Dropdown
-          filter
           disabled={loading}
           size="small"
           value={state}

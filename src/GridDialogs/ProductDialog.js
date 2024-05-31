@@ -8,9 +8,8 @@ import axios from "axios";
 import {useForm} from "react-hook-form";
 import * as yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {Toast} from "primereact/toast";
-import {Container} from "@/componentsStyles/dialogforms";
 import {TranslateInput} from "@/components/Forms/TranslateInput";
 import {setSubmitted} from "@/features/productsSlice";
 import PrimeInputNumber from "@/components/Forms/PrimeInputNumber";
@@ -292,7 +291,7 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
                     />
 
                     <p className="mt-2 font-bold text-lg">Κωδικοί</p>
-                    <div className="product_form_grid_row">
+                    <div className="product_form_grid_row_three">
                         <Input
                             label={"Κωδικός ERP"}
                             name={"CODE"}
@@ -307,16 +306,17 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
                             required
                             error={errors.CODE2}
                         />
-                    </div>
-                    <Input
+                         <Input
                         label={"Κωδικός ΕΑΝ"}
                         name={"CODE1"}
                         control={methods.control}
                         required
                         error={errors.CODE1}
                     />
+                    </div>
+                   
                     <p className="mt-2 font-bold text-lg">Τιμές</p>
-                    <div className="product_form_grid_row">
+                    <div className="product_form_grid_row_three">
                         <PrimeInputNumber
                             label={"Τιμή Λιανικής"}
                             name={"PRICER"}
@@ -343,7 +343,7 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
                             maxFractionDigits={2}
                             control={methods.control}
                             required
-                            error={errors.PRICE02}
+                            error={errors?.PRICER02}
                         />
                     </div>
                     <p className="mt-2 font-bold text-lg">Πληροφορίες</p>
@@ -366,7 +366,7 @@ export const ProductDialog = ({dialog, hideDialog, isEdit, data}) => {
                             error={errors.LENGTH}
                         />
                     </div>
-                    <div className="product_form_grid_row">
+                    <div className="product_form_grid_row_three">
                         <PrimeInputNumber
                             label={"Ύψος"}
                             name={"HEIGHT"}

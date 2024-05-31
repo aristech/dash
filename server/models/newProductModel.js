@@ -25,31 +25,26 @@ const softoneProduct = new mongoose.Schema({
     CODE2: {
         type: String,
         index: true,
-        // κωδικός Eργοαστασίου
+        // κωδικός Eργοστασίου
     }, 
     MTRCATEGORY: {
         type: Number,
-        default: 0
     },
     CATEGORY_NAME: String,
     MTRGROUP: {
         type: Number,
-        default: 0
     },
     GROUP_NAME: String,
     CCCSUBGROUP2: {
         type: Number,
-        default: 0
     },
     CCCSUBGROUP: {
         type: Number,
-        default: 0
     },
     SUBGROUP_NAME: String,
     MTRMANFCTR: String,
     MTRMARK: {
         type: Number,
-        default: 0
     },
     VAT: String,
     COUNTRY: String,
