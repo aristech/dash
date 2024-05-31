@@ -1,30 +1,32 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog';
 import { InputText } from "primereact/inputtext";
 import { MultiSelect } from 'primereact/multiselect';
 import { InputTextarea } from 'primereact/inputtextarea';
-import { Checkbox } from "primereact/checkbox";
 import axios from 'axios';
+import { Toast } from 'primereact/toast';
+
 const emails = [
     { email: 'kolleris@info.gr', default: true },
-    { email: 'johnchiout.dev@gmail.com', default: true },
-    { email: 'sample@gmail.com', default: false },
-    { email: 'sample@gmail.com', default: false }
+   
 ];
 
 
 const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, products,setRefetch}) => {
     const [visible, setVisible] = useState(false);
+    const toast = useRef(null)
     const [loading, setLoading] = useState(false)
     const [selectedCC, setSelectedCC] = useState([
         { email: 'kolleris@info.gr', default: true },
-        { email: 'johnchiout.dev@gmail.com', default: true }
     ])
+
+
 
     const [state, setState] = useState({
         visible: false,
+        email: email,
         subject: '',
         message: '',
         checked: true,
@@ -42,7 +44,23 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
     
     }, [])
 
-
+    const showError = (message) => {
+        toast.current.show({
+          severity: "error",
+          summary: message,
+          detail: message,
+          life: 4000,
+        });
+      };
+  
+    const showSuccess = (message) => {
+        toast.current.show({
+          severity: "success",
+          summary: message,
+          detail: message,
+          life: 4000,
+        });
+      };
   
     
 
@@ -58,13 +76,15 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
     const handleMessage = (e) => {
         setState((prev) => ({ ...prev, message: e.target.value }))
     }
-    const handleCheck = (e) => {
-        setState((prev) => ({ ...prev, checked: e.checked }))
+    
+    const handleEmail = (e) => {
+        setState((prev) => ({ ...prev, email: e.target.value }))
     }
 
     const finalSubmit = async () => {
         setLoading(true)
-        let { data } = await axios.post('/api/singleOffer', 
+        try {
+            let { data } = await axios.post('/api/singleOffer', 
             { 
                 action: 'sendEmail',
                 cc: selectedCC,
@@ -78,6 +98,17 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
                 SALDOCNUM: SALDOCNUM, 
                 createdAt: createdAt,
             })
+            console.log({data})
+            if (data.status) {
+                showSuccess(data.message)
+            } else {
+                showError(data.message)
+            }
+        } catch (e) {
+            console.error(e)
+            showError(e.message)
+        }
+        
         setVisible(false)
         setLoading(false)
         setRefetch(prev => !prev)
@@ -91,6 +122,7 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
 
     return (
         <div>
+            <Toast ref={toast} />
             <Button className={`mt-${mt} w-full`} label="Δημιουργία Εmail" icon="pi pi-envelope" onClick={() => setVisible(true)} />
             <Dialog
                 header="Εmail Template"
@@ -101,7 +133,7 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
             >
                 <div className="flex flex-column gap-2">
                     <label className='font-bold' htmlFor="username">Προς:</label>
-                    <InputText value={email}  />
+                    <InputText value={state.email} onChange={handleEmail}  />
                 </div>
                 <div className="flex flex-column gap-2 mt-2">
                     <label className='font-bold mb01' htmlFor="username">Κοινοποίηση:</label>

@@ -224,7 +224,6 @@ function Product() {
     });
   };
   const fetchProducts = async () => {
-    console.log(stateFilters)
     if ( !stateFilters.codeSearch && !stateFilters.impaSearch && !stateFilters.erpCode && !stateFilters.nameSearch) {
         //create a conditional loading state:
         setLoading(true)
@@ -364,7 +363,6 @@ function Product() {
           text="Κάνοντας click πάνω στον πίνακα των προϊόντων, πατώντας τα βελάκια δεξί/αριστερό μπορείτε να πλοηγηθείτε στο εσωτερικό του πίνακα για να δείτε τις στήλες που δεν φαίνονται"
         />
       </div>
-
       <OverlayPanel ref={op}>
         <div className="flex flex-column align-center">
           <Button

@@ -10,11 +10,8 @@ import { Tag } from 'primereact/tag';
 import CreatedAt from '@/components/grid/CreatedAt';
 import SendEmailTemplate from '../emails/SendEmailTemplate';
 import { InputNumber } from 'primereact/inputnumber';
-import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import { uploadBunnyFolderName } from '@/utils/bunny_cdn';
 
 
 const OfferGrid = ({ clientName }) => {
@@ -210,7 +207,7 @@ const OfferGrid = ({ clientName }) => {
                 <Column field="FINCODE" header="Κωδ.Παραστατικού"></Column>
                 <Column field="createdAt" body={CreatedAt} header="Ημ. Δημ."></Column>
                 <Column header="Status" field="status" body={Status} style={{ width: '20%' }} editor={(options) => statusEditor(options)}></Column>
-                <Column field="createdFrom" body={CreatedFrom} header="Created From" style={{ width: '10%' }}></Column>
+                <Column field="createdFrom" body={CreatedFrom} header="Δημιουργήθηκε από" style={{ width: '10%' }}></Column>
                 <Column header="Status Edit" rowEditor headerStyle={{ width: '50px' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column headerStyle={{ width: '30px' }} bodyStyle={{ textAlign: 'end' }} body={Actions}></Column>
             </DataTable>

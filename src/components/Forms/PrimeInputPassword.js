@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Password } from 'primereact/password';
-import { InputContainer } from "./PrimeInput";
 import { Controller} from 'react-hook-form';
 import { classNames } from 'primereact/utils';
 
@@ -10,7 +9,6 @@ import { classNames } from 'primereact/utils';
 export function PrimeInputPass({ name, mb, mt, control,error, label,  }) {
 
     return (
-        <InputContainer mb={mb} mt={mt} error={error}>
             <Controller
                     name={name}
                     control={control}
@@ -32,7 +30,5 @@ export function PrimeInputPass({ name, mb, mt, control,error, label,  }) {
                         </>
                     )}
                 />
-
-        </ InputContainer >
     )
 }

@@ -202,8 +202,8 @@ const ClientHolder = ({ NAME }) => {
                 <Column expander={allowExpansion} style={{ width: '20px', textAlign: 'center' }} />
                 <Column header="Όνομα Πελάτη" field="clientName" body={Client}></Column>
                 <Column header="Kωδ. Παραστατικού" field="FINCODE" style={{ maxWidth: '90px' }}></Column>
-                <Column header="createdAt" field="createdAt" body={CreatedAt}></Column>
-                <Column field="createdFrom" body={CreatedFrom} header="Created From" style={{ width: '60px' }}></Column>
+                <Column header="Ημερομηνία Δημιουργίας" field="createdAt" body={CreatedAt}></Column>
+                <Column  header="Δημιουργήθηκε Από" field="createdFrom"  body={CreatedFrom} style={{ width: '60px' }}></Column>
                 <Column header="Status" field="status" body={Status} style={{ width: '160px' }} editor={(options) => statusEditor(options)}></Column>
                 <Column header="Status Edit" rowEditor headerStyle={{ width: '50px' }} bodyStyle={{ textAlign: 'center' }}></Column>
                 <Column headerStyle={{ width: '30px' }} bodyStyle={{ textAlign: 'end' }} body={Actions}></Column>

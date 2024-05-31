@@ -181,6 +181,7 @@ export default async function handler(req, res) {
             console.log(mtrlArr)
 
             const PURDOC = await getPurdoc(mtrlArr, TRDR)
+            console.log({PURDOC})
             if (!PURDOC) {
                 throw new Error('purdcocum not created')
             }
@@ -308,10 +309,6 @@ export default async function handler(req, res) {
             await connectMongo();
             let find = await PendingOrders.findOne({_id: id});
 
-
-
-
-
             let products = find.products;
             //find the products that the quantity doesnt change
             let rest_products = products.filter(item => item.MTRL !== MTRL);
@@ -356,18 +353,15 @@ export default async function handler(req, res) {
             await connectMongo();
             let find = await PendingOrders.findOne({_id: id, 'products.MTRL': MTRL});
             let products = find.products;
-            console.log('products')
-            console.log(products)
+         
             let remaining = products.filter(item => item.MTRL !== MTRL);
-            console.log('remaining')
-            console.log(remaining)
+          
             let total = 0;
             for(let item of remaining) {
                 total += item.COST * item.QTY1;
             }
 
-            console.log('total')
-            console.log(total)
+            
             let update = await PendingOrders.findOneAndUpdate({_id: id, 'products.MTRL': MTRL}, {
                 $set: {
                     orderCompletionValue: total
@@ -405,6 +399,7 @@ export const getPurdoc = async (data, TRDR) => {
         })
     });
     let resJson = await response.json();
+    console.log({resJson})
     return resJson.PURDOCNUM;
 }
 

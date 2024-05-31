@@ -59,6 +59,8 @@ export default async function handler(req, res) {
                 result.imageName = images;
                 result.message = "NOT FOUND";
             }
+                    // Sort results based on success
+            response.result.sort((a, b) => b.success - a.success);
             response.success = true;
             response.countSuccess = countSuccess;
             response.countNotFound = countNotFound;

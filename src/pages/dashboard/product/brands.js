@@ -1,17 +1,15 @@
-import React, { useState, useEffect, useRef, useReducer } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
 import AdminLayout from '@/layouts/Admin/AdminLayout';
 import axios from 'axios';
-import { Tag } from 'primereact/tag';
 import { FilterMatchMode } from 'primereact/api';
 import { InputText } from 'primereact/inputtext';
 import { Toolbar } from 'primereact/toolbar';
 import { AddDialog, EditDialog } from '@/GridDialogs/brandDialog';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setGridRowData } from '@/features/grid/gridSlice';
-
 import { Toast } from 'primereact/toast';
 import RegisterUserActions from '@/components/grid/GridRegisterUserActions';
 import GridLogoTemplate from '@/components/grid/gridLogoTemplate';
@@ -22,7 +20,7 @@ import { useRouter } from 'next/router';
 import { ImageGrid } from '@/components/bunnyUpload/ImageGrid';
 import styled from 'styled-components';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { setGridData, setHeaders, setSelectedPriceKey, } from '@/features/catalogSlice';
+import { setGridData } from '@/features/catalogSlice';
 import { uploadBunnyFolderName } from '@/utils/bunny_cdn';
 import XLSX from 'xlsx';
 import Link from 'next/link';
@@ -40,7 +38,6 @@ export default function TemplateDemo() {
     const [submitted, setSubmitted] = useState(false);
     const [data, setData] = useState([])
     const toast = useRef(null);
-    const [selectedBrand, setSelectedBrand] = useState(null)
     const [expandedRows, setExpandedRows] = useState(null);
     const [loading, setLoading] = useState(false);
     const [filters, setFilters] = useState({
@@ -218,15 +215,7 @@ export default function TemplateDemo() {
             const parsedData = XLSX.utils.sheet_to_json(sheet);
             dispatch(setGridData(parsedData))
 
-            if (parsedData.length > 0) {
-                const firstRow = parsedData[0];
-                const headers = Object.keys(firstRow).map((key) => ({
-                    field: key,
-                }));
-                dispatch(setHeaders(headers))
-                setFileLoading(false)
-                router.push('/dashboard/catalogs/upload-catalog')
-            }
+           
         };
     };
 

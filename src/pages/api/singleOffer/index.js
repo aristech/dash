@@ -80,6 +80,7 @@ export default async function handler(req, res) {
     }
 
     if(action === "sendEmail") {
+        
         const {products, cc, subject, fileName, message, createdAt, includeFile, clientEmail, clientName, SALDOCNUM} = req.body;
             let newcc = []
             for(let item of cc) {
@@ -88,19 +89,21 @@ export default async function handler(req, res) {
           
            try {
             let csv = await createCSVfile(products)
-            console.log(csv)
             let send = await sendEmail(clientEmail, newcc, subject, message, fileName, csv, includeFile);
-            console.log(send)
-            if(send) {
+            console.log({send})
+            if(send.status) {
                 await SingleOffer.updateOne({SALDOCNUM: SALDOCNUM}, {
                     $set: {
                         status: 'sent'
                     }
                 })
+            } else {
+                return res.status(400).json({ success: send.status, message: send.message })
             }
-            return res.status(200).json({ success: true, send: send})
+
+            return res.status(200).json({ success: true, message: send.message})
            } catch (e) {
-            return res.status(400).json({ success: false })
+            return res.status(400).json({ success: false, message: e.message })
            }
     }
 

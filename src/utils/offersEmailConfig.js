@@ -1,6 +1,6 @@
 
 import { transporter } from "./nodemailerConfig";
-import createCSV from "./createCSVfile";
+
 
 export const sendEmail = (email,cc, subject, message, fileName, file, includeFile) => {
     console.log(email)
@@ -22,13 +22,19 @@ export const sendEmail = (email,cc, subject, message, fileName, file, includeFil
 
     return new Promise((resolve, reject) => {
       transporter.sendMail(mail, (err, info) => {
-        if (err) {
-          console.log(err);
-          resolve(false); // Resolve with false if there's an error
-        } else {
-          console.log('Email sent successfully!');
-          resolve(true); // Resolve with true if the email is sent successfully
-        }
+          if (err) {
+              console.log(err.message);
+              resolve({
+                  status: false,
+                  message: err.message
+              }); // Resolve with an object containing status false and the error message
+          } else {
+              console.log('Email sent successfully!');
+              resolve({
+                  status: true,
+                  message: 'Email sent successfully'
+              }); // Resolve with an object containing status true and a success message
+          }
       });
-    });
+  });
   }

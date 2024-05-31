@@ -63,10 +63,19 @@ const PendingOrders = ({ id }) => {
                 return;
             }
             setLoading(true)
-            let { data } = await axios.post('/api/createOrder', { action: 'issuePurdoc', TRDR: id, id: _id })
-            setLoading(false)
-            dispatch(setOrderReady())
-            setRefetch(prev => !prev)
+            try {
+                let { data } = await axios.post('/api/createOrder', { action: 'issuePurdoc', TRDR: id, id: _id })
+                console.log(data)
+                dispatch(setOrderReady())
+                setRefetch(prev => !prev)
+            } catch (e) {
+                console.error(e.message)
+            } finally {
+                setLoading(false)
+            }
+          
+          
+            
         }
         
         const deletePendingOffer = async () => {

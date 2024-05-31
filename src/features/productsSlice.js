@@ -46,8 +46,7 @@ const productsSlice = createSlice({
 	initialState,
 	reducers: {
         setSelectedProducts: (state, {payload}) => {
-            console.log('selected products state')
-            console.log(payload)
+           
 			state.selectedProducts = payload;
 			
 			const updateMTRLINES = payload.map(item => {

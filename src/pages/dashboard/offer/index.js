@@ -4,7 +4,6 @@ import AdminLayout from '@/layouts/Admin/AdminLayout';
 import { useRouter } from 'next/router';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSelectedProducts } from '@/features/productsSlice';
-import { Toast } from 'primereact/toast';
 import OfferGrid from '@/components/offer/OfferGrid';
 const Page = () => {
   const router = useRouter();
