@@ -1,10 +1,11 @@
+'use client'
 import React, { useState, useEffect, useRef, use } from "react";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import AdminLayout from "@/layouts/Admin/AdminLayout";
 import axios from "axios";
 import { Toast } from "primereact/toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Dialog } from "primereact/dialog";
 import * as yup from "yup";
@@ -21,37 +22,49 @@ import DropdownManufacturers from "@/components/Forms/DrodownManufactures";
 import DropdownBrands from "@/components/Forms/DropdownBrands";
 import DropdownIntrastat from "@/components/Forms/DropdownIntrastat";
 import Input from "@/components/Forms/PrimeInput";
-import { TextAreaInput } from "@/components/Forms/PrimeInput";
+import PrimeSelect from "@/components/Forms/PrimeSelect";
+import { Button } from "primereact/button";
+import { useToast } from "@/_context/ToastContext";
+import { setSelectedProducts } from "@/features/productsSlice";
+import { Dropdown } from 'primereact/dropdown';
+import { useRouter } from "next/router";
+
 
 export default function Page() {
-  const toast = useRef(null);
   const [visible, setVisible] = useState(false);
   const { selectedProducts } = useSelector((store) => store.products);
   const [rowData, setRowData] = useState({});
-  const showError = (message, summary = "Error") => {
-    toast.current.show({
-      severity: "error",
-      summary: summary,
-      detail: message,
-      life: 4000,
-    });
-  };
+  const {showMessage} = useToast();
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+
+
+  // const router = useRouter();
+  // if(!selectedProducts) {
+  //   router.push("/dashboard")
+  // }
 
   const handleAdd = async (rowData) => {
+    setLoading(true)
     try {
       const { data } = await axios.post("/api/product/add-softone", {
         data: rowData,
       });
-      console.log({ data });
-      // if(!data.success) {
-      //     showError(data.message)
-      // }
       if (!data.status) {
-        showError(data.message);
+        showMessage("error", data.message, "Σφάλμα" );
+      } else {
+        showMessage("success", data.message, "Eπιτυχία" );
+        let newProducts = selectedProducts.filter((product) => product._id !== rowData._id);
+        dispatch(setSelectedProducts(newProducts));
+      
+
       }
     } catch (e) {
       console.log(e.message);
-      showError(e.message);
+      showMessage("error", e.message, "Σφάλμα!" );
+    } finally {
+      setLoading(false)
+      setVisible(false);
     }
   };
 
@@ -62,19 +75,45 @@ export default function Page() {
 
   return (
     <AdminLayout>
-      <Toast ref={toast} />
-      <DataTable
+      <Table 
+        data={selectedProducts} 
+        setVisible={setVisible} 
+        rowData={rowData} 
+        handleEdit={handleEdit} 
+        handleAdd={handleAdd}
+        loading={loading}
+      />
+      <AddSoftoneForm
+        loading={loading}
+        rowData={rowData}
+        visible={visible}
+        handleAdd={handleAdd}
+        setVisible={setVisible}
+      />
+    </AdminLayout>
+  );
+}
+
+const Table = ({
+  data, 
+  setVisible,
+  handleEdit,
+  loading,
+}) => {
+
+     
+      return (
+        <DataTable
         header="Προϊόντα στην ουρά για προσθήκη στο SoftOne"
-        value={selectedProducts}
+        value={data}
         showGridlines
+        loading={loading}
       >
         <Column
           body={(rowData) => (
             <Actions
               setVisible={setVisible}
-              rowData={rowData}
               handleEdit={() => handleEdit(rowData)}
-              handleSubmit={handleAdd}
             />
           )}
           style={{ width: "30px" }}
@@ -89,25 +128,14 @@ export default function Page() {
         <Column field="CODE1" header="Κωδικός EAN"></Column>
         <Column field="CODE2" header="Kωδ. Εργοστασίου"></Column>
       </DataTable>
-      <AddSoftoneForm
-        rowData={rowData}
-        visible={visible}
-        setVisible={setVisible}
-      />
-    </AdminLayout>
-  );
+      )
 }
 
-const Actions = ({ rowData, handleSubmit, handleEdit }) => {
+
+const Actions = ({  handleEdit }) => {
   return (
     <div className="flex align-items-center">
-      <button
-        className="plus_button mr-2"
-        onClick={() => handleSubmit(rowData)}
-      >
-        <i className="pi pi-plus "></i>
-      </button>
-      <button className="plus_button" onClick={handleEdit}>
+      <button  className="plus_button" onClick={handleEdit}>
         <i className="pi pi-pencil "></i>
       </button>
     </div>
@@ -115,53 +143,51 @@ const Actions = ({ rowData, handleSubmit, handleEdit }) => {
 };
 
 const addSchema = yup.object().shape({
-  NAME: yup.string().required("Συμπληρώστε το όνομα"),
-  PRICER: yup
-    .number()
-    .typeError("Πρέπει να είναι αριθμός")
-    .required("Συμπληρώστε την τιμή λιανικής"),
-  // MTRCATEGORY: yup.object().required("Συμπληρώστε την κατηγορία"),
-  // MTRGROUP: yup.object().required("Συμπληρώστε την ομάδα"),
-  // CCCSUBGROUP2: yup.object().required("Συμπληρώστε την υποομάδα"),
+    NAME: yup.string().required("Συμπληρώστε το όνομα"),
+  
+    MTRCATEGORY: yup.object().required("Συμπληρώστε την κατηγορία").typeError("Συμπληρώστε την Εμπορική Κατηγορία"),
+    MTRGROUP: yup.object().required("Συμπληρώστε την Ομάδα").typeError("Συμπληρώστε την Ομάδα"),
+ 
+    MTRMANFCTR:  yup.object().required("Συμπληρώστε τον Κατασκευαστή").typeError("Συμπληρώστε τον Κατασκευαστή"),
+    // CCCSUBGROUP2: yup.object().required("Συμπληρώστε την υποομάδα").typeError("Συμπληρώστε την υποομάδα"),
 });
 
-const defaultValues = {
-  NAME: "",
-  //DROPDOWNS:
-  MTRCATEGORY: null,
-  MTRGROUP: null,
-  CCCSUBGROUP2: null,
-  MTRMANFCTR: null,
-  MTRMARK: null,
-  INTRASTAT: null,
-  //CODES:
-  CODE: "",
-  CODE1: "",
-  CODE2: "",
-  //PRICES:
-  PRICER: null,
-  PRICEW: null,
-  PRICER02: null,
-  //DIMENSIONS:
-  WIDTH: null,
-  LENGTH: null,
-  HEIGHT: null,
-  GWEIGHT: null,
-  VOLUME: null,
-  //AVAILABILITY:
-  isSkroutz: null,
-};
 
-const AddSoftoneForm = ({ visible, setVisible, rowData }) => {
-  console.log({ rowData });
+const DEFAULT_VALUES = {
+    NAME: "",
+    MTRCATEGORY: null,
+    MTRGROUP: null,
+    CCCSUBGROUP2: null,
+    MTRMANFCTR: null,
+    MTRMARK: null,
+    INTRASTAT: null,
+    CODE: "",
+    CODE1: "",
+    CODE2: "",
+    PRICER: 0,
+    PRICEW: 0,
+    PRICER02: 0,
+    WIDTH: 0,
+    LENGTH: 0,
+    HEIGHT: 0,
+    GWEIGHT: 0,
+    VOLUME: 0,
+    ISACTIVE: true,
+    SKROUTZ: false,
+
+}
+
+
+const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) => {
+  
   const methods = useForm({
+    defaultValues: DEFAULT_VALUES,
     resolver: yupResolver(addSchema),
   });
   const {
     handleSubmit,
-    register,
-    control,
     reset,
+    control,
     formState: { errors },
     setValue,
   } = methods;
@@ -169,25 +195,29 @@ const AddSoftoneForm = ({ visible, setVisible, rowData }) => {
 
   useEffect(() => {
     reset({
-      MTRCATEGORY: rowData?.MTRCATEGORY,
-      MTRGROUP: rowData?.MTRGROUP,
-      CCCSUBGROUP2: rowData?.CCCSUBGROUP2,
-      MTRMANFCTR: rowData?.MTRMANFCTR,
-      MTRMARK: rowData?.MTRMARK,
-      INTRASTAT: rowData?.INTRASTAT,
-      CODE: rowData?.CODE,
-      CODE1: rowData?.CODE1,
-      CODE2: rowData?.CODE2,
-      PRICER: rowData?.PRICER,
-      PRICEW: rowData?.PRICEW,
-      PRICER02: rowData?.PRICER02,
-      WIDTH: rowData?.WIDTH,
-      LENGTH: rowData?.LENGTH,
-      HEIGHT: rowData?.HEIGHT,
-      GWEIGHT: rowData?.GWEIGHT,
-      VOLUME: rowData?.VOLUME,
+        _id: rowData?._id,
+        NAME: rowData?.NAME,
+        MTRCATEGORY: rowData?.MTRCATEGORY,
+        MTRGROUP: rowData?.MTRGROUP,
+        CCCSUBGROUP2: rowData?.CCCSUBGROUP2,
+        MTRMANFCTR: rowData?.MTRMANFCTR,
+        MTRMARK: rowData?.MTRMARK,
+        INTRASTAT: rowData?.INTRASTAT,
+        CODE: rowData?.CODE,
+        CODE1: rowData?.CODE1,
+        CODE2: rowData?.CODE2,
+        PRICER: rowData?.PRICER,
+        PRICEW: rowData?.PRICEW,
+        PRICER02: rowData?.PRICER02,
+        WIDTH: rowData?.WIDTH,
+        LENGTH: rowData?.LENGTH,
+        HEIGHT: rowData?.HEIGHT,
+        GWEIGHT: rowData?.GWEIGHT,
+        VOLUME: rowData?.VOLUME,
+        ISACTIVE: rowData?.ISACTIVE,
+        SKROUTZ: rowData?.isSkroutz,
     });
-  }, []);
+  }, [reset, rowData]);
   const handleInputChange = (value, name) => {
     setValue(name, value);
   };
@@ -204,23 +234,58 @@ const AddSoftoneForm = ({ visible, setVisible, rowData }) => {
   const handleSubgroupClear = () => {
     setValue("CCCSUBGROUP2", null);
   };
+
+
+ 
+
+  const productDialogFooter = (
+    <React.Fragment>
+      <Button
+        label="Ακύρωση"
+        icon="pi pi-times"
+        severity="info"
+        outlined
+        onClick={() => setVisible(false)}
+      />
+      <Button
+        label="Αποθήκευση"
+        icon="pi pi-check"
+        severity="info"
+        loading={loading}
+        onClick={handleSubmit(handleAdd)}
+      />
+    </React.Fragment>
+  );
+
+  
   return (
     <div>
       <Dialog
+        className="dialog_form"
+        footer={productDialogFooter}
         breakpoints={{ "960px": "60vw", "640px": "90vw" }}
         header="Προσθήκη Προϊόντος στο SoftOne"
         visible={visible}
-        hideDialog={() => setVisible(false)}
-        style={{width: "34rem", minHeight: "40vh"}}
+        maximizable
+        modal
+        // style={{width: "34rem", minHeight: "40vh"}}
         onHide={() => setVisible(false)}
       >
         <form
           className="form"
-          onSubmit={handleSubmit((data) => console.log(data))}
-        >
+          onSubmit={handleSubmit(handleAdd)}
+        >   
+          <Input 
+                label={"Όνομα Προϊόντος"} 
+                name={"NAME"} 
+                control={methods.control} 
+                error={errors.NAME}
+
+                />
           <div className="product_form_grid_row">
             <DropdownCategories
               isEdit={true}
+              showClear={true}
               state={values.MTRCATEGORY}
               handleState={(e) => handleInputChange(e, "MTRCATEGORY")}
               error={errors?.MTRCATEGORY?.message}
@@ -247,17 +312,17 @@ const AddSoftoneForm = ({ visible, setVisible, rowData }) => {
             />
             <DropdownManufacturers
               isEdit={true}
-              state={values.MTRMANFCTR}
+              state={values?.MTRMANFCTR}
               handleState={(e) => handleInputChange(e, "MTRMANFCTR")}
-              error={errors?.MTRMANFCTR}
+              error={errors?.MTRMANFCTR?.message}
             />
           </div>
           <div className="product_form_grid_row">
             <DropdownBrands
               isEdit={true}
-              state={values.MTRMARK}
+              state={values?.MTRMARK}
               handleState={(e) => handleInputChange(e, "MTRMARK")}
-              error={errors?.MTRMARK}
+              error={errors?.MTRMARK?.message}
             />
             <DropdownIntrastat
               isEdit={true}
@@ -283,75 +348,124 @@ const AddSoftoneForm = ({ visible, setVisible, rowData }) => {
           </div>
           <p className="mt-2 font-bold text-lg">Κωδικοί</p>
           <div className="product_form_grid_row_three">
-                        <PrimeInputNumber
-                            label={"Τιμή Λιανικής"}
-                            name={"PRICER"}
-                            prefix={"€"}
-                            maxFractionDigits={2}
-                            control={methods.control}
-                            required
-                            error={errors.PRICER}
-                        />
+            <Input 
+                label={"Κωδικός ERP"} 
+                name={"CODE"} 
+                control={control} 
 
-                        <PrimeInputNumber
-                            label={"Τιμή Χονδρικής"}
-                            name={"PRICEW"}
-                            prefix={"€"}
-                            maxFractionDigits={2}
-                            control={methods.control}
-                            required
-                            error={errors.PRICEW}
-                        />
-                        <PrimeInputNumber
-                            label={"Τιμή Skroutz"}
-                            name={"PRICER02"}
-                            prefix={"€"}
-                            maxFractionDigits={2}
-                            control={methods.control}
-                            required
-                            error={errors?.PRICER02}
-                        />
-                    </div>
+                />
+            <Input 
+                label={"Κωδικός EAN"} 
+                name={"CODE1"} 
+                control={control} 
+
+                />
+            <Input 
+                label={"Κωδικός Εργοστασίου"} 
+                name={"CODE2"} 
+                control={control} 
+
+                />
+          
+          </div>
           <p className="mt-2 font-bold text-lg">Τιμές</p>
           <div className="product_form_grid_row_three">
-              <PrimeInputNumber
-                label={"Τιμή Λιανικής"}
-                name={"PRICER"}
-                prefix={"€"}
-                maxFractionDigits={2}
-                control={methods.control}
-                required
-                error={errors.PRICER}
-              />
+            <PrimeInputNumber
+              label={"Τιμή Λιανικής"}
+              name={"PRICER"}
+              prefix={"€"}
+              maxFractionDigits={2}
+              control={methods.control}
+              required
+              error={errors.PRICER}
+            />
 
-              <PrimeInputNumber
-                label={"Τιμή Χονδρικής"}
-                name={"PRICEW"}
-                prefix={"€"}
-                maxFractionDigits={2}
-                control={methods.control}
-                required
-                error={errors.PRICEW}
-              />
-              <PrimeInputNumber
-                label={"Τιμή Χονδρικής"}
-                name={"PRICEW"}
-                prefix={"€"}
-                maxFractionDigits={2}
-                control={methods.control}
-                required
-                error={errors.PRICEW}
-              />
-            
+            <PrimeInputNumber
+              label={"Τιμή Χονδρικής"}
+              name={"PRICEW"}
+              prefix={"€"}
+              maxFractionDigits={2}
+              control={control}
+              required
+              error={errors.PRICEW}
+            />
+            <PrimeInputNumber
+              label={"Τιμή Skroutz"}
+              name={"PRICER02"}
+              prefix={"€"}
+              maxFractionDigits={2}
+              control={control}
+              required
+              error={errors?.PRICER02}
+            />
           </div>
-          {/* <div className="product_form_grid_row">
-           
-           
-            <p className="mt-2 font-bold text-lg">Τιμές</p>
-            
+          <p className="mt-2 font-bold text-lg">Πληροφορίες</p>
+          <div className="product_form_grid_row">
+            <PrimeInputNumber
+              label={"Πλάτος"}
+              name={"WIDTH"}
+              maxFractionDigits={2}
+              control={methods.control}
+              required
+              error={errors.WIDTH}
+            />
+
+            <PrimeInputNumber
+              label={"Μήκος"}
+              name={"LENGTH"}
+              maxFractionDigits={2}
+              control={methods.control}
+              required
+              error={errors.LENGTH}
+            />
           </div>
-          <div className="product_form_grid_row"></div>
-          <div className="product_form_grid_row"></div> */}
+          <div className="product_form_grid_row_three">
+            <PrimeInputNumber
+              label={"Ύψος"}
+              name={"HEIGHT"}
+              control={methods.control}
+              required
+              error={errors.HEIGHT}
+            />
+            <PrimeInputNumber
+              label={"Βάρος"}
+              name={"GWEIGHT"}
+              control={methods.control}
+              required
+              error={errors.GWEIGHT}
+            />
+            <PrimeInputNumber
+              label={"Όγκος"}
+              name={"VOLUME"}
+              control={methods.control}
+              required
+              error={errors.VOLUME}
+            />
+          </div>
+          <div className="product_form_grid_row">
+            <PrimeSelect
+              options={[
+                { label: "Είναι στο Skroutz", value: true },
+                { label: "Δεν είναι στο Skroutz", value: false },
+              ]}
+              label="Στο Skroutz"
+              name="isSkroutz"
+              optionLabel={"label"}
+              optionValue={"value"}
+              control={methods.control}
+            />
+            <PrimeSelect
+              options={[
+                { label: "Ενεργό Προϊόν", value: true },
+                { label: "Ανενεργό Προϊόν", value: false },
+              ]}
+              label="Κατάσταση Προϊόντος"
+              name="ISACTIVE"
+              optionLabel={"label"}
+              optionValue={"value"}
+              control={methods.control}
+            />
+          </div>
         </form>
       </Dialog>
     </div>

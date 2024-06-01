@@ -35,8 +35,9 @@ export default function CountriesDropdown({
 
     return (
         <div  className="w-full">
-            <label className={`custom_label ${error && "text-red-500"}`}>Χώρα {required && "*"}</label>
+            <label className={`custom_label ${error && "text-red-600"}`}>Χώρα {required && "*"}</label>
             <Dropdown
+                filter
                 className='w-full custom_dropdown'
                 value={state}
                 onChange={(e) => handleState(e.target.value)}
@@ -44,7 +45,7 @@ export default function CountriesDropdown({
                 optionLabel="NAME"
                 placeholder="Χώρα"
             />
-            <p className="text-red-500 mt-1">{error}</p>
+            <p className="text-red-600 mt-1">{error}</p>
         </div>
     )
 }

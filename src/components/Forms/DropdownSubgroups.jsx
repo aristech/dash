@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Dropdown } from "primereact/dropdown";
 import axios from "axios";
-import { sub } from "date-fns";
 
 
 export default function DropdownSubroups({
@@ -17,20 +16,27 @@ export default function DropdownSubroups({
 }) {
   const [options, setOptions] = useState([]);
 
+
+
   const handleFetch = async () => {
     let { data } = await axios.post("/api/product/apiProductFilters", {
       action: "findSubGroups",
       groupID: groupId,
     });
-   
+  
     if (data.success) {
       setOptions(data.result);
-    }
+    } 
+   
   };
+
+ 
+
 
 
   useEffect(() => {
-    if(!groupId) return
+    //False value should be handled
+    if(groupId === null || groupId === undefined) return
     (async () => {
       await handleFetch();
     })();
@@ -52,7 +58,7 @@ export default function DropdownSubroups({
     <div className="w-full">
       {
         !isFilter ? (
-          <label className={`custom_label ${error ? "text-red-500" : null}`}>
+          <label className={`custom_label ${error ? "text-red-600" : null}`}>
           Υποομάδα
           {required && <span className="ml-1 font-bold text-red-500">*</span>}
         </label>
@@ -61,19 +67,18 @@ export default function DropdownSubroups({
       <div className="custom_dropdown_wrapper">
       <Dropdown
         filter
-        disabled={!groupId}
+        disabled={groupId === null || groupId === undefined}
         value={state}
-        onChange={(e) => handleState( e.target.value)}
+        onChange={(e) => handleState(e.target.value)}
         options={options}
         optionLabel="subGroupName"
         placeholder="Yποομάδα"
-        className="custom_dropdown"
+        className={`custom_dropdown ${error ? "p-invalid" : null}`}
         style={isFilter ? { width: '140px' } : null}
       />
-      {error ?  <p className="text-red-500 mt-1">{error}</p> : null}
       {state ? <i className="icon pi pi-times" onClick={handleClear} /> : null}
       </div>
-   
+      {error ?  <p className="text-red-600 mt-1">{error}</p> : null}
     </div>
   );
 }

@@ -40,7 +40,7 @@ const PrimeInputNumber = ({
               id={field.name}
               value={field.value}
               disabled={disabled}
-              className={`custom_input ${classNames({ "p-invalid": fieldState.error })}`}
+              className={`custom_number_input ${classNames({ "p-invalid": fieldState.error })}`}
               onValueChange={(e) => field.onChange(e)}
             />
           <div className="error-div">

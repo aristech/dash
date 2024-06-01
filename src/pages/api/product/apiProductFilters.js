@@ -34,7 +34,6 @@ export default async function handler(req, res) {
             await connectMongo();
           
             let filterConditions = {};
-            console.log({stateFilters})
             //CATEGORIZATION:
             if(stateFilters?.MTRCATEGORY) {
                 filterConditions.MTRCATEGORY =stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY;
@@ -139,32 +138,65 @@ export default async function handler(req, res) {
         try {
             await connectMongo();
             let response = await MtrCategory.find({}, { "softOne.MTRCATEGORY": 1, categoryName: 1, _id: 0 }).sort({ categoryName: 1 })
-           
             return res.status(200).json({ success: true, result: response })
         } catch (e) {
             return res.status(400).json({ success: false })
         }
     }
     if (action === 'findGroups') {
-        
-        let { categoryID } = req.body;
-        if(!categoryID) return res.status(200).json({ success: false, result: null})
-      
         await connectMongo();
-        let response = await MtrGroup.find({ 'softOne.MTRCATEGORY': parseInt(categoryID) }, { "softOne.MTRGROUP": 1, groupName: 1, _id: 0 }).sort({ groupName: 1 })
-        try {
-            return res.status(200).json({ success: true, result: response })
-        } catch (e) {
-            return res.status(400).json({ success: false })
+        let response = {}
+        let { categoryID } = req.body;
+        if(!categoryID) {
+            response.success = false;
+            response.result = [];
+            response.error = "Δεν Υπάρχει κλειδί κατηγορίας"
+            return res.status(200).json(response)
         }
+       
+        try {
+            let result = await MtrGroup.find({ 'softOne.MTRCATEGORY': parseInt(categoryID) }, { "softOne.MTRGROUP": 1, groupName: 1, _id: 0 }).sort({ groupName: 1 })
+                response.result = result;
+                response.success = true;
+                return res.status(200).json(response)
+            // } else {
+            //     response.result = [{
+            //         softOne: {
+            //             MTRGROUP: false
+            //         },
+            //         groupName: "Χωρίς Ομάδα"
+            //     }]
+            //     response.success = true;
+            //     return res.status(200).json(response)
+            // }
+        } catch (e) {
+            response.success = false;
+            response.error = e.message;
+            response.message = "Πρόβλημα στην ανάκτηση των ομάδων"
+            return res.status(400).json(response)
+        }
+
+       
     }
+
+
+
     if (action === 'findSubGroups') {
         let { groupID } = req.body;
         if(!groupID) return res.status(200).json({ success: false, result: null})
         try {
 
             let response = await SubMtrGroup.find({ 'softOne.MTRGROUP': groupID }, { "softOne.cccSubgroup2": 1, subGroupName: 1, _id: 0 }).sort({ subGroupName: 1 })
-          
+            // if(!response.length) {
+            //     let result = [{
+            //         softOne: {
+            //             cccSubgroup2: false
+            //         },
+            //         subGroupName: "Χωρίς Υποομάδα"
+                
+            //     }]
+            //     return res.status(200).json({ success: true, result: result })
+            // }
             return res.status(200).json({ success: true, result: response })
         } catch (e) {
             return res.status(400).json({ success: false })

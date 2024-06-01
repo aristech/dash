@@ -1,6 +1,6 @@
 
 'use client'
-import React, { useState, createContext,  } from 'react'
+import React, { useState  } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { toggleSidebar } from '@/features/userSlice';
@@ -11,18 +11,17 @@ import NewSidebar from './NewSidebar';
 import BreadCrumbs from './BreadCrumbs';
 
 
-
-
+// EXPORT ADMIN LAYOUT:
 const AdminLayout = ({ children }) => {
 	const { isSidebarOpen } = useSelector((store) => store.user)
 	const dispatch = useDispatch()
 	const handleToggleSidebar = () => {
 		dispatch(toggleSidebar())
 	}
-
-
+	
 	return (
 		<Container>
+			
 			{isSidebarOpen ? <NewSidebar  /> : null}
 			<Content isSidebarOpen={isSidebarOpen} >
 				<Navbar  isSidebarOpen={isSidebarOpen}>
@@ -46,7 +45,6 @@ const AdminLayout = ({ children }) => {
 					
 				</Navbar>
 				<MainContent>
-
 					{children}
 				</MainContent>
 			</Content>

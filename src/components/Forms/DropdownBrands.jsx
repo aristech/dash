@@ -38,7 +38,7 @@ export default function DropdownBrands({
     return (
       <div className="w-full">
         {!isFilter ? (
-            <label className={`custom_label ${error ? "text-red-500" : null}`}>
+            <label className={`custom_label ${error ? "text-red-600" : null}`}>
             Μάρκα
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
@@ -51,10 +51,10 @@ export default function DropdownBrands({
           options={options}
           optionLabel="softOne.NAME"
           placeholder="Μάρκα"
-          className="custom_dropdown"
+          className={`custom_dropdown ${error ? "p-invalid" : null}`}
           style={isFilter ? { width: '140px' } : null}
         />
-        {error && <p className="text-red-500 mt-1">{error}</p>}
+        {error && <p className="text-red-600 mt-1">{error}</p>}
 
       </div>
     );

@@ -9,14 +9,14 @@ export default function DropdownCategories({
   error,
   required = false,
   isFilter = false,
-  handleClear
+  handleClear,
+ 
 }) {
   //if the dropdown is used for filters then remove the label, and make it smaller:
 
   //setValue comes from react-hook-forms, it is used to set the value of the dropdown
   const [options, setOptions] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log({ state })
   const handleFetch = async () => {
     setLoading(true);
     let { data } = await axios.post("/api/product/apiProductFilters", {
@@ -50,16 +50,16 @@ export default function DropdownCategories({
 
 
   return (
-    <div className="w-full">
+    <div className="dropdown_container">
       {!isFilter && (
-        <label className="custom_label">
+        <label className={`custom_label ${error ? "text-red-600" : null}`}>
           Κατηγορία
           {required && <span className="text-red-500">*</span>}
         </label>
       )}
       <div className="custom_dropdown_wrapper">
         <Dropdown
-          disabled={loading}
+         filter
           size="small"
           value={state}
           onChange={(e) => handleState(e.target.value)}
@@ -67,11 +67,11 @@ export default function DropdownCategories({
           optionLabel="categoryName"
           placeholder="Κατηγορία"
           style={isFilter ? { width: '140px' } : null}
-          className="custom_dropdown"
+          className={`custom_dropdown ${error ? "p-invalid" : null}`}
         />
-         {error ?  <p className="text-red-500 mt-1">{error}</p> : null}
       {handleClear && state ? <i className="icon pi pi-times" onClick={handleClear} /> : null}
       </div>
+      {error ?  <p className="text-red-600 mt-1">{error}</p> : null}
     </div>
   );
 }

@@ -88,9 +88,12 @@ form {
 }
 
 
+.dropdown_container {
+    max-width: 100%;
+}
+
 /* CUSTOMIZE THE PRODUCT DROPDOWNS: */
 .custom_dropdown_wrapper {
-    display: inline-block;
     position: relative;
     width: 100%;
 }
@@ -110,6 +113,7 @@ form {
 .custom_dropdown.p-dropdown {
     width: 100%;
     min-width: 120px;
+    max-width: 100%; 
 }
 
 .dropdown-md.p-dropdown {
@@ -155,11 +159,15 @@ form {
     min-width: 100px;
 }
 
-
-
-/* NUMBER INPUT: */
-.p-inputnumber.p-component.p-inputwrapper.p-inputwrapper-filled.custom_input {
+.custom_number_input {
     width: 100%;
+}
+
+.p-inputnumber-input {
+    padding: 0.57rem 0.57rem;
+    font-size: 0.85rem;
+    width: 100%;
+    min-width: 100px;
 }
 
 .input_med {
@@ -321,14 +329,17 @@ form {
 
 .product_form_grid_row {
     display: grid;
-    grid-template-columns: repeat(2, calc(50% - 10px));
+    grid-template-columns: repeat(2, 50%);
     column-gap: 10px;
+    max-width: 100%;
     
 }
 .product_form_grid_row_three {
+   
     display: grid;
-    grid-template-columns: repeat(3, calc(33.3333% -  10px));
+    grid-template-columns: repeat(3, 1fr);
     column-gap: 10px;
+    row-gap: 10px;
     
 }
 
@@ -388,6 +399,10 @@ form {
     font-size: 0.8rem;
 }
 
+
+.dialog_form {
+    width: 500px;
+}
 ::-webkit-scrollbar {
     width: 5px;
     height: 12px;
@@ -403,7 +418,7 @@ form {
 }
 
 
-@media screen and (max-width: 700px) {
+@media screen and (max-width: 800px) {
     .product_form_grid_row {
         grid-template-columns: 1fr;
         row-gap: 10px;

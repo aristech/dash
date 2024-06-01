@@ -38,19 +38,21 @@ export default function DropdownManufacturers ({
   
     return (
       <div  className="w-full">
-        <label className={`custom_label ${error ? "text-red-500" : null}`}>
+        <label className={`custom_label ${error ? "text-red-600" : null}`}>
             Κατασκευαστής 
             {required && <span className="ml-1 font-bold text-red-500">*</span>}
             </label>
         <Dropdown
+          showClear
+          filter
           value={state}
           onChange={(e) => handleState(e.target.value)}
           options={options}
           optionLabel="NAME"
           placeholder="Κατασκευαστής"
-          className="w-full custom_dropdown"
+          className={`custom_dropdown ${error ? "p-invalid" : null}`}
         />
-        {error && <p className="text-red-500 mt-1">{error}</p>}
+        {error && <p className="text-red-600 mt-1">{error}</p>}
       </div>
     );
   };

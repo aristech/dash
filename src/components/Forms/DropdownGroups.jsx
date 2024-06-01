@@ -41,9 +41,9 @@ export default function DropdownGroups({
   }, [options]);
 
   return (
-    <div className="w-full">
+    <div className="dropdown_container">
       {!isFilter ? (
-        <label className={`custom_label ${error ? "text-red-500" : null}`}>
+        <label className={`custom_label ${error ? "text-red-600" : null}`}>
           Ομάδα
           {required && <span className="ml-1 font-bold text-red-500">*</span>}
         </label>
@@ -57,15 +57,14 @@ export default function DropdownGroups({
           options={options}
           optionLabel="groupName"
           placeholder="Ομάδα"
-          className="custom_dropdown"
+          className={`custom_dropdown ${error ? "p-invalid" : null}`}
           style={isFilter ? { width: "140px" } : null}
         />
-        <p className="text-red-500 mt-1">{error}</p>
-        {error ? <p className="text-red-500 mt-1">{error}</p> : null}
         {handleClear && state ? (
           <i className="icon pi pi-times" onClick={handleClear} />
         ) : null}
       </div>
+      {error ? <p className="text-red-600 mt-1">{error}</p> : null}
     </div>
   );
 }

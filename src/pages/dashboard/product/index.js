@@ -215,7 +215,6 @@ function Product() {
 
   const [stateFilters, setStateFilters] = useState(INITIAL_STATE_FILTERS);
 
-  console.log({stateFilters})
   const showError = (message) => {
     toast.current.show({
       severity: "error",
@@ -734,7 +733,6 @@ const RenderHeader = ({
   INITIAL_STATE_FILTERS
 }) => {
 
-  console.log({INITIAL_STATE_FILTERS})
   const ref = useRef(null);
  
 

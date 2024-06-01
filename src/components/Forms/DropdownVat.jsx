@@ -25,16 +25,18 @@ const VatDropdown = ({ state, handleState, isEdit =false, error, required = fals
     
     return (
       <div className="w-full">
-        <label className={`custom_label ${error ? "text-red-500" : null}`}>Αλλαγή ΦΠΑ {required && "*"}</label>
+        <label className={`custom_label ${error ? "text-red-600" : null}`}>Αλλαγή ΦΠΑ {required && "*"}</label>
         <Dropdown
+        showClear
+          filter
           value={state}
           onChange={(e) => handleState(e.target.value)}
           options={options}
           optionLabel="NAME"
           placeholder="ΦΠΑ"
-          className="w-full custom_dropdown"
+          className={`custom_dropdown ${error ? "p-invalid" : null}`}
         />
-        <p className="text-red-500 mt-1">{error}</p>
+        <p className="text-red-600 mt-1">{error}</p>
       </div>
     );
   };
