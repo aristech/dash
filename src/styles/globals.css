@@ -158,6 +158,12 @@ form {
     width: 100%;
     min-width: 100px;
 }
+.p-password-input {
+    font-size: 0.85rem;
+    padding: 0.57rem 0.57rem;
+    width: 100%;
+    min-width: 100px;
+}
 
 .custom_number_input {
     width: 100%;

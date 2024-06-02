@@ -38,12 +38,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-
-  // const router = useRouter();
-  // if(!selectedProducts) {
-  //   router.push("/dashboard")
-  // }
-
+ 
   const handleAdd = async (rowData) => {
     setLoading(true)
     try {

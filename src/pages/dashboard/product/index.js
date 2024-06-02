@@ -596,7 +596,7 @@ function Product() {
               field="availability.DIATHESIMA"
               bodyStyle={{ textAlign: "center" }}
               body={productAvailabilityTemplate}
-              style={{ maxWidth: "130px" }}
+              style={{ maxWidth: "80px", width: "80px" }}
               header="Διαθέσιμα"
             ></Column>
           )}

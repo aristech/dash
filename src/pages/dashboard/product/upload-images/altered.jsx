@@ -7,9 +7,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { Toast } from "primereact/toast";
 import axios from "axios";
-import { InputText } from "primereact/inputtext";
-import { setGridData, setNewData } from "@/features/catalogSlice";
-import { sub } from "date-fns";
+
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
@@ -30,14 +28,7 @@ export default function Page() {
     });
   };
 
-  const showWarn = (message) => {
-    toast.current.show({
-      severity: "warn",
-      summary: message,
-      detail: message,
-      life: 4000,
-    });
-  };
+  
   const showSuccess = (message) => {
     toast.current.show({
       severity: "success",
@@ -47,9 +38,7 @@ export default function Page() {
     });
   };
 
-  console.log({ mongoKeys });
-  console.log({newData})
-  console.log({submitedData})
+
 
   useEffect(() => {
     if (!newData || !newData.length) {

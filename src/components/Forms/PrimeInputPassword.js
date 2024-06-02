@@ -25,7 +25,7 @@ export function PrimeInputPass({ name, mb, mt, control,error, label,  }) {
                                 inputRef={field.ref} 
                                 style={{ width: '100%' }}
                                 onChange={(e) => field.onChange(e.target.value)}
-                                className={classNames({ 'p-invalid': fieldState.error })}
+                                className={`custom_input ${classNames({ 'p-invalid': fieldState.error })}` }
                                  />
                         </>
                     )}
