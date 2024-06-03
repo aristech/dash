@@ -46,6 +46,10 @@ const navConfig = [
             {
                 title: 'Κατασκευαστές',
                 href: '/dashboard/product/manufacturers',
+            },
+            {
+                title: 'Απενεργοποίηση Προϊόντων ',
+                href: '/dashboard/product/deactivate-products',
             }
            
         ]

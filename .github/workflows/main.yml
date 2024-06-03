@@ -1,29 +1,57 @@
-name: GZB Unit Tests
+# name: GZB Unit Tests
 
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches: [main]
+
+# jobs:
+#   frontend_unit_tests:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2   
+#         with:
+#           node-version: 16.17.1
+#       - name: Build the Project
+#         run: |
+#           npm ci
+#           touch .env.local
+#           echo APP_ID=${{ secrets.APP_ID }} >> .env.local
+#           echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
+#           echo BRANCH=${{ secrets.BRANCH}} >> .env.local
+#           echo COMPANY=${{ secrets.COMPANY }} >> .env.local
+#           echo DOMAIN=${{ secrets.DOMAIN}} >> .env.local
+#           echo MONGO_URI=${{ secrets.MONGO_URI }} >> .env.local
+#           echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env.local
+#           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env.local
+#           npm run build
+
+name: Dash CI/CD
 on:
   push:
-    branches:
-      - main
+    paths-ignore:
+      - 'public/**'
+    branches: [ main ]
   pull_request:
-    branches: [main]
-
+    branches: [ main ]
 jobs:
-  frontend_unit_tests:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2   
+      - uses: actions/checkout@v3
         with:
-          node-version: 16.17.1
-      - name: Build the Project
-        run: |
-          npm ci
-          touch .env.local
-          echo APP_ID=${{ secrets.APP_ID }} >> .env.local
-          echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
-          echo BRANCH=${{ secrets.BRANCH}} >> .env.local
-          echo COMPANY=${{ secrets.COMPANY }} >> .env.local
-          echo DOMAIN=${{ secrets.DOMAIN}} >> .env.local
-          echo MONGO_URI=${{ secrets.MONGO_URI }} >> .env.local
-          echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env.local
-          echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env.local
-          npm run build
+          clean: false
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Copy .env
+        run: echo "${{ secrets.ENV_FILE }}" > .env.local
+      - run: yarn install
+      - run: yarn build
+      //- run: pm2 stop dash
+      //- run: pm2 start dash
+      //- run: pm2 save
+      - run: sudo service nginx restart 

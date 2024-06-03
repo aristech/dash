@@ -7,6 +7,7 @@ import supplierOrderSlice from "./features/supplierOrderSlice";
 import productsSlice from "./features/productsSlice";
 import pdfSlice from "./features/pdfSlice";
 import uploadImagesSlice from "./features/uploadImagesSlice";
+import deactivateProductsSlice from "./features/deactivateProductsSlice";
 import { combineReducers } from 'redux'
 import storage from 'redux-persist/lib/storage'
 import {
@@ -24,7 +25,7 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
-  blacklist: ['products', 'user', 'catalog', 'uploadImages'],
+  blacklist: ['products', 'user', 'catalog', 'uploadImages', 'deactivateProducts'],
 
 }
 const reducers = combineReducers({
@@ -36,6 +37,7 @@ const reducers = combineReducers({
     products: productsSlice,
     pdf: pdfSlice,
     uploadImages: uploadImagesSlice,
+    deactivateProducts: deactivateProductsSlice
 })
 
 
@@ -58,5 +60,3 @@ export const store = configureStore({
 
 export const  persistor = persistStore(store)
 
-// const makeStore = () => store;
-// export const wrapper = createWrapper(makeStore, {debug: true});

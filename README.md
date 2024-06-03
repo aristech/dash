@@ -8,3 +8,5 @@ rm -rf tmp
 (PATH=/opt/plesk/node/18/bin/:$PATH;  npm install && npm run build &> npm-install.log) 
 mkdir tmp
 touch tmp/restart.txt
+
+//3046

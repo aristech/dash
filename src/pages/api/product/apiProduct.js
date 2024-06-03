@@ -66,9 +66,9 @@ export default async function handler(req, res) {
                 GWEIGHT: GWEIGHT?.toString(),
                 VOLUME: VOLUME?.toString(),
                 availability: {
-                    DIATHESIMA: DIATHESIMA?.toString(),
-                    SEPARAGELIA: SEPARAGELIA?.toString(),
-                    DESVMEVMENA: DESVMEVMENA?.toString(),
+                    DIATHESIMA: DIATHESIMA?.toString() || "0",
+                    SEPARAGELIA: SEPARAGELIA?.toString() || "0",
+                    DESVMEVMENA: DESVMEVMENA?.toString() || "0",
                     date: format(new Date(), 'yyyy-MM-dd HH:mm:ss')
                 },
                 ISACTIVE: true,
@@ -314,6 +314,8 @@ export default async function handler(req, res) {
 
     if (action === 'warehouse') {
         const { exportWarehouse, importWarehouse, diathesimotita } = req.body;
+
+        console.log({exportWarehouse, importWarehouse, diathesimotita})
         const now = new Date();
         const formattedDateTime = format(now, 'yyyy-MM-dd HH:mm:ss');
 
