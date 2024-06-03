@@ -78,7 +78,7 @@ export default function PageWrapper() {
           icon="pi pi-upload"
         ></Button>
       </div>
-      <Table gridData={gridData} />
+      {gridData.length ? (<Table gridData={gridData} />) : null}
     </AdminLayout>
   );
 }
@@ -86,7 +86,6 @@ export default function PageWrapper() {
 function Table({ gridData }) {
   const [visible, setIsVisible] = useState(false);
 
-  if (!gridData.length) return null;
 
   const columns = () => {
     //CREATE COLUMNS:
@@ -139,8 +138,12 @@ const schema = yup.object().shape({
     .typeError("Υποχρεωτικό πεδίο"),
 });
 
-const FieldMappingDialog = ({ isVisible, setIsVisible, data }) => {
-  if (!isVisible) return null;
+const FieldMappingDialog = ({ 
+    isVisible, 
+    setIsVisible, 
+    data 
+}) => {
+ 
   const router = useRouter();
   const dispatch = useDispatch();
   const keysOptions = Object?.keys(data[0]).map((key) => ({
