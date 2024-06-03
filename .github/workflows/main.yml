@@ -22,7 +22,7 @@ jobs:
         run: echo "${{ secrets.ENV_FILE }}" > .env.local
       - run: yarn install
       - run: yarn build
-      //- run: pm2 stop dash
-      //- run: pm2 start dash
-      //- run: pm2 save
+      #- run: pm2 stop dash
+      #- run: pm2 start dash
+      #- run: pm2 save
       - run: sudo service nginx restart 
