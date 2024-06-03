@@ -18,55 +18,54 @@ export default async function handler(req, res) {
 
     try {
         let countSuccess = 0;
-        let countNotFound = 0;
         let countError = 0;
         for (let product of data) {
             let result = {};
-            
             let field;
             const { images,  ...rest } = product;
-            const filter = {};
+            field = Object.values(rest)[0];
+            console.log({field})
             const update = { 
                 $push: {
-                    images: {
-                        name: images.toString()
-                    }
+                    images: images
                 }
             };
-
-            for (const key in rest) {
-                filter[key] = rest[key];
-                field = rest[key];
-            }
-            console.log({filter})
+            
+            // 1) how many photos where updated
+            // 2) how many products where updated, on each product how many photos where in total and how many where updated
+          
+            // return res.status(200).json({success: false})
             const productData = await SoftoneProduct.findOneAndUpdate(
-                filter,
+                rest,
                 update,
                 { new: true }
             );
                 //COMMON DATA:
-                result.NAME = productData?.NAME || 'Δεν βρέθηκε προϊόν με τον Κωδικό:'
+                result.NAME = productData?.NAME || `Δεν βρέθηκε προϊόν με τον Κωδικό: ${field}`
                 result.code = field;
-                result.imageName = images;
+            console.log({productData})
             if (productData) {
                 //PRODUCT FOUND:
-                countSuccess++;
+                ++countSuccess;
                 result.success = true;
                 result.message = "UPDATED";
             } else {
                 //PRODUCT NOT FOUND:
-                countError++;
+                ++countError;
+                result.success  = false;
                 result.imageName = images;
                 result.message = "NOT FOUND";
             }
-                    // Sort results based on success
+            // Sort results based on success
             response.result.sort((a, b) => b.success - a.success);
-            response.success = true;
-            response.countSuccess = countSuccess;
-            response.countNotFound = countNotFound;
-            response.message = 'Τα προϊόντας ενημερώθηκαν επιτυχώς'
+           
             response.result.push(result);
         }
+        response.success = true;
+        response.countSuccess = countSuccess;
+        response.totalProducts = data.length;
+        response.countError = countError;
+        response.message = 'Τα προϊόντα ενημερώθηκαν επιτυχώς'
         return res.status(200).json(response);
     } catch (e) {
         console.error("Error updating products:", e);

@@ -10,7 +10,8 @@ export default function DropdownCustom({
     isEdit = false, 
     required, 
     error,
-    placeholder
+    placeholder,
+    filter = true
 }) {
 
 
@@ -20,7 +21,7 @@ export default function DropdownCustom({
             <label className={`custom_label ${error && "text-red-600"}`}>{label} {required && "*"}</label>
             <Dropdown
                 showClear
-                filter
+                filter={filter}
                 className={`custom_dropdown ${error ? "p-invalid" : null}`}
                 value={state}
                 onChange={(e) => handleState(e.target.value)}

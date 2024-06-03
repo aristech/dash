@@ -13,7 +13,7 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const toast = useRef(null);
   const router = useRouter();
-  const { gridData, mongoKeys, newData } = useSelector(
+  const {  mongoKeys, newData } = useSelector(
     (state) => state.uploadImages
   );
 
@@ -41,15 +41,13 @@ export default function Page() {
 
 
   useEffect(() => {
-    if (!newData || !newData.length) {
+    if (!newData || !newData.length || !mongoKeys) {
       router.push("/dashboard/product");
       return;
     }
   }, []);
 
-  useEffect(() => {
-    console.log(submitedData);
-  }, [submitedData]);
+
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -57,9 +55,10 @@ export default function Page() {
       const { data } = await axios.put("/api/butchImages/update", {
         data: newData,
       });
+      console.log(data)
       if (data.success) {
         showSuccess(data.message);
-        setSubmitedData(data.result);
+        setSubmitedData(data);
       } else {
         showError(data.error);
       }
@@ -109,9 +108,17 @@ const ViewTable = ({ handleSubmit, mongoKeys, data }) => {
       value={data}
       tableStyle={{ minWidth: "50rem" }}
     >
-      {mongoKeys.map((key) => {
+      {/* {mongoKeys.map((key) => {
         return <Column key={key.value} field={key.value} header={key.label} />;
-      })}
+      })} */}
+      <Column field={mongoKeys?.mappingKey?.key} header={mongoKeys?.mappingKey?.label} />
+      {mongoKeys?.imageFields?.map((imageField, index) => (
+          <Column
+            key={index}
+            field={`images.${index}.name`}
+            header={`Φωτογραφία-${index}`}
+          />
+        ))}
     </DataTable>
   );
 };
@@ -131,11 +138,14 @@ const SubmitTable = ({ data }) => {
             onClick={() => router.push("/dashboard/product")}
           />
           <div>
-
+              <div>
+                 <span className="text-500">Ανανεωμένα Προϊόντα: </span>
+                  <span>{data.countSuccess} / {data.totalProducts}</span>
+              </div>
           </div>
         </div>
       )}
-      value={data}
+      value={data.result}
       rows={20}
       showGridlines
       rowsPerPageOptions={[20, 50, 100, 200, 500]}
@@ -144,7 +154,6 @@ const SubmitTable = ({ data }) => {
     >
       <Column field={"NAME"} header={"Όνομα"} />
       <Column field={"code"} header={"Κωδικός"} />
-      <Column field={"imageName"} header={"Όνομα Φωτογραφίας"} />
       <Column
         style={{ width: "100px" }}
         field={"success"}
@@ -159,7 +168,7 @@ const StatusTemplate = ({ success }) => {
   return (
     <div className="">
       <span
-        className={`p-badge ${success ? " p-badge-success" : "p-badge-error"}`}
+        className={`p-badge ${success ? " p-badge-success" : "p-badge-danger"}`}
       >
         {success ? "Επιτυχία" : "Αποτυχία"}
       </span>
