@@ -1,32 +1,3 @@
-# name: GZB Unit Tests
-
-# on:
-#   push:
-#     branches:
-#       - main
-#   pull_request:
-#     branches: [main]
-
-# jobs:
-#   frontend_unit_tests:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2   
-#         with:
-#           node-version: 16.17.1
-#       - name: Build the Project
-#         run: |
-#           npm ci
-#           touch .env.local
-#           echo APP_ID=${{ secrets.APP_ID }} >> .env.local
-#           echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
-#           echo BRANCH=${{ secrets.BRANCH}} >> .env.local
-#           echo COMPANY=${{ secrets.COMPANY }} >> .env.local
-#           echo DOMAIN=${{ secrets.DOMAIN}} >> .env.local
-#           echo MONGO_URI=${{ secrets.MONGO_URI }} >> .env.local
-#           echo NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }} >> .env.local
-#           echo NODE_ENV=${{ secrets.NODE_ENV }} >> .env.local
-#           npm run build
 
 name: Dash CI/CD
 on:
