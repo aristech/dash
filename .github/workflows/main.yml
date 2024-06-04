@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     runs-on: self-hosted
-    environment: progressnet
+    environment: progressNet
     steps:
       - uses: actions/checkout@v3
         with:
