@@ -3,7 +3,6 @@
 @import 'primeicons/primeicons.css';
 @import './product.css';
 @import './holder.css';
-@import './dataTable.css';
 
 *,
 *::before,
@@ -405,6 +404,30 @@ form {
     font-size: 0.8rem;
 }
 
+
+.upload_product_result {
+    background-color: white;
+    padding: 12px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.uploaded_status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.uploaded_success {
+    background-color: rgb(5, 173, 5);
+}
+.uploaded_error {
+    background-color: green;
+}
 
 .dialog_form {
     width: 500px;

@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 import { model, models, Schema } from 'mongoose';
-import { Catalogs } from './catalogsModle';
-import Markes from './markesModel';
 
 const supplierSchema = new mongoose.Schema({
     TRDR: {

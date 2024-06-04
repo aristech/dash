@@ -81,11 +81,7 @@ const Page = () => {
         });
     };
 
-    useEffect(() => {
-        console.log({attributes})
-        console.log({mongoKeys})
-    }, [attributes, mongoKeys]);
-
+  
    
 
     const handleMongoKeysChange = () => {

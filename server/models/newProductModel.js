@@ -49,9 +49,9 @@ const softoneProduct = new mongoose.Schema({
     VAT: String,
     COUNTRY: String,
     INTRASTAT: String,
-    WIDTH: String,
-    HEIGHT: String,
-    LENGTH: String,
+    WIDTH: String, //DIM1
+    HEIGHT: String, //DIM2
+    LENGTH: String, //DIM3
     GWEIGHT: String,
     VOLUME: String,
     STOCK: String,

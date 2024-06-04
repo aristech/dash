@@ -23,11 +23,6 @@ const Page = () => {
         </div>
       </div>
      <OffersSection />
-      <div className="col bg-white border-round mb-3">
-        < UploadedProductsGrid />
-      </div>
-    
-    
     </AdminLayout>
 
   )
