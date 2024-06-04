@@ -3,27 +3,25 @@ import { transporter } from "./nodemailerConfig";
 
 
 export const sendEmail = (email,cc, subject, message, fileName, file, includeFile) => {
-    console.log(email)
+    console.log({email})
     const mail = {
-        from: 'info@kolleris.com',
+        from: 'noreply@progressnet.dev',
         to: email,
         cc: cc,
         subject: subject,
         text: message,
-        attachments: [],
-    };
-    
-    if(includeFile) {
-        mail.attachments.push({
+        attachments: [{
             filename: `${fileName}.xlsx`,
             content: file
-        })
-    }
+        }],
+    
+    };
+    
 
     return new Promise((resolve, reject) => {
       transporter.sendMail(mail, (err, info) => {
           if (err) {
-              console.log(err.message);
+              console.log("error " + err.message);
               resolve({
                   status: false,
                   message: err.message
@@ -35,6 +33,7 @@ export const sendEmail = (email,cc, subject, message, fileName, file, includeFil
                   message: 'Email sent successfully'
               }); // Resolve with an object containing status true and a success message
           }
+        
       });
   });
   }

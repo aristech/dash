@@ -75,7 +75,6 @@ export const TextAreaInput = ({
             <InputTextarea
               rows={rows}
               cols={cols}
-              row={1}
               disabled={disabled}
               autoResize={autoResize}
               id={field.name}

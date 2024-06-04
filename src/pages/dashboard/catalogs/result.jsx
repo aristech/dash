@@ -119,10 +119,19 @@ const Table = ({ data, mongoKeys, attributes, setReturnedProducts }) => {
         SUPPLIER_TRDR: trdr,
       });
       setReturnedProducts(res.data);
-      showMessage("success", "Τα δεδομένα αποστάλθηκαν επιτυχώς", "Επιτυχία");
+      showMessage({
+        severity: "success",
+        summary: "Επιτυχία",
+        message: Επιτυχία,
+      });
       console.log(res.data);
     } catch (e) {
-      showMessage("error", e.message, "Σφάλμα");
+      showMessage({
+        severity: "success",
+        summary: e.message,
+        message: "Σφαλμα",
+      });
+     
     } finally {
       setLoading(false);
     }

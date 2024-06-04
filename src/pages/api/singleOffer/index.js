@@ -80,19 +80,17 @@ export default async function handler(req, res) {
     }
 
     if(action === "sendEmail") {
-        
-        const {products, cc, subject, fileName, message, createdAt, includeFile, clientEmail, clientName, SALDOCNUM} = req.body;
-            let newcc = []
-            for(let item of cc) {
-                newcc.push(item.email)
-            }
+        const {formData, products, id} = req.body;
+        const {email, subject, cc, message, fileName} = formData;
+        // const {products, cc, subject, fileName, message,  includeFile, clientEmail, id} = req.body;
           
            try {
-            let csv = await createCSVfile(products)
-            let send = await sendEmail(clientEmail, newcc, subject, message, fileName, csv, includeFile);
+            const csv = await createCSVfile(products)
+            //SEND EMAIL PARAMS email ,cc, subject, message, fileName, file
+            let send = await sendEmail(email, cc, subject, message, fileName, csv );
             console.log({send})
             if(send.status) {
-                await SingleOffer.updateOne({SALDOCNUM: SALDOCNUM}, {
+                await SingleOffer.updateOne({_id: id}, {
                     $set: {
                         status: 'sent'
                     }

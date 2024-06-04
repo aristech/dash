@@ -2,13 +2,14 @@ import {useState, useEffect} from "react";
 import { Dropdown } from "primereact/dropdown";
 import axios from "axios";
 
-const VatDropdown = ({ state, handleState, isEdit =false, error, required = false }) => {
+const VatDropdown = ({ state, handleState, isEdit =false, error, required = false, showOnly=false, disabled=false }) => {
     const [options, setOptions] = useState([]);
-
+    console.log({state})
     const handleFetch = async () => {
       let { data } = await axios.post("/api/product/apiProductFilters", {
         action: "findVats",
       });
+      console.log(data)
       setOptions(data.result);
     };
     useEffect(() => {
@@ -18,6 +19,7 @@ const VatDropdown = ({ state, handleState, isEdit =false, error, required = fals
     useEffect(() => {
         if(!isEdit && !options) return
         let option = options.find((option) => option.VAT == state);
+        console.log({option})
         if(!option) return;
         handleState(option);
     }, [options]);
@@ -27,7 +29,8 @@ const VatDropdown = ({ state, handleState, isEdit =false, error, required = fals
       <div className="w-full">
         <label className={`custom_label ${error ? "text-red-600" : null}`}>Αλλαγή ΦΠΑ {required && "*"}</label>
         <Dropdown
-        showClear
+          disabled={disabled}
+          showClear
           filter
           value={state}
           onChange={(e) => handleState(e.target.value)}

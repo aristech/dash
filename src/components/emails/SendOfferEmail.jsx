@@ -36,7 +36,7 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
     useEffect(() => {
         setState((prev) => (
             { ...prev, 
-                subject: `Προσφορά με αριθμό ${SALDOCNUM} για τον πελάτη ${clientName}`,
+                subject: `Προσφορά  για τον πελάτη ${clientName}`,
                 fileName: `kollers.offer.csv`,
                 message: 'Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.'
             }
@@ -83,6 +83,7 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
 
     const finalSubmit = async () => {
         setLoading(true)
+
         try {
             let { data } = await axios.post('/api/singleOffer', 
             { 
@@ -93,7 +94,7 @@ const SendEmailTemplate = ({ email, mt,  clientName, SALDOCNUM, createdAt, produ
                 fileName: state.fileName,
                 includeFile: state.checked,
                 clientName: clientName,
-                clientEmail: email, 
+                clientEmail: state.email, 
                 products:  products, 
                 SALDOCNUM: SALDOCNUM, 
                 createdAt: createdAt,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, use } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import axios from 'axios';
@@ -8,10 +8,10 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import { Dropdown } from 'primereact/dropdown';
 import { Tag } from 'primereact/tag';
 import CreatedAt from '@/components/grid/CreatedAt';
-import SendEmailTemplate from '../emails/SendEmailTemplate';
 import { InputNumber } from 'primereact/inputnumber';
 import { Toast } from 'primereact/toast';
 import { useRouter } from 'next/router';
+import EmailTemplate from '../emails/EmailTemplate';
 
 
 const OfferGrid = ({ clientName }) => {
@@ -27,6 +27,11 @@ const OfferGrid = ({ clientName }) => {
     const [refetch, setRefetch] = useState(false)
     const [statuses] = useState(['pending', 'done', 'rejected']);
 
+
+    useEffect(() => {
+        handleFetch();
+    }, [refetch])
+
     const handleFetch = async () => {
         setLoading(prev => ({ ...prev, grid: true }))
         let res = await axios.post('/api/singleOffer', { action: 'findOffers', clientName: clientName })
@@ -34,11 +39,8 @@ const OfferGrid = ({ clientName }) => {
         setLoading(prev => ({ ...prev, grid: false }))
     }
 
-
-    useEffect(() => {
-        handleFetch();
-    }, [refetch])
-
+    
+ 
 
     //STATUS ROW:
     const getSeverity = (value) => {
@@ -77,10 +79,8 @@ const OfferGrid = ({ clientName }) => {
     };
 
 
-    //SUBMIT ACTIONS, SEND EMAIL TO CLIENT:
-    // const Actions = ({products, clientName, clientEmail, _id, SALDOCNUM,createdAt}) => {
+   
     const Actions = ({ clientEmail, clientName, products, SALDOCNUM, createdAt, _id, TRDR, FINCODE }) => {
-
         const op = useRef(null);
         const _products = products.map((item, index) => {
             return {
@@ -133,15 +133,16 @@ const OfferGrid = ({ clientName }) => {
                     <Button  disabled={FINCODE} loading={loading.findoc}  className='w-full mb-2'  severity='secondary' label="Εκ. Παραστατικού" onClick={handleFinDoc}/>
                     <Button loading={loading.delete} label="Διαγραφή" severity='danger' className='w-full mb-2' icon="pi pi-trash" onClick={onDelete} />
                     <XLSXDownloadButton data={_products} fileName={`${clientName}.offer`} />
-                    <SendEmailTemplate
-                        mt={2}
-                        email={clientEmail}
-                        products={_products}
-                        clientName={clientName}
-                        SALDOCNUM={SALDOCNUM}
-                        setRefetch={setRefetch}
-                        op={op}
-                    />
+                    <div className='mt-2'>
+                    <SendOfferEmail
+                            id={_id}
+                            email={clientEmail}
+                            products={_products}
+                            clientName={clientName}
+                            SALDOCNUM={SALDOCNUM}
+                            setRefetch={setRefetch}
+                        />
+                    </div>
                     <span className='font-bold mt-2 block'>PDF:</span>
                     <Button disabled={!FINCODE} loading={loading.pdf}  severity='warning' className='w-full mt-2' label="Δημιουργία PDF" onClick={createPDF} />
                 </OverlayPanel>
@@ -188,6 +189,7 @@ const OfferGrid = ({ clientName }) => {
         )
     }
 
+
     return (
         <div className="card mt-3">
             <DataTable
@@ -214,6 +216,8 @@ const OfferGrid = ({ clientName }) => {
         </div>
     )
 }
+
+
 
 
 const CreatedFrom = ({ createdFrom }) => {
@@ -487,6 +491,49 @@ const DiscountedPrice = ({DISCOUNTED_PRICE}) => {
         <div>
             <p className='font-bold'>{`${DISCOUNTED_PRICE >= 0 ? DISCOUNTED_PRICE + " €": '' } `}</p>
         </div>
+    )
+}
+
+
+const SendOfferEmail = ({ 
+    email,  
+    clientName, 
+    products,
+    setRefetch,
+    id,
+}) => {
+   
+  
+    const finalSubmit = async (formData) => {
+        try {
+            let { data } = await axios.post('/api/singleOffer', 
+            { 
+                action: 'sendEmail',
+                products,
+                id,
+                formData,
+            })
+            setRefetch(prev => !prev)
+            return data.message
+        } catch (e) {
+            console.error({e})
+            return e.message
+        }
+        
+    
+    }
+   
+
+    return (
+        <EmailTemplate
+        handleSend={finalSubmit}
+        email={email}
+        products={products}
+        clientName={clientName}
+        subject={`Προσφορά σε πελάτη ${clientName}`}
+        fileName={`${clientName}.offer`}
+        message={`Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.`}
+    />
     )
 }
 
