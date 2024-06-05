@@ -1,79 +1,70 @@
-import React, { useEffect, useRef, useState } from 'react'
-import AdminLayout from '@/layouts/Admin/AdminLayout'
-import SelectedProducts from '@/components/grid/SelectedProducts'
-import ProductSearchGrid from '@/components/grid/ProductSearchGrid';
-import StepHeader from '@/components/StepHeader';
-import { useSelector } from 'react-redux';
-import { Button } from 'primereact/button';
-import axios from 'axios';
-import { Toast } from 'primereact/toast';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import SoftoneStatusButton from '@/components/grid/SoftoneStatusButton';
+import React, {  useState } from "react";
+import AdminLayout from "@/layouts/Admin/AdminLayout";
+import SelectedProducts from "@/components/grid/SelectedProducts";
+import ProductSearchGrid from "@/components/grid/ProductSearchGrid";
+import StepHeader from "@/components/StepHeader";
+import { useSelector } from "react-redux";
+import { Button } from "primereact/button";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/_context/ToastContext";
 
 const Page = ({}) => {
-    const router = useRouter();
-    const { data: session, update } = useSession();
+  const router = useRouter();
+  const { data: session } = useSession();
+  const [loading, setLoading] = useState(false);
+  const { selectedProducts, mtrLines } = useSelector((state) => state.products);
+  const { offerEmail } = useSelector((state) => state.impaoffer);
+  const { selectedClient } = useSelector((state) => state.impaoffer);
+  const user = session?.user?.user;
+  const { showMessage } = useToast();
 
 
-    const [loading, setLoading] = useState(false)
-    const toast = useRef(null);
-    const {selectedProducts, mtrLines} = useSelector(state => state.products);
-    const {offerEmail} = useSelector(state => state.impaoffer);
-    const { selectedClient } = useSelector(state => state.impaoffer)
-    const user = session?.user?.user;
-   
-
-    
-
-    const showSuccess = (message) => {
-      toast.current.show({ severity: 'success', summary: 'Success', detail: message, life: 3000 });
+ 
+  const onClick = async () => {
+    setLoading(true);
+    try {
+       await axios.post("/api/singleOffer", {
+        action: "createOrder",
+        data: mtrLines,
+        email: offerEmail,
+        name: selectedClient?.NAME,
+        TRDR: selectedClient?.TRDR,
+        createdFrom: user?.lastName,
+      });
+      router.push("/dashboard/offer");
+    } catch (e) {
+      showMessage({
+        severity: "error",
+        summary: "Error",
+        message: e.message
+      })
+    } finally {
+      setLoading(false);
     }
-  
-    const showError = (message) => {
-      toast.current.show({ severity: 'error', summary: 'Error', detail: message, life: 3000 });
-    }
-    const onClick = async () => {
-      
-        setLoading(true)
-        const {data} = await axios.post('/api/singleOffer', {
-          action: "createOrder", 
-          data: mtrLines, 
-          email: offerEmail,
-          name: selectedClient?.NAME,
-          TRDR: selectedClient?.TRDR,
-          createdFrom: user?.lastName
-        })
-
-        if(!data.success) {
-          showError(data.error)
-          return;
-        } 
-        setLoading(false)
-
-        router.push('/dashboard/offer')
-    }
+  };
   return (
     <AdminLayout>
-      <Toast ref={toast} />
-        <div>
-            <StepHeader text="Επιλογή Προϊόντων" />
-            <ProductSearchGrid />
-            {selectedProducts.length > 0 ? (
-               <>
-                  <div className='mt-4'>
-                 <StepHeader text="Επιλεγμένα Προϊόντα" />
-                 </div>
-                 <SelectedProducts />
-                 <div className='mt-3'>
-                 < SoftoneStatusButton onClick={onClick} btnText="Ολοκλήρωση" />
-                 </div>
-               </>
-            ) : null}
-           
-        </div>
-    </AdminLayout >
-  )
-}
+      <div>
+        <StepHeader text="Επιλογή Προϊόντων" />
+        <ProductSearchGrid />
+        {selectedProducts.length ? (
+          <div className="mt-4">
+            <StepHeader text="Επιλεγμένα Προϊόντα" />
+            <SelectedProducts />
+            <Button
+              loading={loading}
+              className="mt-2"
+              label="Προσθήκη"
+              onClick={onClick}
+              icon="pi pi-plus"
+            />
+          </div>
+        ) : null}
+      </div>
+    </AdminLayout>
+  );
+};
 
-export default Page
+export default Page;

@@ -43,7 +43,6 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
 
     const handleEdit = async (data) => {
 
-      
         const object = {
             ...data,
             videoPromoList: videoList,
@@ -54,6 +53,7 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
             let user = session.user.user.lastName
             console.log(user)
             let resp = await axios.post('/api/product/apiMarkes', { action: "update", data: { ...object, updatedFrom: user, }, id: gridRowData._id, mtrmark: gridRowData?.softOne?.MTRMARK })
+            console.log({resp})
             if (!resp.data.success) {
                 return showError(resp.data.softoneError)
             }
@@ -82,13 +82,12 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
 
     const productDialogFooter = (
         <React.Fragment>
-            <Button label="Ακύρωση" icon="pi pi-times" severity="info" outlined onClick={handleClose} />
+            <Button  label="Ακύρωση" icon="pi pi-times" severity="info" outlined onClick={handleClose} />
             <Button label="Αποθήκευση" icon="pi pi-check" severity="info" onClick={handleSubmit(handleEdit)} />
         </React.Fragment>
     );
 
     return (
-        < Container>
             <form >
                 <Toast ref={toast} />
                 <Dialog
@@ -179,8 +178,6 @@ const EditDialog = ({ dialog, hideDialog, setSubmitted }) => {
                     />
                 </Dialog>
             </form>
-        </Container>
-
     )
 }
 
@@ -240,7 +237,6 @@ const UploadLogo = ({ id }) => {
 
 const addSchema = yup.object().shape({
     name: yup.string().required('Συμπληρώστε το όνομα'),
-    TRDCATEGORY: yup.string().required('Συμπληρώστε την κατηγορία'),
 });
 
 
@@ -255,7 +251,6 @@ const AddDialog = ({
         control,
         formState: { errors },
         handleSubmit,
-        getValues,
         reset
     } = useForm({
         resolver: yupResolver(addSchema),
@@ -290,6 +285,7 @@ const AddDialog = ({
 
 
     const handleAdd = async (data) => {
+        
         setDisabled(false)
         let dataImages = []
         for (let i of images) {
@@ -319,8 +315,8 @@ const AddDialog = ({
 
     const productDialogFooter = (
         <>
-            <Button label="Ακύρωση" icon="pi pi-times" outlined onClick={cancel} />
-            <Button label="Αποθήκευση" icon="pi pi-check" type="submit" onClick={handleSubmit(handleAdd)} disabled={disabled} />
+            <Button size="small" label="Ακύρωση" icon="pi pi-times" outlined onClick={cancel} />
+            <Button size="small" label="Αποθήκευση" icon="pi pi-check" type="submit" onClick={handleSubmit(handleAdd)} disabled={disabled} />
         </>
     );
 

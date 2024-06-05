@@ -80,11 +80,21 @@ form {
     font-size: 0.8rem;
 }
 
-.p-button.p-button-sm {
+/* .p-button.p-button-sm {
+    font-size: 0.8rem;
+    padding: 0.55rem 0.9rem;
+
+} */
+.p-button {
     font-size: 0.8rem;
     padding: 0.55rem 0.9rem;
 
 }
+.p-button.p-button-icon-only {
+    width: 3rem;
+    padding: 0.55rem 0;
+}
+
 /* label for all input elements */
 .custom_label {
     /* block mb-1 text-sm font-medium text-gray-700 */

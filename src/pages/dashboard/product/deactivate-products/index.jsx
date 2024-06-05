@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import AdminLayout from "@/layouts/Admin/AdminLayout";
 import { Button } from "primereact/button";
 import { useSelector } from "react-redux";
@@ -37,11 +37,15 @@ export default function PageWrapper() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { gridData } = useSelector((state) => state.deactivateProducts);
+
+
+ 
   const onUploadClick = () => {
     fileInputRef.current.click();
   };
 
   const handleFileUpload = async (e) => {
+    dispatch(setGridData([]));
     try {
       setLoading(true);
       const reader = new FileReader();
@@ -74,6 +78,7 @@ export default function PageWrapper() {
           className="mb-4"
           loading={loading}
           onClick={onUploadClick}
+          severity="secondary"
           label="Ανέβασμα Προϊόντων για Απενεργοποίηση"
           icon="pi pi-upload"
         ></Button>
@@ -106,7 +111,6 @@ function Table({ gridData }) {
             />
           </div>
         )}
-        editMode="cell"
         paginator
         rows={10}
         showGridlines
@@ -114,7 +118,6 @@ function Table({ gridData }) {
         selectionMode="radiobutton"
         value={gridData}
         tableStyle={{ minWidth: "50rem" }}
-        filterDisplay="row"
       >
         {columns()}
       </DataTable>

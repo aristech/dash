@@ -2,8 +2,7 @@
 import { transporter } from "./nodemailerConfig";
 
 
-export const sendEmail = (email,cc, subject, message, fileName, file, includeFile) => {
-    console.log({email})
+export const sendEmail = (email ,cc, subject, message, fileName, file) => {
     const mail = {
         from: 'noreply@progressnet.dev',
         to: email,

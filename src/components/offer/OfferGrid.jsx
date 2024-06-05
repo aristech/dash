@@ -84,15 +84,11 @@ const OfferGrid = ({ clientName }) => {
         const op = useRef(null);
         const _products = products.map((item, index) => {
             return {
-                CLIENT_NAME: clientName,
-                CLIENT_EMAIL: clientEmail || 'Δεν υπάρχει email',
-                SALDOCNUM: SALDOCNUM,
-                CREATED_AT: createdAt,
-                SALDOCNUM: SALDOCNUM,
-                PRODUCT_NAME: item.NAME,
-                PRICE: item.PRICE,
-                QTY1: item.QTY1,
-                TOTAL_PRICE: item.TOTAL_PRICE
+             
+                "Όνομα Προϊόντος": item.NAME,
+                "Τιμή": item.PRICE,
+                "Ποσότητα": item.QTY1,
+                "Συνολική Τιμή": item.TOTAL_PRICE
             }
         })
 

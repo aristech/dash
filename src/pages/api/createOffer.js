@@ -387,26 +387,31 @@ export default async function handler(req, res) {
 
     }
     if (action === "sendEmail") {
-        const { holders, products, cc, clientName, clientEmail, id, num, subject, message, fileName, includeFile, TRDR, mtrLines } = req.body;
-        let newcc = []
-        for (let item of cc) {
-            newcc.push(item.email)
-        }
-
+        // const {  products, cc, clientEmail, id,  subject, message, fileName, includeFile } = req.body;
+        const {formData, products, id} = req.body;
+        const {email, subject, cc, message, fileName} = formData;
+      
         try {
-            let csv = await createCSVfile(products)
-            let send = await sendEmail(clientEmail, newcc, subject, message, fileName, csv, includeFile);
             await connectMongo();
-            let update = await Holders.updateOne({ _id: id }, {
-                $set: {
-                    status: "sent"
+            const csv = await createCSVfile(products)
+            const send = await sendEmail(email, cc, subject, message, fileName, csv );
+            console.log({send})
+            if(send.status) {
+                try {
+                  const update =  await Holders.updateOne({ _id: id }, {
+                        $set: {
+                            status: "sent"
+                        }
+                    })
+                    console.log({update})
+                } 
+                catch(e) {
+                    console.log(e)
                 }
-            })
-
-            let modified = update.modifiedCount
-            return res.status(200).json({ success: true, result: modified, send: send })
+            }
+            return res.status(200).json({ success: true, message: send.message })
         } catch (e) {
-            return res.status(500).json({ success: false, result: null })
+            return res.status(500).json({ success: false, message:e.message })
         }
 
 

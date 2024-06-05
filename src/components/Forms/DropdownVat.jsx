@@ -4,12 +4,10 @@ import axios from "axios";
 
 const VatDropdown = ({ state, handleState, isEdit =false, error, required = false, showOnly=false, disabled=false }) => {
     const [options, setOptions] = useState([]);
-    console.log({state})
     const handleFetch = async () => {
       let { data } = await axios.post("/api/product/apiProductFilters", {
         action: "findVats",
       });
-      console.log(data)
       setOptions(data.result);
     };
     useEffect(() => {
@@ -19,7 +17,6 @@ const VatDropdown = ({ state, handleState, isEdit =false, error, required = fals
     useEffect(() => {
         if(!isEdit && !options) return
         let option = options.find((option) => option.VAT == state);
-        console.log({option})
         if(!option) return;
         handleState(option);
     }, [options]);

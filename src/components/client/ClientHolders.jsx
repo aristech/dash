@@ -9,13 +9,13 @@ import { Tag } from 'primereact/tag';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import CreatedAt from '../grid/CreatedAt'
 import XLSXDownloadButton from '../exportCSV/Download'
-import SendMultiOfferEmail from '../emails/SendMultiOfferTemplate'
 import { setSelectedProducts } from '@/features/productsSlice'
 import { setSelectedImpa } from '@/features/impaofferSlice'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { InputNumber } from 'primereact/inputnumber';
 import { Toast } from 'primereact/toast';
+import EmailTemplate from '../emails/EmailTemplate'
 
 
 const ClientHolder = ({ NAME }) => {
@@ -101,13 +101,10 @@ const ClientHolder = ({ NAME }) => {
         holders.map((holder) => {
             holder.products.map((product) => {
                 _products.push({
-                    name: clientName,
-                    email: clientEmail,
-                    holderName: holder.name,
-                    productName: product.NAME,
-                    productPrice: product.PRICE,
-                    productQuantity: product.QTY1,
-                    productTotalPrice: product.TOTAL_PRICE
+                    "Προϊόν": product.NAME,
+                    "Τιμή": product.PRICE,
+                    "Ποσότητα": product.QTY1,
+                    "Συνολική Τιμή": product.TOTAL_PRICE
                 })
 
             })
@@ -151,18 +148,15 @@ const ClientHolder = ({ NAME }) => {
                     <Button disabled={FINCODE} loading={loading.findoc} label="Εκ. Παραστατικού" severity='secondary' className='w-full mb-2' onClick={handleFinDoc} />
                     <Button loading={loading.delete} label="Διαγραφή" icon="pi pi-trash" severity='danger' className='w-full mb-2' onClick={handleDelete} />
                     <XLSXDownloadButton data={_products} fileName={`${clientName}.offer`} />
+                    <div className='mt-2'>
                     <SendMultiOfferEmail
-                        mt={2}
                         email={clientEmail}
                         products={_products}
                         clientName={clientName}
-                        SALDOCNUM={SALDOCNUM}
                         setRefetch={setRefetch}
-                        holders={holders}
-                        createdAt={createdAt}
-                        num={num}
-                        _id={_id}
+                        id={_id}
                     />
+                    </div>
                     <Button disabled={!FINCODE} className='w-full mt-2' severity='warning'  label="pdf" icon="pi pi-file-pdf" onClick={handlePDF} />
                 </OverlayPanel>
             </div>
@@ -594,6 +588,47 @@ const CreatedFrom = ({ createdFrom }) => {
 
 
 
+const SendMultiOfferEmail = ({ 
+    email,  
+    clientName, 
+    products,
+    setRefetch,
+    id,
+}) => {
+   
+  
+    const finalSubmit = async (formData) => {
+        try {
+            const { data } = await axios.post('/api/createOffer', { 
+                action: 'sendEmail', 
+                products,
+                formData,
+                id,
+            })
+            console.log({data})
+            setRefetch(prev => !prev)
+            return data.message
+        } catch (e) {
+            console.error({e})
+            return e.message
+        }
+        
+    
+    }
+
+
+    return (
+        <EmailTemplate
+        handleSend={finalSubmit}
+        email={email}
+        products={products}
+        clientName={clientName}
+        subject={`Προσφορά σε πελάτη ${clientName}`}
+        fileName={`${clientName}.offer`}
+        message={`Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.`}
+    />
+    )
+}
 
 
 export default ClientHolder;

@@ -1,8 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState,  useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { setPageId, setDataSource, setShowImpaTable, setHolder } from '@/features/impaofferSlice';
-import { setSelectedProducts } from '@/features/productsSlice';
+import {  setDataSource, setShowImpaTable, } from '@/features/impaofferSlice';
 import StepHeader from '@/components/StepHeader';
 import { Button } from 'primereact/button';
 import { Toolbar } from 'primereact/toolbar';
@@ -13,21 +12,17 @@ import AdminLayout from '@/layouts/Admin/AdminLayout';
 import { useRouter } from 'next/router';
 import ProductSearchGrid from '@/components/grid/ProductSearchGrid';
 import SelectedProducts from '@/components/grid/SelectedProducts';
-import SoftoneStatusButton from '@/components/grid/SoftoneStatusButton';
 import { Toast } from 'primereact/toast';
 
 
 const ImpaHolder = () => {
-    const dispatch = useDispatch();
     const [loading, setLoading] = useState(false)
     const router = useRouter();
     const {id} = router.query;
     const toast = useRef(null);
 
-
-
     const { selectedProducts, mtrLines } = useSelector(state => state.products)
-    const { selectedClient, holder, selectedImpa } = useSelector(state => state.impaoffer)
+    const { selectedImpa } = useSelector(state => state.impaoffer)
 
     const showError = (message) => {
         toast.current.show({severity:'error', summary: 'Error', detail:message, life: 5000});
@@ -57,12 +52,14 @@ const ImpaHolder = () => {
                 <Button loading={loading} size="small" icon="pi pi-angle-left" label="Πίσω" onClick={() => router.back()} />
             </div>
             <PickListComp title={'Επιλογή Impa'} />
-            <div className='mt-4 mb-5'>
-                <div className='mt-3'>
-                    < SoftoneStatusButton onClick={onHolderCompletions} btnText="Ολοκλήρωση Holder" />
-                </div>
-
-            </div>
+            {selectedProducts.length ? (
+                <Button 
+                    label="Ολοκλήρωση Holder"
+                    className='ml-2'
+                    onClick={onHolderCompletions}
+                    icon="pi pi-check"
+                />
+            ) : null}
         </AdminLayout>
     )
 }
@@ -75,7 +72,6 @@ export const PickListComp = ({disableImpaBtn = false, title, code}) => {
     const { selectedProducts } = useSelector(state => state.products)
     const [show, setShow] = useState(true)
 
-    console.log('picklist code :'  + code)
     return (
         <div >
             <div className='mt-4' >

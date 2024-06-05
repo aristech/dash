@@ -4,7 +4,6 @@ import { Column } from 'primereact/column';
 import { ProgressBar } from 'primereact/progressbar';
 import axios from 'axios';
 import { Dropdown } from 'primereact/dropdown';
-import { setLazyState } from '@/features/productsSlice';
 import XLSXDownloadButton from '../exportCSV/Download';
 
 const ProductStats = () => {

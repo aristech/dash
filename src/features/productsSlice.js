@@ -7,36 +7,11 @@ const initialState = {
     mtrLines: [],
     orderLines: [],
     loading: false,
-    sort: 1,
-    sortImpa: 0,
-    sortPrice: 0,
-    sortEan: 0,
-    sortAvailability: 0,
-    searchTerm: '',
-    softoneFilter: null,
-    filters: {
-        category: null,
-        group: null,
-        subgroup: null,
-        marka: null,
-    },
-    category: null,
-    group: null,
-    subgroup: null,
-    marka: null,
-    lazyState: {
-        first: 0,
-        rows: 10,
-        page: 1,
-    },
     lazyState2: {
         first: 0,
         rows: 50,
         page: 1,
     },
-    productsForSoftone: [],
-    singleProductForSoftone: null,
-    codeSearch: '',
 }
 
 
@@ -70,6 +45,8 @@ const productsSlice = createSlice({
 			state.selectedProducts = state.selectedProducts.filter(product => product._id !== payload.id);
             state.mtrLines = state.mtrLines.filter(product => product.NAME !== payload.name);
 		},
+
+        //#used in the selected products grid to update the quantity and the total price
 		setMtrLines: (state, {payload}) => {
 			state.mtrLines = state.mtrLines.map(item => {
 				if (item.MTRL === payload.MTRL) {
@@ -79,25 +56,6 @@ const productsSlice = createSlice({
 			});
 		},
 	
-		setFilters: (state, {payload}) => {
-            switch(payload.action) {
-                case "category": 
-                    state.filters.category = payload.value;
-                    // state.filters.group = null;
-                    // state.filters.subgroup = null;
-                    break;
-                case "group": 
-                    state.filters.group = payload.value;
-                    // state.filters.subgroup = null;
-                    break;
-                case "subgroup":
-                    state.filters.subgroup = payload.value;
-                    break;
-                case "marka":
-                    state.filters.marka = payload.value;
-                    break;
-            }
-		},
 
         //set the state after dropwdown selection
         setCategory: (state, {payload}) => { 

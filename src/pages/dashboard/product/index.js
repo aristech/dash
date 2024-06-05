@@ -144,6 +144,28 @@ export default function ProductLayout() {
   );
 }
 
+
+const INITIAL_STATE_FILTERS = {
+  //SEARCHES:
+  nameSearch: "",
+  impaSearch: "",
+  erpCode: "",
+  codeSearch: "",
+  //CATEGORIZATION:
+  manufacturer: null,
+  MTRCATEGORY: null,
+  MTRGROUP: null,
+  CCCSUBGROUP2: null,
+  MTRMARK: null,
+  MANUFACTURER: null,
+  //STATUSES:
+  SOFTONESTATUS: true,
+  ISACTIVE: true,
+  skroutz: null,
+  active: true,
+  images: null,
+}
+
 function Product() {
   const op = useRef(null);
   const toast = useRef(null);
@@ -192,26 +214,7 @@ function Product() {
     impas: 0,
   });
 
-  const INITIAL_STATE_FILTERS = {
-    //SEARCHES:
-    nameSearch: "",
-    impaSearch: "",
-    erpCode: "",
-    codeSearch: "",
-    //CATEGORIZATION:
-    manufacturer: null,
-    MTRCATEGORY: null,
-    MTRGROUP: null,
-    CCCSUBGROUP2: null,
-    MTRMARK: null,
-    MANUFACTURER: null,
-    //STATUSES:
-    SOFTONESTATUS: true,
-    ISACTIVE: true,
-    skroutz: null,
-    active: true,
-    images: null,
-  }
+  
 
   const [stateFilters, setStateFilters] = useState(INITIAL_STATE_FILTERS);
 
@@ -228,7 +231,7 @@ function Product() {
         //create a conditional loading state:
         setLoading(true)
     }
- 
+    console.log("FETCHING PRODUCTS")
     try {
       let { data } = await axios.post("/api/product/apiProductFilters", {
         action: "productSearchGrid",
@@ -255,7 +258,7 @@ function Product() {
   }, [])
   useEffect(() => {
     fetchProducts();
-  }, [lazyState2,submitted,stateFilters,sortState]);
+  }, [lazyState2,submitted, stateFilters,sortState]);
 
   const allowExpansion = (rowData) => {
     return rowData;
@@ -272,12 +275,11 @@ function Product() {
 
   // -------------------- ADD / EDIT DIALOG ACTIONS --------------------------------
   const onAdd = async () => {
-    dispatch(setSubmitted());
+  
     setDialog((prev) => ({ ...prev, state: true, isEdit: false }));
   };
 
   const onEdit = async (product) => {
-    dispatch(setSubmitted());
     setDialog((prev) => ({ ...prev, state: true, isEdit: true }));
     setRowData(product);
   };
@@ -702,7 +704,7 @@ function Product() {
           {/* <Column style={{ width: '40px' }} field="PRICER01" header="Τιμή Scroutz"></Column> */}
         </DataTable>
       </div>
-      {dialog.state ? (
+     
         <ProductDialog
           isEdit={dialog.isEdit}
           data={rowData}
@@ -710,7 +712,6 @@ function Product() {
           hideDialog={hideDialog}
           setSubmitted={setSubmitted}
         />
-      ) : null}
       <ClassificationDialog
         dialog={classDialog}
         setDialog={setClassDialog}

@@ -1,24 +1,11 @@
 "use client";
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useSelector, useDispatch } from "react-redux";
-import { InputText } from "primereact/inputtext";
-import { useRouter } from "next/router";
-import { Dropdown } from "primereact/dropdown";
 import {
-  setCategory,
-  setGroup,
-  setSubgroup,
-  setFilters,
-  setLazyState,
-  setLoading,
-  resetSelectedFilters,
-  setSearchTerm,
-  setSort,
   setSelectedProducts,
-  setMarka,
 } from "@/features/productsSlice";
 import DropdownCategories from "../Forms/DropdownCategories";
 import DropdownGroups from "../Forms/DropdownGroups";
@@ -28,19 +15,25 @@ import { SearchAndSort } from "../Forms/SearchAndSort";
 
 const ProductSearchGrid = () => {
   const dispatch = useDispatch();
-  const { marka, lazyState, searchTerm, sort, selectedProducts } = useSelector(
+  const { selectedProducts } = useSelector(
     (store) => store.products
   );
-  const { selectedMarkes } = useSelector((state) => state.supplierOrder);
+
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
   const [data, setData] = useState([]);
-  const [codeSearch, setCodeSearch] = useState("");
+
+  const [lazyState, setLazyState] = useState({
+    first: 0,
+    rows: 20,
+    page: 1,
+  })
   const [sortState, setSortState] = useState({
     ean: 0,
     name: 1,
   });
   const [stateFilters, setStateFilters] = useState({
+    nameSearch: "",
     impaSearch: "",
     eanSearch: "",
     skroutz: null,
@@ -51,9 +44,10 @@ const ProductSearchGrid = () => {
     MTRMARK: null,
   });
 
+  
   useEffect(() => {
-    console.log({ data });
-  }, [data]);
+    dispatch(setSelectedProducts([]));
+  }, [])
 
   const fetch = async () => {
     try {
@@ -61,10 +55,6 @@ const ProductSearchGrid = () => {
         action: "productSearchGrid",
         skip: lazyState.first,
         limit: lazyState.rows,
-        mtrmark: selectedMarkes?.mtrmark,
-        sort: sort,
-        marka: marka,
-        softoneFilter: null,
         stateFilters: stateFilters,
       });
       setData(data.result);
@@ -76,45 +66,29 @@ const ProductSearchGrid = () => {
   useEffect(() => {
     fetch();
   }, [
-    selectedMarkes,
-    lazyState.rows,
-    lazyState.first,
-    searchTerm,
-    marka,
-    sort,
-    codeSearch,
+    lazyState,
     stateFilters,
   ]);
 
-  useEffect(() => {
-    dispatch(setLazyState({ ...lazyState, first: 0 }));
-  }, [selectedMarkes]);
+
 
   const onSelectionChange = (e) => {
     dispatch(setSelectedProducts(e.value));
   };
 
   const onPage = (event) => {
-    dispatch(
-      setLazyState({ ...lazyState, first: event.first, rows: event.rows })
-    );
+      setLazyState((prev) => ({
+        ...prev,
+        first: event.first,
+        rows: event.rows,
+      }))
   };
 
-  //CATEGORIZATION:
-  const handleCategoryChange = (value) => {
-    setStateFilters((prev) => ({ ...prev, MTRCATEGORY: value }));
-  };
+ 
 
-  const handleGroupChange = (value) => {
-    setStateFilters((prev) => ({ ...prev, MTRGROUP: value }));
-  };
-  const handleSubgroupChange = (value) => {
-    setStateFilters((prev) => ({ ...prev, CCCSUBGROUP2: value }));
-  };
-  //BRANDS:
-  const handleBrandChange = (value) => {
-    setStateFilters((prev) => ({ ...prev, MTRMARK: value }));
-  };
+  const handleInputChange = (value, name) => {
+    setStateFilters((prev) => ({ ...prev, [name]: value }));
+  }
 
   //On filter button clear empty the states and the dependats:
   const handleCategoryClear = () => {
@@ -168,7 +142,7 @@ const ProductSearchGrid = () => {
           <SearchAndSort
             state={stateFilters.nameSearch}
             handleState={(value) =>
-              setStateFilters((prev) => ({ ...prev, nameSearch: value }))
+              handleInputChange(value, "nameSearch")
             }
             sort={sortState.ean}
             handleSort={() =>
@@ -183,9 +157,9 @@ const ProductSearchGrid = () => {
       <Column
         field="availability.DIATHESIMA"
         header="Διαθέσιμα"
-		style={{ maxWidth: "90px", textAlign: "center" }}
+		    style={{ maxWidth: "90px", textAlign: "center" }}
         body={({ availability }) => (
-          <span className="font-bold">{availability.DIATHESIMA}</span>
+          <span className="font-bold">{availability?.DIATHESIMA}</span>
         )}
       ></Column>
       <Column
@@ -197,7 +171,7 @@ const ProductSearchGrid = () => {
         filterElement={() => (
           <DropdownBrands
             state={stateFilters.MTRMARK}
-            handleState={handleBrandChange}
+            handleState={(value) => handleInputChange(value, "MTRMARK")}
             isFilter
           />
         )}
@@ -210,9 +184,9 @@ const ProductSearchGrid = () => {
         filterElement={() => (
           <DropdownCategories
             isFilter
-            handleState={handleCategoryChange}
+            handleState={(value) => handleInputChange(value, "MTRCATEGORY")}
             handleClear={handleCategoryClear}
-            state={stateFilters?.MTRCATEGORY}
+            state={stateFilters.MTRCATEGORY}
           />
         )}
       ></Column>
@@ -225,9 +199,9 @@ const ProductSearchGrid = () => {
         filterElement={() => (
           <DropdownGroups
             state={stateFilters.MTRGROUP}
-            handleState={handleGroupChange}
+            handleState={(value) => handleInputChange(value, "MTRGROUP")}
             handleClear={handleGroupClear}
-            categoryId={stateFilters?.MTRCATEGORY?.softOne.MTRCATEGORY}
+            categoryId={stateFilters?.MTRCATEGORY?.softOne?.MTRCATEGORY}
             isFilter
           />
         )}
@@ -240,7 +214,7 @@ const ProductSearchGrid = () => {
         filterElement={() => (
           <DropdownSubroups
             state={stateFilters.CCCSUBGROUP2}
-            handleState={handleSubgroupChange}
+            handleState={(value) => handleInputChange(value, "CCCSUBGROUP2")}
             handleClear={handleSubgroupClear}
             groupId={stateFilters.MTRGROUP?.softOne.MTRGROUP}
             categoryId={stateFilters.MTRCATEGORY?.softOne.MTRCATEGORY}
@@ -258,7 +232,7 @@ const ProductSearchGrid = () => {
           <SearchAndSort
             state={stateFilters.eanSearch}
             handleState={(value) =>
-              setStateFilters((prev) => ({ ...prev, eanSearch: value }))
+              handleInputChange(value, "eanSearch")
             }
             sort={sortState.ean}
             handleSort={() =>
