@@ -203,10 +203,8 @@ export default async function handler(req, res) {
                 const QTY1 = parseInt(item.QTY1);
                 return { MTRL, QTY1 };
             });
-            console.log(mtrlArr )
             const purdoc = await getPurdoc(mtrlArr, TRDR);
-            console.log('purdoc')
-            console.log(purdoc)
+            
             if (!purdoc) {
                 return res.status(200).json({ success: false, result: null, message: 'ORDER NOT CREATED' })
             }
@@ -260,14 +258,14 @@ export default async function handler(req, res) {
                     }, { new: true
                     })
                 }
-                console.log(send)
-                return res.status(200).json({ success: true,  message: send.message })
+                console.log({send})
+                return res.status(200).json({ success: true,  message: send.message, status: send.status })
 
             }
           
            
         } catch (e) {
-            return res.status(500).json({ success: false, message: e.message })
+            return res.status(500).json({ success: false, message: e.message, status: false })
         }
 
     }

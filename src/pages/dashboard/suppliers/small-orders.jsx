@@ -13,6 +13,7 @@ import { Toast } from 'primereact/toast';
 import { InputNumber } from 'primereact/inputnumber';
 import AdminLayout from '@/layouts/Admin/AdminLayout'
 import EmailTemplate from '@/components/emails/EmailTemplate'
+import { useToast } from '@/_context/ToastContext'
 
 const PendingOrders = ({ id }) => {
     const [data, setData] = useState([])
@@ -20,7 +21,7 @@ const PendingOrders = ({ id }) => {
     const [refetch, setRefetch] = useState(false)
     const [loading, setLoading] = useState(false)
     const [expandedRows, setExpandedRows] = useState(null);
-    
+    const {showMessage} = useToast();
 
 
     const allowExpansion = (rowData) => {
@@ -52,9 +53,15 @@ const PendingOrders = ({ id }) => {
         }
 
         const handleSubmit = async () => {
-            let {data} = await axios.post('/api/createSmallOrder', {action: 'issueFinDoc', id: _id, TRDR: TRDR})
-            console.log(data)
-            setRefetch(prev => !prev)
+            try {
+                let {data} = await axios.post('/api/createSmallOrder', {action: 'issueFinDoc', id: _id, TRDR: TRDR})
+                console.log(data)
+                setRefetch(prev => !prev)
+                showMessage({severity: 'success', summary: 'Success', message: data.message})
+            } catch (e) {
+                showMessage({severity: 'error', summary: 'Error', message: e.message})
+            }
+           
         }
         return (
             <div>
@@ -90,7 +97,6 @@ const PendingOrders = ({ id }) => {
         )
     }
 
-    console.log({data})
  
  
     return (
@@ -286,9 +292,12 @@ const SendSmallOrderEmail = ({
                 id
             })
             setRefetch(prev => !prev)
-            return data.message
+            return data
         } catch (e) {
-            return e.message
+            return {
+                status: false,
+                message: e.message
+            }
         }
     }
 

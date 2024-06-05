@@ -103,9 +103,9 @@ export default async function handler(req, res) {
           }
         );
       }
-      return res.status(200).json({ success: true, message: send.message });
+      return res.status(200).json({ success: true, message: send.message, status:send.status });
     } catch (e) {
-      return res.status(400).json({ success: false, message: e.message });
+      return res.status(400).json({ success: false, message: e.message, status: false });
     }
   }
 
@@ -409,6 +409,10 @@ async function getNewSalesDoc(TRDR, MTRLINES, totalDiscount) {
 }
 
 export async function getFinDoc(saldoc) {
+
+  if(!saldoc) {
+    return { success: false, error: "saldoc is missing"}
+  }
   let URL = `${process.env.NEXT_PUBLIC_SOFTONE_URL}/JS/mbmv.utilities/getFinDocInfo`;
   const response = await fetch(URL, {
     method: "POST",

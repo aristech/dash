@@ -605,12 +605,13 @@ const SendMultiOfferEmail = ({
                 formData,
                 id,
             })
-            console.log({data})
             setRefetch(prev => !prev)
-            return data.message
+            return data
         } catch (e) {
-            console.error({e})
-            return e.message
+            return {
+                status: false,
+                message: e.message
+            }
         }
         
     

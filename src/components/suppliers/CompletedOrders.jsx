@@ -134,23 +134,23 @@ const SendOrderEmail = ({
   
     const finalSubmit = async (formData) => {
         try {
-
-            const { data } = await axios.post('/api/createOrder', 
+            const { data } = await axios.post('test/api/createOrder', 
             { 
                 action: 'sentEmail',
                 formData,
                 id
             })
             setRefetch(prev => !prev)
-            return data.message
+            return data
         } catch (e) {
-            console.error({e})
-            return e.message
+            return {
+                status: false,
+                message: e.message
+            }
         }
         
     
     }
-   
 
     return (
         <EmailTemplate

@@ -496,18 +496,11 @@ const SendOfferEmail = ({
     setRefetch,
     id,
 }) => {
-    // setState((prev) => (
-    //     { ...prev, 
-    //         email: email,
-    //         subject: `Παραγγελία στον προμηθευτή ${name}`,
-    //         fileName: `kollers.order.csv`,
-    //         message: 'Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της παραγγελίας. Ευχαριστούμε.'
-    //     }
-    //     ))
+  
   
     const finalSubmit = async (formData) => {
         try {
-            let { data } = await axios.post('/api/singleOffer', 
+            const { data } = await axios.post('/api/singleOffer', 
             { 
                 action: 'sendEmail',
                 products,
@@ -515,7 +508,7 @@ const SendOfferEmail = ({
                 formData,
             })
             setRefetch(prev => !prev)
-            return data.message
+            return data
         } catch (e) {
             console.error({e})
             return e.message

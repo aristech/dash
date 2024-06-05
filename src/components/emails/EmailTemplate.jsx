@@ -53,23 +53,29 @@ const EmailTemplate = ({
   }, []);
 
   const handleFinalSubmit = async (data) => {
-    console.log(data);
     setLoading(true);
     try {
-      let message = await handleSend(data);
-      console.log({ message });
-      showMessage({
-        severity: "success",
-        summary: "Επιτυχία",
-        message: message,
-      });
-      showMessage("success", "Τα δεδομένα αποστάλθηκαν επιτυχώς", "Επιτυχία");
+      const res = await handleSend(data);
+      console.log({res});
+      if(res.status) {
+        showMessage({
+          severity: "success",
+          summary: "Επιτυχία",
+          message: res.message,
+        });
+      } else {
+        showMessage({
+          severity: "error",
+          summary: "Σφάλμα",
+          message: res.message,
+        });
+      }
+     
     } catch (error) {
-      console.error({ error });
       showMessage({
         severity: "error",
         summary: "Σφάλμα",
-        message: message,
+        message: error.message,
       });
     } finally {
       setVisible(false);
