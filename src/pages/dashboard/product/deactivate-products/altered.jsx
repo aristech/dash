@@ -136,7 +136,6 @@ const SubmitedTable = ({data}) => {
       <Column field="deleted" header="Kατάσταση Διαγραφής" />
       <Column field="error" header="Σφάλμα" />
       <Column field="message" header="Μήνυμα" />
-      <Column field="imagesDeleted" header="Διαγραφή Φωτογραφιών" />
     </DataTable>
   );
 }

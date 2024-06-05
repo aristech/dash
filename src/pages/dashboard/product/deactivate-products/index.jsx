@@ -38,14 +38,16 @@ export default function PageWrapper() {
   const dispatch = useDispatch();
   const { gridData } = useSelector((state) => state.deactivateProducts);
 
-
+  useEffect(() => {
+      dispatch(setGridData([]));
+  }, [])
  
   const onUploadClick = () => {
     fileInputRef.current.click();
   };
 
   const handleFileUpload = async (e) => {
-    dispatch(setGridData([]));
+   
     try {
       setLoading(true);
       const reader = new FileReader();

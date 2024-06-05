@@ -1,6 +1,6 @@
 import SoftoneProduct from "../../../../server/models/newProductModel";
 import connectMongo from "../../../../server/config";
-import { images } from "../../../../next.config";
+import { deleteBunny } from "@/utils/bunny_cdn";
 export default async function handler(req, res) {
   const response = {
     result: [],
@@ -43,16 +43,16 @@ export default async function handler(req, res) {
         //DELETE IMAGES FROM BUNNY CDN:
         if (productExists.images && productExists.images.length > 0) {
           const deleteImagesResponse = await deleteImages(productExists.images);
-          if (deleteImagesResponse.success) {
-            result.images = productExists.images;
-            result.imagesDeleted = true;
-          } else {
-            result.images = productExists.images;
-            result.imagesDeleted = false;
-            result.error = `Οι εικόνες του προϊόντος με κωδικό ${
-              product[mongoKeys.mappingKey.key]
-            } δεν διαγράφηκαν.`;
-          }
+          // if (deleteImagesResponse.success) {
+          //   result.images = productExists.images;
+          //   result.imagesDeleted = true;
+          // } else {
+          //   result.images = productExists.images;
+          //   result.imagesDeleted = false;
+          //   result.error = `Οι εικόνες του προϊόντος με κωδικό ${
+          //     product[mongoKeys.mappingKey.key]
+          //   } δεν διαγράφηκαν.`;
+          // }
         }
         //THEN DELETE THE WHOLE PRODUCT:
         const deleteOnSystem = await deleteSystem(productExists._id);
@@ -157,7 +157,6 @@ async function deactivateSoftone(data) {
     });
 
     let resJson = await result.json();
-    console.log({ resJson });
     return resJson;
   } catch (error) {
     console.error(`Error updating Softone: ${error.message}`);
@@ -167,10 +166,10 @@ async function deactivateSoftone(data) {
 
 
 async function deleteImages(images) {
+
     try {
       for (let image of images) {
-        let bunny = await deleteBunny(image)
-         console.log({bunny})
+        let bunny = await deleteBunny(image?.name)
      }
      return {
         success: true,
