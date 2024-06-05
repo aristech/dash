@@ -63,10 +63,10 @@ const softoneProduct = new mongoose.Schema({
     PRICER05: Number,
     UPDDATE: String,
     availability: {
-        DIATHESIMA: String,
-        SEPARAGELIA: String,
-        DESVMEVMENA: String,
-        date: String,
+        DIATHESIMA: { type: String, default: '0' },
+        SEPARAGELIA: { type: String, default: '0' },
+        DESVMEVMENA: { type: String, default: '0' },
+        date: { type: String, default: '0' },
     },
     SOFTONESTATUS: {
         type: Boolean,

@@ -144,6 +144,7 @@ function createData(item) {
     SOFTONESTATUS: false,
     isSkroutz: item?.isSkroutz,
     COST: item?.COST,
+  
   };
 
   return { PRODUCT_DATA: removeEmptyObjectFields(product), SOFTONE_DATA: removeEmptyObjectFields(softone) };
