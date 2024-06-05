@@ -13,6 +13,10 @@
 }
 
 
+html {
+    font-size: 14px;
+}
+
 .wharehouse-msg .p-inline-message-text {
     font-size: 0.76rem;
 }
@@ -45,11 +49,10 @@
 }
 
 
-html,
+
 body {
     max-width: 100vw;
     overflow: hidden;
-
     font-size: 0.90rem;
     height: 100vh;
     font-family: 'Roboto', sans-serif;
@@ -312,7 +315,7 @@ form {
   }
   
 .product_toolbar.p-toolbar {
-    padding: 0.8px;
+    padding: 0.8rem;
 }
 
 

@@ -419,9 +419,11 @@ function Product() {
           totalRecords={totalRecords}
           onPage={onPage}
           className="p-dataTable-sm"
-          selectionMode={"checkbox"}
+          selectionMode="checkbox"
+          selectionAutoFocus={false}
           selection={selectedProducts}
           onSelectionChange={onSelection}
+          selectionPageOnly
           paginator
           rows={lazyState2.rows}
           rowsPerPageOptions={[20, 50, 100, 200, 500]}
@@ -436,7 +438,7 @@ function Product() {
           onRowCollapse={(e) => setExpandedRows(null)}
           rowExpansionTemplate={rowExpansionTemplate}
           expandedRows={expandedRows}
-          scrollHeight="550px"
+          scrollHeight="500px"
           scrollable
         >
           <Column
