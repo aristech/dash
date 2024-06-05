@@ -220,13 +220,15 @@ form {
 }
 
 
-
+.p-input-icon-left .custom_input {
+    padding-left: 2.5rem;  
+    font-size: 0.85rem;
+}
 .p-input-icon-left .custom_search_input {
     padding-left: 1.8rem;  
     font-size: 0.85rem;
 
 }
-
 /* For WebKit browsers (Chrome, Safari) */
 .custom_search_input::-webkit-input-placeholder {
     font-size: 0.8rem;
@@ -310,7 +312,7 @@ form {
   }
   
 .product_toolbar.p-toolbar {
-    padding: 0.80rem;
+    padding: 0.8px;
 }
 
 
