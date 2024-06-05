@@ -7,7 +7,6 @@ import SingleOffer from "../../../server/models/singleOfferModel";
 import createCSVfile from "@/utils/createCSVfile";
 import { sendEmail } from "@/utils/offersEmailConfig";
 import { getSaldoc, getFinDoc } from "./singleOffer";
-import { get } from "mongoose";
 
 function generateOfferNum(length) {
     const max = Math.pow(10, length) - 1; // Generates a number like 999999 for length = 6

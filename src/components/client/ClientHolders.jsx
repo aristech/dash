@@ -152,7 +152,7 @@ const ClientHolder = ({ NAME }) => {
                     <SendMultiOfferEmail
                         email={clientEmail}
                         products={_products}
-                        clientName={clientName}
+                        name={clientName}
                         setRefetch={setRefetch}
                         id={_id}
                     />
@@ -590,7 +590,7 @@ const CreatedFrom = ({ createdFrom }) => {
 
 const SendMultiOfferEmail = ({ 
     email,  
-    clientName, 
+    name, 
     products,
     setRefetch,
     id,
@@ -621,10 +621,8 @@ const SendMultiOfferEmail = ({
         <EmailTemplate
         handleSend={finalSubmit}
         email={email}
-        products={products}
-        clientName={clientName}
-        subject={`Προσφορά σε πελάτη ${clientName}`}
-        fileName={`${clientName}.offer`}
+        subject={`Προσφορά σε πελάτη ${name}`}
+        fileName={`${name}.offer`}
         message={`Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.`}
     />
     )

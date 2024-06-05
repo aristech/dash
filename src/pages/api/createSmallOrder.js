@@ -222,18 +222,9 @@ export default async function handler(req, res) {
 
     }
     if (action === "sentEmail") {
-        const { TRDR, cc, subject, message, fileName, includeFile,  email, id } = req.body;
-        console.log(email)
-        console.log('sent email')
-        
-        if(email === 'no-email' || email === null) {
-            return res.status(200).json({success: false, message: 'Δεν υπάρχει email για τον προμηθευτή'})
-        }
-        let newcc = []
-        for (let item of cc) {
-            newcc.push(item.email)
-        }
-
+        const {formData, id} = req.body;
+        const {email, subject, cc, message, fileName} = formData;
+      
        async function findProducts(id) {
             try {
                 let find = await SmallOrders.findOne({ _id: id });
@@ -242,10 +233,10 @@ export default async function handler(req, res) {
                 let products = find.products;
                 let _products = products.map((item, index) => {
                     return {
-                        PRODUCT_NAME: item.NAME,
-                        COST: item.COST,
-                        QTY1: item.QTY1,
-                        TOTAL_COST: item.TOTAL_COST
+                        "Όνομα Προϊόντος": item.NAME,
+                        "Κόστος": item.COST,
+                        "Ποσότητα": item.QTY1,
+                        "Συνολικό Κόστος": item.TOTAL_COST
                     }
                 })
                 return _products;
@@ -256,20 +247,27 @@ export default async function handler(req, res) {
        }
         try {
             const _products = await findProducts(id);
-            let csv = await createCSVfile(_products)
-            let send = await sendEmail(email, newcc, subject, message, fileName, csv, includeFile);
-        
-            let update = await SmallOrders.findOneAndUpdate({ _id: id }, {
-                $set: {
-                    status: "sent"
+            if(!_products) {
+                return res.status(500).json({ success: false, message: 'Αδυναμία εύρεσης προϊόντων για την δημιουργία email. To email δεν στάλθηκε' })
+            } else {
+                const csv = await createCSVfile(_products)
+                const send = await sendEmail(email, cc, subject, message, fileName, csv );
+                if(send.status) {
+                    let update = await SmallOrders.findOneAndUpdate({ _id: id }, {
+                        $set: {
+                            status: "sent"
+                        }
+                    }, { new: true
+                    })
                 }
-            }, { new: true
-            })
-           
-            return res.status(200).json({ success: true,  send: send })
+                console.log(send)
+                return res.status(200).json({ success: true,  message: send.message })
 
+            }
+          
+           
         } catch (e) {
-            return res.status(500).json({ success: false, result: null })
+            return res.status(500).json({ success: false, message: e.message })
         }
 
     }

@@ -18,7 +18,7 @@ const schema = yup.object().shape({
 
 const EmailTemplate = ({
   email,
-  mt,
+  disabled = false,
   subject,
   fileName,
   message,
@@ -34,6 +34,7 @@ const EmailTemplate = ({
     fileName: fileName,
     message: message,
   };
+
   const methods = useForm({
     resolver: yupResolver(schema),
     defaultValues: DEFAULT_VALUES,
@@ -87,6 +88,7 @@ const EmailTemplate = ({
         onClick={() => setVisible(false)}
       />
       <Button
+
         size="small"
         loading={loading}
         label="Αποστολή"
@@ -103,7 +105,8 @@ const EmailTemplate = ({
   return (
     <div>
       <Button
-        className={`mt-${mt} w-full`}
+        disabled={disabled}
+        className={`w-full`}
         label="Δημιουργία Εmail"
         icon="pi pi-envelope"
         onClick={() => setVisible(true)}

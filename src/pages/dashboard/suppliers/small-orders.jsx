@@ -1,10 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { Button } from 'primereact/button'
-import { useSelector, useDispatch } from 'react-redux'
+import {  useDispatch } from 'react-redux'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import axios from 'axios'
-import SendSmallOrderEmail from '@/components/emails/SmallOrdersEmail'
 import StepHeader from '@/components/StepHeader'
 import { useRouter } from 'next/router';
 import { setSelectedProducts } from '@/features/productsSlice';
@@ -13,6 +12,7 @@ import { OverlayPanel } from 'primereact/overlaypanel';
 import { Toast } from 'primereact/toast';
 import { InputNumber } from 'primereact/inputnumber';
 import AdminLayout from '@/layouts/Admin/AdminLayout'
+import EmailTemplate from '@/components/emails/EmailTemplate'
 
 const PendingOrders = ({ id }) => {
     const [data, setData] = useState([])
@@ -22,10 +22,6 @@ const PendingOrders = ({ id }) => {
     const [expandedRows, setExpandedRows] = useState(null);
     
 
-
-    const showError = () => {
-        toast.current.show({severity:'error', summary: 'Error', detail:'Δεν έχετε συμπληρώσει το ποσό για αποστολή παραγγελίας', life: 3000});
-    }
 
     const allowExpansion = (rowData) => {
         return rowData
@@ -44,7 +40,7 @@ const PendingOrders = ({ id }) => {
 
 
 
-    const Actions = ({ supplierName, supplierEmail,products,  TRDR, PURDOCNUM, _id }) => {
+    const Actions = ({ supplierName, supplierEmail,TRDR, PURDOCNUM, _id }) => {
         const op = useRef(null);
         const onBulletsClick = (e) => {
             op.current.toggle(e)
@@ -65,17 +61,15 @@ const PendingOrders = ({ id }) => {
                 <i className="pi pi-ellipsis-v pointer" style={{ fontSize: '1.1rem', color: 'blue' }} onClick={onBulletsClick}></i>
                 <OverlayPanel className='w-15rem' ref={op}>
                     <Button disabled={PURDOCNUM} className='w-full' severity='secondary' label='Εκ. Παραστατικού' onClick={handleSubmit} />
+                    <div className='mt-2'>
                     <SendSmallOrderEmail
                         disabled={!PURDOCNUM}
-                        mt={2}
                         email={supplierEmail}
-                        products={products}
                         name={supplierName}
-                        TRDR={TRDR}
                         id={_id}
                         setRefetch={setRefetch}
-                        op={op}
                     />
+                    </div>
                     <Button onClick={handleDelete} className='mt-2 w-full' severity='danger' label="Διαγραφή" icon="pi pi-trash"/>
                 </OverlayPanel>
 
@@ -96,7 +90,7 @@ const PendingOrders = ({ id }) => {
         )
     }
 
-
+    console.log({data})
  
  
     return (
@@ -118,6 +112,7 @@ const PendingOrders = ({ id }) => {
                   <Column header="Όνομα προμηθευτή" field="supplierName"></Column>
                   <Column header="Κωδικός Παρ." style={{ width: '150px' }} field="PURDOCNUM"></Column>
                   <Column header="Email" field="supplierEmail"></Column>
+                  <Column header="Κατάσταση" field="status"></Column>
                   <Column header="Ημερομ. Δημ" style={{minWidth: '250px'}} body={CreatedAt}></Column>
                   <Column header="Aποστολή" body={Actions} style={{ width: "120px" }} bodyStyle={{ textAlign: 'center' }}></Column>
               </DataTable>
@@ -183,9 +178,6 @@ const RowExpansionGrid = ({ products, id,  PURDOCNUM}) => {
                             <span className='text-500 mr-1'>{`TOTAL PRICE:`}</span>
                             <span>{` ${state.total_cost} €`}</span>
                         </div>
-                        {/* <div className='flex  justify-content-end mt-1'>
-                            <span onClick={handleRefresh} className='text-primary-600 underline font-light text-sm'>update grid</span>
-                        </div> */}
                     </div>
                 </div>
 
@@ -276,6 +268,43 @@ const TotalTemplate = ({ TOTAL_COST }) => {
         </div>
     )
 }
+const SendSmallOrderEmail = ({ 
+    email,  
+    name, 
+    setRefetch,
+    id,
+    disabled,
+}) => {
+   
+  
+    const finalSubmit = async (formData) => {
+        try {
+            const { data } = await axios.post('/api/createSmallOrder', 
+            { 
+                action: 'sentEmail',
+                formData,
+                id
+            })
+            setRefetch(prev => !prev)
+            return data.message
+        } catch (e) {
+            return e.message
+        }
+    }
+
+
+    return (
+        <EmailTemplate
+        disabled={disabled}
+        handleSend={finalSubmit}
+        email={email}
+        subject= {`Παραγγελία στον προμηθευτή ${name}`} 
+        fileName={`kollers.order`}
+        message={`Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.`}
+    />
+    )
+}
+
 
 
 export default PendingOrders;

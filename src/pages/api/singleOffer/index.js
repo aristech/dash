@@ -4,8 +4,6 @@ import Clients from "../../../../server/models/modelClients";
 import SingleOffer from "../../../../server/models/singleOfferModel";
 import { sendEmail } from "@/utils/offersEmailConfig";
 import createCSVfile from "@/utils/createCSVfile";
-import Offer from "@/components/grid/Product/Offer";
-import { mn } from "date-fns/locale";
 import Holders from "../../../../server/models/holderModel";
 
 export default async function handler(req, res) {
@@ -384,7 +382,6 @@ export default async function handler(req, res) {
    
       return res.status(200).json({ success: true, result: update });
     } catch (e) {}
-    // console.log(id, mtrLines)
     return res.status(200).json({ success: true });
   }
 }

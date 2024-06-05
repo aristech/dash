@@ -4,33 +4,23 @@ import { useSelector, useDispatch } from 'react-redux'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import axios from 'axios'
-import SendOrderEmail from '@/components/emails/SendOrderEmail';
 import StepHeader from '../multiOffer/StepHeader';
 import { useRouter } from 'next/router';
 import { setSelectedProducts } from '@/features/productsSlice';
 import CreatedAt from '../grid/CreatedAt';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { Toast } from 'primereact/toast';
 import { InputNumber } from 'primereact/inputnumber';
 import { setOrderReady } from '@/features/supplierOrderSlice'
+import { useToast } from '@/_context/ToastContext'
 
 const PendingOrders = ({ id }) => {
     const [data, setData] = useState([])
-    const toast = useRef(null);
     const [refetch, setRefetch] = useState(false)
     const [loading, setLoading] = useState(false)
     const [expandedRows, setExpandedRows] = useState(null);
     const dispatch = useDispatch()
+    const {showMessage} = useToast();
 
-
-
-    const showError = (message) => {
-        toast.current.show({ severity: 'error', summary: 'Error', detail: message, life: 3000 });
-    }
-
-    const showSuccess = (message) => {
-        toast.current.show({ severity: 'success', summary: 'Success', detail: message, life: 3000 });
-    }
 
     const allowExpansion = (rowData) => {
         return rowData
@@ -39,7 +29,6 @@ const PendingOrders = ({ id }) => {
     const handleFetch = async () => {
         setLoading(true)
         let { data } = await axios.post('/api/createOrder', { action: 'findPending', TRDR: id })
-        console.log(data.result)
         setData(data.result)
         setLoading(false)
     }
@@ -50,7 +39,7 @@ const PendingOrders = ({ id }) => {
 
 
 
-    const Actions = ({ supplierName, supplierEmail, products, minOrderValue, orderCompletionValue, _id }) => {
+    const Actions = ({ minOrderValue, orderCompletionValue, _id }) => {
         const op = useRef(null);
         const onBulletsClick = (e) => {
             op.current.toggle(e)
@@ -59,17 +48,24 @@ const PendingOrders = ({ id }) => {
       
         const issuePurdoc = async () => {
             if (orderCompletionValue < minOrderValue) {
-                showError('Δεν έχετε συμπληρώσει το ποσό για αποστολή παραγγελίας');
+                showMessage({
+                    severity: "info",
+                    summary: "Προσοχή",
+                    message: "Δεν έχετε συμπληρώσει το ποσό για αποστολή παραγγελίας"
+                })
                 return;
             }
             setLoading(true)
             try {
                 let { data } = await axios.post('/api/createOrder', { action: 'issuePurdoc', TRDR: id, id: _id })
-                console.log(data)
                 dispatch(setOrderReady())
                 setRefetch(prev => !prev)
             } catch (e) {
-                console.error(e.message)
+                showMessage({
+                    severity: "error",
+                    summary: "Σφάλμα",
+                    message: e.message
+                })
             } finally {
                 setLoading(false)
             }
@@ -81,16 +77,25 @@ const PendingOrders = ({ id }) => {
         const deletePendingOffer = async () => {
             setLoading(true)
             try {
-                let { data } = await axios.post('/api/createOrder', { action: 'deletePendingOrder', TRDR: id, id: _id })
-                console.log(data)
-                showSuccess('Επιτυχής διαγραφή προσφοράς')
+                 await axios.post('/api/createOrder', { action: 'deletePendingOrder', TRDR: id, id: _id })
+                showMessage({
+                    severity: "success",
+                    summary: "Επιτυχία",
+                    message: "Επιτυχής διαγραφή προσφοράς"
+                })
                 setRefetch(prev => !prev)
 
             } catch (e) {
-                 showError('Αποτυχία διαγραφής προσφοράς')
+                showMessage({
+                    severity: "error",
+                    summary: "Σφάλμα",
+                    message: e.message
+                })
+            } finally {
+                setLoading(false)
             }
            
-            setLoading(false)
+         
         }
         return (
             <div>
@@ -103,18 +108,7 @@ const PendingOrders = ({ id }) => {
                         severity='secondary' 
                         onClick={issuePurdoc} 
                     />
-                    {/* <SendOrderEmail
-                        disabled={orderCompletionValue < minOrderValue ? true : false}
-                        mt={2}
-                        id={_id}
-                        email={supplierEmail}
-                        products={products}
-                        name={supplierName}
-                        TRDR={id}
-                    
-                        setRefetch={setRefetch}
-                        op={op}
-                    /> */}
+                  
                     <Button onClick={deletePendingOffer} className='mt-2 w-full' severity='danger' label="Διαγραφή" icon="pi pi-trash" />
                 </OverlayPanel>
 
@@ -141,7 +135,6 @@ const PendingOrders = ({ id }) => {
 
     return (
         <div className='mt-4 mb-5'>
-            <Toast ref={toast} />
             <StepHeader text="Ενεργή Παραγγελία" />
             {data && data.length ? (
                 <DataTable
@@ -205,9 +198,7 @@ const RowExpansionGrid = ({ products, id, docId, refresh, setRefetch }) => {
         }))
     }
 
-    useEffect(() => {
-        console.log(state.data)
-    }, [state.data])
+  
 
     useEffect(() => {
         handleFetch();

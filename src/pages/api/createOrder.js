@@ -223,42 +223,41 @@ export default async function handler(req, res) {
         }
     }
     if (action === "sentEmail") {
-        const { TRDR, cc, subject, message, fileName, includeFile,  email, id } = req.body;
-        console.log('id')
-            console.log(id)
-        
-        if(email === 'no-email' || email === null) {
-            return res.status(200).json({success: false, message: 'Δεν υπάρχει email για τον προμηθευτή'})
-        }
-        let newcc = []
-        for (let item of cc) {
-            newcc.push(item.email)
-        }
+        const {formData, id} = req.body;
+        const {email, subject, cc, message, fileName} = formData;
+      
+        let csv;
         try {
             let find = await CompletedOrders.findOne({ _id: id });
-            const products = find.products;
+            const products = find?.products;
             const _products = products.map((item, index) => {
                 return {
-                    PRODUCT_NAME: item.NAME,
-                    COST: item.COST,
-                    QTY1: item.QTY1,
-                    TOTAL_COST: item.TOTAL_COST
+                    "Όνομα Προϊόντος": item.NAME,
+                    "Κόστος": item.COST,
+                    "Ποσότητα": item.QTY1,
+                    "Συνολικό Κόστος": item.TOTAL_COST
                 }
             })
-            console.log(_products)
-            let csv = await createCSVfile(_products)
-            let send = await sendEmail(email, newcc, subject, message, fileName, csv, includeFile);
-            let update = await CompletedOrders.findOneAndUpdate({ _id: id }, {
-                $set: {
-                    status: "sent"
-                }
-            }, { new: true
-            })
-           
-            return res.status(200).json({ success: true,  send: send })
+            csv = await createCSVfile(_products)
+        } catch(e) {
+            return res.status(500).json({ success: true,  message: e.message })
+        }
+        try {
+            const send = await sendEmail(email, cc, subject, message, fileName, csv );
+            if(send.status) {
+                let update = await CompletedOrders.findOneAndUpdate({ _id: id }, {
+                    $set: {
+                        status: "sent"
+                    }
+                }, { new: true
+                })
+                console.log({update})
+            }
+         
+            return res.status(200).json({ success: true,  message: send.message })
 
         } catch (e) {
-            return res.status(500).json({ success: false, result: null })
+            return res.status(500).json({ success: false, message:e.message })
         }
 
     }

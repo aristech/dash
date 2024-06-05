@@ -16,7 +16,6 @@ import EmailTemplate from '../emails/EmailTemplate';
 
 const OfferGrid = ({ clientName }) => {
     const [expandedRows, setExpandedRows] = useState(null);
-    const [pdf, setPdf] = useState(null)    
     const [data, setData] = useState([])
     const [loading, setLoading] = useState({
         grid: false,
@@ -134,8 +133,7 @@ const OfferGrid = ({ clientName }) => {
                             id={_id}
                             email={clientEmail}
                             products={_products}
-                            clientName={clientName}
-                            SALDOCNUM={SALDOCNUM}
+                            name={clientName}
                             setRefetch={setRefetch}
                         />
                     </div>
@@ -493,12 +491,19 @@ const DiscountedPrice = ({DISCOUNTED_PRICE}) => {
 
 const SendOfferEmail = ({ 
     email,  
-    clientName, 
+    name, 
     products,
     setRefetch,
     id,
 }) => {
-   
+    // setState((prev) => (
+    //     { ...prev, 
+    //         email: email,
+    //         subject: `Παραγγελία στον προμηθευτή ${name}`,
+    //         fileName: `kollers.order.csv`,
+    //         message: 'Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της παραγγελίας. Ευχαριστούμε.'
+    //     }
+    //     ))
   
     const finalSubmit = async (formData) => {
         try {
@@ -524,11 +529,10 @@ const SendOfferEmail = ({
         <EmailTemplate
         handleSend={finalSubmit}
         email={email}
-        products={products}
-        clientName={clientName}
-        subject={`Προσφορά σε πελάτη ${clientName}`}
-        fileName={`${clientName}.offer`}
-        message={`Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της προσφοράς. Στείλε το μας πίσω συμπληρωμένο με τα προϊόντα που έχετε αποδεχτεί. Ευχαριστούμε.`}
+        subject={`Προσφορά σε πελάτη ${name}`}
+        fileName={`${name}.offer`}
+        message= 'Καλησπέρα σας στον παρόν email θα βρείτε επισυναπτόμενο το αρχείο της παραγγελίας. Ευχαριστούμε.'
+
     />
     )
 }
