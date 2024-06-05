@@ -231,7 +231,6 @@ function Product() {
         //create a conditional loading state:
         setLoading(true)
     }
-    console.log("FETCHING PRODUCTS")
     try {
       let { data } = await axios.post("/api/product/apiProductFilters", {
         action: "productSearchGrid",
@@ -270,6 +269,8 @@ function Product() {
     let orderedSelectedColumns = columns.filter((col) =>
       selectedColumns.some((sCol) => sCol.id === col.id)
     );
+
+    
     setVisibleColumns(orderedSelectedColumns);
   };
 
@@ -361,12 +362,12 @@ function Product() {
         label="Menu"
         onClick={(e) => op.current.toggle(e)}
       />
-      <div className="mb-2">
+      {/* <div className="mb-2">
         <Message
           severity="info"
           text="Κάνοντας click πάνω στον πίνακα των προϊόντων, πατώντας τα βελάκια δεξί/αριστερό μπορείτε να πλοηγηθείτε στο εσωτερικό του πίνακα για να δείτε τις στήλες που δεν φαίνονται"
         />
-      </div>
+      </div> */}
       <OverlayPanel ref={op}>
         <div className="flex flex-column align-center">
           <Button
@@ -417,7 +418,7 @@ function Product() {
           lazy
           totalRecords={totalRecords}
           onPage={onPage}
-          className="p-dataTable-sm "
+          className="p-dataTable-sm"
           selectionMode={"checkbox"}
           selection={selectedProducts}
           onSelectionChange={onSelection}
@@ -435,6 +436,8 @@ function Product() {
           onRowCollapse={(e) => setExpandedRows(null)}
           rowExpansionTemplate={rowExpansionTemplate}
           expandedRows={expandedRows}
+          scrollHeight="550px"
+          scrollable
         >
           <Column
             bodyStyle={{ textAlign: "center" }}
@@ -585,6 +588,7 @@ function Product() {
               showFilterMenu={false}
               filterElement={() => (
                 <DropdownManufacturers
+                  isFilter
                   state={stateFilters.MANUFACTURER}
                   handleState={(val) =>
                     handleDropdownState(val, "MANUFACTURER")
@@ -736,6 +740,9 @@ const RenderHeader = ({
 
   const ref = useRef(null);
  
+  let newOptions = columns.filter(col => {
+    return col.id !== 15
+  })
 
   const makeMinimalGrid = () => {
     if (visibleColumns.some((column) => column.id === 15))
@@ -755,7 +762,7 @@ const RenderHeader = ({
   return (
     //product.css //
     <div className="header_container">
-      <div className="header_left ">
+      <div className="header_left">
         <div>
           <Button
             type="button"
@@ -766,7 +773,7 @@ const RenderHeader = ({
             onClick={makeMinimalGrid}
           />
         </div>
-        <div className="card flex flex-column align-items-center gap-3 ">
+        <div className="card flex flex-column align-items-center  ">
           <span className="p-buttonset">
             <Button
               type="button"
@@ -866,6 +873,7 @@ const RenderHeader = ({
                 }
               />
               <DropdownBrands
+
                 state={stateFilters?.MTRMARK}
                 handleState={(val) =>
                   setStateFilters((prev) => ({ ...prev, MTRMARK: val }))
@@ -887,7 +895,15 @@ const RenderHeader = ({
             </div>
           </OverlayPanel>
         </div>
-        
+        <MultiSelect 
+          value={visibleColumns} 
+          onChange={onColumnToggle} 
+          options={newOptions} 
+          optionLabel="header" 
+          placeholder="Επιλέξτε Στήλες" 
+          maxSelectedLabels={2} 
+          className="custom_input column_toggle_input" 
+        />
       </div>
       <div>
         <XLSXDownloadButton products={selectedProducts} />
@@ -901,7 +917,7 @@ const RenderHeader = ({
 const rowExpansionTemplate = (data) => {
   return (
     <div className="card p-20" style={{ maxWidth: "1000px" }}>
-      <TabView>
+      <TabView className="product_tabs">
         <TabPanel header="Λεπτομέρειες">
           <ExpansionDetails data={data} />
         </TabPanel>

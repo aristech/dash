@@ -119,9 +119,10 @@ form {
 .custom_dropdown_wrapper .icon {
     position: absolute;
     right: 2.3rem;
-    top: 50%;
-    transform: translateY(-50%);
+    top: 50%!important;
+    transform: translateY(-50%)!important;
     cursor: pointer;
+    margin-top: 1px;
     color: rgb(191, 191, 191);
     font-size: 0.75rem;
 }
@@ -212,17 +213,14 @@ form {
 }
 
 .p-input-icon-left .pi {
-    font-size: 0.74rem;
+    font-size: 0.72rem;
     margin-top: 0;
     top: 50%;
     transform: translateY(-50%);
 }
 
 
-.p-input-icon-left .custom_input {
-    padding-left: 2.5rem;  
-    font-size: 0.85rem;
-}
+
 .p-input-icon-left .custom_search_input {
     padding-left: 1.8rem;  
     font-size: 0.85rem;
@@ -294,19 +292,35 @@ form {
     margin-top: 2px;
 }
 
+
 /* PRODUCT ACTIONS */
 .basket-icon {
     display: flex;
     align-items: center;
+    position:relative;
   }
-
-
+  .basket-icon span {
+    margin-left: 10px;
+  }
+  
+ 
   .impa_text {
     font-size: 0.80rem;
     color: #726f6f;
   }
   
+.product_toolbar.p-toolbar {
+    padding: 0.80rem;
+}
 
+
+.column_toggle_input.p-multiselect .p-multiselect-label {
+   width: 140px;
+    padding: 0.65rem 0.55rem
+}
+.column_toggle_input {
+    margin-left: 10px;
+}
 
 .offer_input .p-inputtext {
     width: 70px;
@@ -451,8 +465,13 @@ form {
 .dialog_form {
     width: 500px;
 }
+
+
+.product_tabs.p-tabview .p-tabview-nav .p-tabview-ink-bar {
+    z-index: 0;
+}
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 10px;
     height: 12px;
 }
 
@@ -464,7 +483,6 @@ form {
     background: #cdcdcda7;
     border-radius: 8px;
 }
-
 
 @media screen and (max-width: 800px) {
     .product_form_grid_row {

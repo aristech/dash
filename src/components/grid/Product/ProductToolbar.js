@@ -20,7 +20,7 @@ import SmallOrders from "./SmallOrders";
 const ProductToolbar = () => {
   return (
     <div>
-      <Toolbar start={LeftSide} end={RightSide} />
+      <Toolbar className="product_toolbar" start={LeftSide} end={RightSide} />
     </div>
   );
 };
@@ -48,7 +48,7 @@ const RightSide = () => {
         <CalculateBasket />
         <i
           className="pi pi-shopping-cart p-overlay-badge"
-          style={{ fontSize: "25px", marginRight: "10px" }}
+          style={{ fontSize: "18px", marginRight: "10px" }}
         >
           <Badge
             value={selectedProducts == null ? "0" : selectedProducts?.length}
@@ -93,7 +93,7 @@ const LeftSide = () => {
     <>
       <Button
         icon="pi pi-shopping-cart"
-        label="Kαλάθι Λειτουργειών"
+        label="Καλάθι Λειτουργειών"
         className="mr-2"
         onClick={onMultipleActions}
         aria-controls="popup_menu_right"
@@ -107,7 +107,7 @@ const LeftSide = () => {
         visible={visible}
         position="right"
         onHide={() => setVisible(false)}
-        className="md:w-6	 lg:w-8"
+        className="md:w-6	 lg:w-5"
         icons={customIcons}
       >
         {activeIndex === 0 ? (
@@ -210,7 +210,7 @@ const FirstScreen = () => {
       </div>
       <div className="box">
         <DataTable
-          className="border-1 border-round-sm	border-50"
+          className="border-1 border-round-sm	border-50 w-full"
           size="small"
           scrollHeight="350px"
           scrollable
@@ -254,7 +254,7 @@ const ProductBaksetTemplate = ({ name, categoryName, PRICER, MTRL }) => {
     setTotal(parseInt(PRICER) * quantity);
   }, [quantity, PRICER]);
   return (
-    <div className="flex align-items-center justify-content-between p-2">
+    <div className="flex align-items-center justify-content-between">
       <div>
         <div>
           <p className="text-md text-900 font-semibold">{name}</p>

@@ -87,7 +87,11 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+}
+
+
+.header_container.p-datatable.p-datatable-gridlines .p-datatable-header {
+    padding: 0.5rem 0.7rem;
 }
 
 .header_left {

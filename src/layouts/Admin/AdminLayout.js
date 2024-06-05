@@ -127,7 +127,7 @@ const Navbar = styled.nav`
 `;
 
 const MainContent = styled.div`
-  padding: 29px;
+  padding: 35px;
   margin-top: 110px;
   background-color: ${({ theme }) => theme.palette.background};
   width: ${({ isSidebarOpen }) => isSidebarOpen ? 'calc(100% - 240px)' : '100%'};

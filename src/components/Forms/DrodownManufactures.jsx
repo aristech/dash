@@ -8,6 +8,7 @@ export default function DropdownManufacturers ({
     handleState, 
     isEdit =false, 
     error, 
+    isFilter = false,
     required = false 
 }) {
     const [options, setOptions] = useState([]);
@@ -38,10 +39,12 @@ export default function DropdownManufacturers ({
   
     return (
       <div  className="w-full">
-        <label className={`custom_label ${error ? "text-red-600" : null}`}>
-            Κατασκευαστής 
-            {required && <span className="ml-1 font-bold text-red-500">*</span>}
-            </label>
+        {!isFilter ? (
+           <label className={`custom_label ${error ? "text-red-600" : null}`}>
+           Κατασκευαστής 
+           {required && <span className="ml-1 font-bold text-red-500">*</span>}
+           </label>
+        ) : null}
         <Dropdown
           showClear
           filter
