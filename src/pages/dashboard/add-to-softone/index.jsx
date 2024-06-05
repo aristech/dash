@@ -4,14 +4,12 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import AdminLayout from "@/layouts/Admin/AdminLayout";
 import axios from "axios";
-import { Toast } from "primereact/toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { Dialog } from "primereact/dialog";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TranslateInput } from "@/components/Forms/TranslateInput";
-import { setSubmitted } from "@/features/productsSlice";
+
 import PrimeInputNumber from "@/components/Forms/PrimeInputNumber";
 import DropdownCountries from "@/components/Forms/DropdownCountries";
 import DropdownVat from "@/components/Forms/DropdownVat";
@@ -26,8 +24,7 @@ import PrimeSelect from "@/components/Forms/PrimeSelect";
 import { Button } from "primereact/button";
 import { useToast } from "@/_context/ToastContext";
 import { setSelectedProducts } from "@/features/productsSlice";
-import { Dropdown } from 'primereact/dropdown';
-import { useRouter } from "next/router";
+
 
 
 export default function Page() {
@@ -40,6 +37,7 @@ export default function Page() {
 
  
   const handleAdd = async (rowData) => {
+  
     setLoading(true)
     try {
       const { data } = await axios.post("/api/product/add-softone", {
@@ -139,44 +137,26 @@ const Actions = ({  handleEdit }) => {
 
 const addSchema = yup.object().shape({
     NAME: yup.string().required("Συμπληρώστε το όνομα"),
-  
     MTRCATEGORY: yup.object().required("Συμπληρώστε την κατηγορία").typeError("Συμπληρώστε την Εμπορική Κατηγορία"),
     MTRGROUP: yup.object().required("Συμπληρώστε την Ομάδα").typeError("Συμπληρώστε την Ομάδα"),
- 
     MTRMANFCTR:  yup.object().required("Συμπληρώστε τον Κατασκευαστή").typeError("Συμπληρώστε τον Κατασκευαστή"),
-    // CCCSUBGROUP2: yup.object().required("Συμπληρώστε την υποομάδα").typeError("Συμπληρώστε την υποομάδα"),
+    MTRMARK:  yup.object().required("Συμπληρώστε την Μάρκα").typeError("Συμπληρώστε την Μάρκα"),
+    COUNTRY: yup.object().required("Η χώρα είναι υποχρεωτική").typeError("Η χώρα είναι υποχρεωτική"),
+    ISACTIVE:  yup.boolean().required("Η κατάσταση είναι υποχρεωτική"),
+    COMPANY:  yup.string().required("Η εταιρία είναι υποχρεωτική"),
+    PRICEW: yup
+    .number()
+    .typeError("Πρέπει να είναι αριθμός")
+    .required("Συμπληρώστε την τιμή χονδρικής"),
+ 
 });
 
 
-const DEFAULT_VALUES = {
-    NAME: "",
-    MTRCATEGORY: null,
-    MTRGROUP: null,
-    CCCSUBGROUP2: null,
-    MTRMANFCTR: null,
-    MTRMARK: null,
-    INTRASTAT: null,
-    CODE: "",
-    CODE1: "",
-    CODE2: "",
-    PRICER: 0,
-    PRICEW: 0,
-    PRICER02: 0,
-    WIDTH: 0,
-    LENGTH: 0,
-    HEIGHT: 0,
-    GWEIGHT: 0,
-    VOLUME: 0,
-    ISACTIVE: true,
-    SKROUTZ: false,
-
-}
 
 
 const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) => {
   
   const methods = useForm({
-    defaultValues: DEFAULT_VALUES,
     resolver: yupResolver(addSchema),
   });
   const {
@@ -191,26 +171,25 @@ const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) =>
   useEffect(() => {
     reset({
         _id: rowData?._id,
-        NAME: rowData?.NAME,
-        MTRCATEGORY: rowData?.MTRCATEGORY,
-        MTRGROUP: rowData?.MTRGROUP,
-        CCCSUBGROUP2: rowData?.CCCSUBGROUP2,
-        MTRMANFCTR: rowData?.MTRMANFCTR,
-        MTRMARK: rowData?.MTRMARK,
-        INTRASTAT: rowData?.INTRASTAT,
-        CODE: rowData?.CODE,
-        CODE1: rowData?.CODE1,
-        CODE2: rowData?.CODE2,
-        PRICER: rowData?.PRICER,
-        PRICEW: rowData?.PRICEW,
-        PRICER02: rowData?.PRICER02,
-        WIDTH: rowData?.WIDTH,
-        LENGTH: rowData?.LENGTH,
-        HEIGHT: rowData?.HEIGHT,
-        GWEIGHT: rowData?.GWEIGHT,
-        VOLUME: rowData?.VOLUME,
-        ISACTIVE: rowData?.ISACTIVE,
-        SKROUTZ: rowData?.isSkroutz,
+        NAME: rowData?.NAME || "",
+        MTRCATEGORY: rowData?.MTRCATEGORY || null,
+        MTRGROUP: rowData?.MTRGROUP || null,
+        CCCSUBGROUP2: rowData?.CCCSUBGROUP2 || null,
+        MTRMANFCTR: rowData?.MTRMANFCTR || null,
+        MTRMARK: rowData?.MTRMARK || null,
+        INTRASTAT: rowData?.INTRASTAT || null,
+        CODE: rowData?.CODE || "",
+        CODE1: rowData?.CODE1 || "",
+        CODE2: rowData?.CODE2 || "",
+        PRICER: rowData?.PRICER || null,
+       PRICEW: rowData?.PRICEW || null,
+        PRICER02: rowData?.PRICER02 || null,
+        WIDTH: rowData?.WIDTH || null,
+        LENGTH: rowData?.LENGTH || null,
+        HEIGHT: rowData?.HEIGHT || null,
+        GWEIGHT: rowData?.GWEIGHT || null,
+        VOLUME: rowData?.VOLUME || null,
+        SKROUTZ: rowData?.isSkroutz || null,
     });
   }, [reset, rowData]);
   const handleInputChange = (value, name) => {
@@ -252,7 +231,6 @@ const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) =>
     </React.Fragment>
   );
 
-  
   return (
     <div>
       <Dialog
@@ -338,7 +316,7 @@ const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) =>
               isEdit={true}
               state={values.COUNTRY}
               handleState={(e) => handleInputChange(e, "COUNTRY")}
-              error={errors?.COUNTRY?.NAME.message}
+              error={errors?.COUNTRY?.message}
             />
           </div>
           <p className="mt-2 font-bold text-lg">Κωδικοί</p>
@@ -459,6 +437,21 @@ const AddSoftoneForm = ({ visible, setVisible, rowData, handleAdd, loading }) =>
               optionLabel={"label"}
               optionValue={"value"}
               control={methods.control}
+              error={errors?.ISACTIVE?.message}
+            />
+          </div>
+          <div className="product_form_grid_row">
+          <PrimeSelect
+              options={[
+                { label: "ΚΟΛΛΕΡΗΣ ΙΚΕ", value: '1001' },
+                { label: "ΚΟΛΛΕΡΗΣ ΕΠΕ", value: '1002' },
+              ]}
+              label="Επιλογή Εταιρείας"
+              name="COMPANY"
+              optionLabel={"label"}
+              optionValue={"value"}
+              control={methods.control}
+              error={errors?.COMPANY?.message}
             />
           </div>
         </form>

@@ -23,9 +23,9 @@ export default function PrimeSelect({
       render={({ field, fieldState }) => {
         return (
           <div>
-              <label className={`custom_label ${error ? "text-red-500" : null}`}>
+              <label className={`custom_label ${error ? "text-red-600" : null}`}>
             {label}
-            {required && <span className="ml-1 font-bold text-red-500">*</span>}
+            {required && <span className="ml-1 font-bold text-red-600">*</span>}
             </label>
             <Dropdown
               id={field.name}
@@ -42,7 +42,7 @@ export default function PrimeSelect({
               }}
             />
             <div className="error-div">
-              {error && <span className="error-text">{error.message}</span>}
+              {error && <span className="error-text text-red-600">{error}</span>}
             </div>
           </div>
         );
